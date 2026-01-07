@@ -1,28 +1,28 @@
-quantrader
+quanttrader
 ==========
 
-.. image:: https://img.shields.io/pypi/v/quantrader.svg
+.. image:: https://img.shields.io/pypi/v/quanttrader.svg
    :alt: PyPi Version
    :scale: 100%
-   :target: https://pypi.python.org/pypi/quantrader/
+   :target: https://pypi.python.org/pypi/quanttrader/
 
-..  .. image:: https://img.shields.io/pypi/dm/quantrader.svg
+..  .. image:: https://img.shields.io/pypi/dm/quanttrader.svg
        :alt: PyPi Monthly Donwloads
        :scale: 100%
-       :target: https://pypi.python.org/pypi/quantrader/
+       :target: https://pypi.python.org/pypi/quanttrader/
 
-.. image:: https://img.shields.io/pypi/l/quantrader.svg
+.. image:: https://img.shields.io/pypi/l/quanttrader.svg
    :alt: License
    :scale: 100%
-   :target: https://github.com/quantrader/quantrader/blob/master/LICENSE
-.. image:: https://travis-ci.org/quantrader/quantrader.png?branch=master
+   :target: https://github.com/quanttrader/quanttrader/blob/master/LICENSE
+.. image:: https://travis-ci.org/quanttrader/quanttrader.png?branch=master
    :alt: Travis-ci Build Status
    :scale: 100%
-   :target: https://travis-ci.org/quantrader/quantrader
-.. image:: https://img.shields.io/pypi/pyversions/quantrader.svg
+   :target: https://travis-ci.org/quanttrader/quanttrader
+.. image:: https://img.shields.io/pypi/pyversions/quanttrader.svg
    :alt: Python versions
    :scale: 100%
-   :target: https://pypi.python.org/pypi/quantrader/
+   :target: https://pypi.python.org/pypi/quanttrader/
 
 **Yahoo API Note**:
 
@@ -34,14 +34,14 @@ quantrader
   The ticket system is (was, actually) more often than not abused to ask for
   advice about samples.
 
-For **feedback/questions/...** use the `Community <https://community.quantrader.com>`_
+For **feedback/questions/...** use the `Community <https://community.quanttrader.com>`_
 
 Here a snippet of a Simple Moving Average CrossOver. It can be done in several
 different ways. Use the docs (and examples) Luke!
 ::
 
   from datetime import datetime
-  import quantrader as bt
+  import quanttrader as bt
 
   class SmaCross(bt.SignalStrategy):
       def __init__(self):
@@ -105,15 +105,15 @@ Documentation
 
 The blog:
 
-  - `Blog <http://www.quantrader.com/blog>`_
+  - `Blog <http://www.quanttrader.com/blog>`_
 
 Read the full documentation at:
 
-  - `Documentation <http://www.quantrader.com/docu>`_
+  - `Documentation <http://www.quanttrader.com/docu>`_
 
 List of built-in Indicators (122)
 
-  - `Indicators Reference <http://www.quantrader.com/docu/indautoref.html>`_
+  - `Indicators Reference <http://www.quanttrader.com/docu/indautoref.html>`_
 
 Python 2/3 Support
 ==================
@@ -126,14 +126,14 @@ Python 2/3 Support
 Installation
 ============
 
-``quantrader`` is self-contained with no external dependencies (except if you
+``quanttrader`` is self-contained with no external dependencies (except if you
 want to plot)
 
 From *pypi*:
 
-  - ``pip install quantrader``
+  - ``pip install quanttrader``
 
-  - ``pip install quantrader[plotting]``
+  - ``pip install quanttrader[plotting]``
 
     If ``matplotlib`` is not installed and you wish to do some plotting
 
@@ -154,7 +154,7 @@ the dependencies in the documentation.
 
 From source:
 
-  - Place the *quantrader* directory found in the sources inside your project
+  - Place the *quanttrader* directory found in the sources inside your project
 
 Version numbering
 =================

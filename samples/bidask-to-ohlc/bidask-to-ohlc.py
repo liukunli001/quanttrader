@@ -24,11 +24,11 @@ from __future__ import (absolute_import, division, print_function,)
 import argparse
 import datetime
 
-import quantrader as bt
-import quantrader.feeds as btfeeds
+import quanttrader as trader
+import trader.feeds
 
 
-class St(bt.Strategy):
+class St(trader.Strategy):
     def next(self):
         print(','.join(str(x) for x in [
             self.data.datetime.datetime(),
@@ -40,7 +40,7 @@ class St(bt.Strategy):
 def runstrat():
     args = parse_args()
 
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     data = btfeeds.GenericCSVData(
         dataname=args.data,
@@ -54,10 +54,10 @@ def runstrat():
         close=5,
         volume=7,
         openinterest=-1,  # -1 for not present
-        timeframe=bt.TimeFrame.Ticks)
+        timeframe=trader.TimeFrame.Ticks)
 
     engine.resampledata(data,
-                         timeframe=bt.TimeFrame.Ticks,
+                         timeframe=trader.TimeFrame.Ticks,
                          compression=args.compression)
 
     engine.addstrategy(St)

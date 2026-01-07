@@ -23,14 +23,14 @@ from __future__ import (absolute_import, division, print_function,
 
 import datetime
 
-import quantrader as bt
-import quantrader.feeds as btfeeds
-import quantrader.indicators as btind
+import quanttrader as trader
+import trader.feeds
+import trader.indicators
 
 from orderobserver import OrderObserver
 
 
-class MyStrategy(bt.Strategy):
+class MyStrategy(trader.Strategy):
     params = (
         ('smaperiod', 15),
         ('limitperc', 1.0),
@@ -41,7 +41,7 @@ class MyStrategy(bt.Strategy):
         ''' Logging function fot this strategy'''
         dt = dt or self.data.datetime[0]
         if isinstance(dt, float):
-            dt = bt.num2date(dt)
+            dt = trader.num2date(dt)
         print('%s, %s' % (dt.isoformat(), txt))
 
     def notify_order(self, order):
@@ -98,13 +98,13 @@ class MyStrategy(bt.Strategy):
             valid = self.data.datetime.date(0) + \
                 datetime.timedelta(days=self.p.valid)
             self.log('BUY CREATE, %.2f' % plimit)
-            self.buy(exectype=bt.Order.Limit, price=plimit, valid=valid)
+            self.buy(exectype=trader.Order.Limit, price=plimit, valid=valid)
 
 
 def runstrat():
-    engine = bt.Engine()
+    engine = trader.Engine()
 
-    data = bt.feeds.BacktraderCSVData(dataname='../../datas/2006-day-001.txt')
+    data = trader.feeds.BacktraderCSVData(dataname='../../datas/2006-day-001.txt')
     engine.adddata(data)
 
     engine.addobserver(OrderObserver)

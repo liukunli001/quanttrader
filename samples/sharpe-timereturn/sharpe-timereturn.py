@@ -24,14 +24,14 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import quantrader as bt
+import quanttrader as trader
 
 
 def runstrat(pargs=None):
     args = parse_args(pargs)
 
     # Create a engine
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     if args.cash is not None:
         engine.broker.set_cash(args.cash)
@@ -41,7 +41,7 @@ def runstrat(pargs=None):
     todate = datetime.datetime.strptime(args.todate, '%Y-%m-%d')
 
     # Create the 1st data
-    data = bt.feeds.BacktraderCSVData(
+    data = trader.feeds.BacktraderCSVData(
         dataname=args.data,
         fromdate=fromdate,
         todate=todate)
@@ -49,16 +49,16 @@ def runstrat(pargs=None):
     engine.adddata(data)  # Add the data to engine
 
     # Add the strategy
-    engine.addstrategy(bt.strategies.SMA_CrossOver)
+    engine.addstrategy(trader.strategies.SMA_CrossOver)
 
     tframes = dict(
-        days=bt.TimeFrame.Days,
-        weeks=bt.TimeFrame.Weeks,
-        months=bt.TimeFrame.Months,
-        years=bt.TimeFrame.Years)
+        days=trader.TimeFrame.Days,
+        weeks=trader.TimeFrame.Weeks,
+        months=trader.TimeFrame.Months,
+        years=trader.TimeFrame.Years)
 
     # Add the Analyzers
-    engine.addanalyzer(bt.analyzers.TimeReturn,
+    engine.addanalyzer(trader.analyzers.TimeReturn,
                         timeframe=tframes[args.tframe])
 
     shkwargs = dict()
@@ -77,12 +77,12 @@ def runstrat(pargs=None):
     if args.no_convertrate:
         shkwargs['convertrate'] = False
 
-    engine.addanalyzer(bt.analyzers.SharpeRatio,
+    engine.addanalyzer(trader.analyzers.SharpeRatio,
                         timeframe=tframes[args.tframe],
                         **shkwargs)
 
     # Add a writer to get output
-    engine.addwriter(bt.WriterFile, csv=args.writercsv, rounding=4)
+    engine.addwriter(trader.WriterFile, csv=args.writercsv, rounding=4)
 
     engine.run()  # And run it
 

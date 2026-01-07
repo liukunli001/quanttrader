@@ -23,10 +23,10 @@ from __future__ import (absolute_import, division, print_function,
 
 import math
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class OrderObserver(bt.observer.Observer):
+class OrderObserver(trader.observer.Observer):
     lines = ('created', 'expired',)
 
     plotinfo = dict(plot=True, subplot=True, plotlinelabels=True)
@@ -48,8 +48,8 @@ class OrderObserver(bt.observer.Observer):
             # in the strategy are Market orders and will be immediately
             # executed
 
-            if order.status in [bt.Order.Accepted, bt.Order.Submitted]:
+            if order.status in [trader.Order.Accepted, trader.Order.Submitted]:
                 self.lines.created[0] = order.created.price
 
-            elif order.status in [bt.Order.Expired]:
+            elif order.status in [trader.Order.Expired]:
                 self.lines.expired[0] = order.created.price

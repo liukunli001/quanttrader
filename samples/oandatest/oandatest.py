@@ -25,20 +25,20 @@ import argparse
 import datetime
 
 # The above could be sent to an independent module
-import quantrader as bt
-from quantrader.utils import flushfile  # win32 quick stdout flushing
+import quanttrader as trader
+from trader.utils import flushfile  # win32 quick stdout flushing
 
-StoreCls = bt.stores.OandaStore
-DataCls = bt.feeds.OandaData
-# BrokerCls = bt.brokers.OandaBroker
+StoreCls = trader.stores.OandaStore
+DataCls = trader.feeds.OandaData
+# BrokerCls = trader.brokers.OandaBroker
 
 
-class TestStrategy(bt.Strategy):
+class TestStrategy(trader.Strategy):
     params = dict(
         smaperiod=5,
         trade=False,
         stake=10,
-        exectype=bt.Order.Market,
+        exectype=trader.Order.Market,
         stopafter=0,
         valid=None,
         cancel=0,
@@ -56,7 +56,7 @@ class TestStrategy(bt.Strategy):
         self.datastatus = 0
 
         # Create SMA on 2nd data
-        self.sma = bt.indicators.MovAv.SMA(self.data, period=self.p.smaperiod)
+        self.sma = trader.indicators.MovAv.SMA(self.data, period=self.p.smaperiod)
 
         print('--------------------------------------------------')
         print('Strategy Created')
@@ -149,7 +149,7 @@ class TestStrategy(bt.Strategy):
                 print('USING BRACKET')
                 price = self.data0.close[0] - 0.05
                 self.order, _, _ = self.buy_bracket(size=self.p.stake,
-                                                    exectype=bt.Order.Market,
+                                                    exectype=trader.Order.Market,
                                                     price=price,
                                                     stopprice=price - 0.10,
                                                     limitprice=price + 0.10,
@@ -160,11 +160,11 @@ class TestStrategy(bt.Strategy):
             if self.order is None:
                 if not self.p.sell:
                     self.order = self.sell(size=self.p.stake // 2,
-                                           exectype=bt.Order.Market,
+                                           exectype=trader.Order.Market,
                                            price=self.data0.close[0])
                 else:
                     self.order = self.buy(size=self.p.stake // 2,
-                                          exectype=bt.Order.Market,
+                                          exectype=trader.Order.Market,
                                           price=self.data0.close[0])
 
             self.orderid.append(self.order)
@@ -192,7 +192,7 @@ def runstrategy():
     args = parse_args()
 
     # Create a engine
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     storekwargs = dict(
         token=args.token,
@@ -211,15 +211,15 @@ def runstrategy():
 
         engine.setbroker(broker)
 
-    timeframe = bt.TimeFrame.TFrame(args.timeframe)
+    timeframe = trader.TimeFrame.TFrame(args.timeframe)
     # Manage data1 parameters
     tf1 = args.timeframe1
-    tf1 = bt.TimeFrame.TFrame(tf1) if tf1 is not None else timeframe
+    tf1 = trader.TimeFrame.TFrame(tf1) if tf1 is not None else timeframe
     cp1 = args.compression1
     cp1 = cp1 if cp1 is not None else args.compression
 
     if args.resample or args.replay:
-        datatf = datatf1 = bt.TimeFrame.Ticks
+        datatf = datatf1 = trader.TimeFrame.Ticks
         datacomp = datacomp1 = 1
     else:
         datatf = timeframe
@@ -297,7 +297,7 @@ def runstrategy():
     engine.addstrategy(TestStrategy,
                         smaperiod=args.smaperiod,
                         trade=args.trade,
-                        exectype=bt.Order.ExecType(args.exectype),
+                        exectype=trader.Order.ExecType(args.exectype),
                         stake=args.stake,
                         stopafter=args.stopafter,
                         valid=valid,
@@ -407,8 +407,8 @@ def parse_args(pargs=None):
                         required=False, action='store_true',
                         help='resample to chosen timeframe')
 
-    parser.add_argument('--timeframe', default=bt.TimeFrame.Names[1],
-                        choices=bt.TimeFrame.Names,
+    parser.add_argument('--timeframe', default=trader.TimeFrame.Names[1],
+                        choices=trader.TimeFrame.Names,
                         required=False, action='store',
                         help='TimeFrame for Resample/Replay')
 
@@ -417,7 +417,7 @@ def parse_args(pargs=None):
                         help='Compression for Resample/Replay')
 
     parser.add_argument('--timeframe1', default=None,
-                        choices=bt.TimeFrame.Names,
+                        choices=trader.TimeFrame.Names,
                         required=False, action='store',
                         help='TimeFrame for Resample/Replay - Data1')
 
@@ -461,8 +461,8 @@ def parse_args(pargs=None):
                         required=False, action='store_true',
                         help='Do not counter the 1st operation')
 
-    parser.add_argument('--exectype', default=bt.Order.ExecTypes[0],
-                        choices=bt.Order.ExecTypes,
+    parser.add_argument('--exectype', default=trader.Order.ExecTypes[0],
+                        choices=trader.Order.ExecTypes,
                         required=False, action='store',
                         help='Execution to Use when opening position')
 

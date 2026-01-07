@@ -23,8 +23,8 @@ from __future__ import (absolute_import, division, print_function,
 
 import testcommon
 
-import quantrader as bt
-import quantrader.indicators as btind
+import quanttrader as trader
+import trader.indicators
 
 chkdatas = 1
 chkvals = [
@@ -36,7 +36,7 @@ chkvals = [
 ]
 
 chkmin = 78
-chkind = bt.ind.Ichimoku
+chkind = trader.ind.Ichimoku
 
 
 def test_run(main=False):

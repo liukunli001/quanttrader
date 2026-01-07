@@ -28,12 +28,12 @@ import time
 import sys
 
 
-import quantrader as bt
-import quantrader.feeds as btfeeds
-import quantrader.indicators as btind
+import quanttrader as trader
+import trader.feeds
+import trader.indicators
 
 
-class OrderExecutionStrategy(bt.Strategy):
+class OrderExecutionStrategy(trader.Strategy):
     params = (
         ('smaperiod', 15),
         ('exectype', 'Market'),
@@ -46,7 +46,7 @@ class OrderExecutionStrategy(bt.Strategy):
         ''' Logging function fot this strategy'''
         dt = dt or self.data.datetime[0]
         if isinstance(dt, float):
-            dt = bt.num2date(dt)
+            dt = trader.num2date(dt)
         print('%s, %s' % (dt.isoformat(), txt))
 
     def notify_order(self, order):
@@ -108,13 +108,13 @@ class OrderExecutionStrategy(bt.Strategy):
 
             # Not in the market and signal to buy
             if self.p.exectype == 'Market':
-                self.buy(exectype=bt.Order.Market)  # default if not given
+                self.buy(exectype=trader.Order.Market)  # default if not given
 
                 self.log('BUY CREATE, exectype Market, price %.2f' %
                          self.data.close[0])
 
             elif self.p.exectype == 'Close':
-                self.buy(exectype=bt.Order.Close)
+                self.buy(exectype=trader.Order.Close)
 
                 self.log('BUY CREATE, exectype Close, price %.2f' %
                          self.data.close[0])
@@ -122,7 +122,7 @@ class OrderExecutionStrategy(bt.Strategy):
             elif self.p.exectype == 'Limit':
                 price = self.data.close * (1.0 - self.p.perc1 / 100.0)
 
-                self.buy(exectype=bt.Order.Limit, price=price, valid=valid)
+                self.buy(exectype=trader.Order.Limit, price=price, valid=valid)
 
                 if self.p.valid:
                     txt = 'BUY CREATE, exectype Limit, price %.2f, valid: %s'
@@ -134,7 +134,7 @@ class OrderExecutionStrategy(bt.Strategy):
             elif self.p.exectype == 'Stop':
                 price = self.data.close * (1.0 + self.p.perc1 / 100.0)
 
-                self.buy(exectype=bt.Order.Stop, price=price, valid=valid)
+                self.buy(exectype=trader.Order.Stop, price=price, valid=valid)
 
                 if self.p.valid:
                     txt = 'BUY CREATE, exectype Stop, price %.2f, valid: %s'
@@ -148,7 +148,7 @@ class OrderExecutionStrategy(bt.Strategy):
 
                 plimit = self.data.close * (1.0 + self.p.perc2 / 100.0)
 
-                self.buy(exectype=bt.Order.StopLimit, price=price, valid=valid,
+                self.buy(exectype=trader.Order.StopLimit, price=price, valid=valid,
                          plimit=plimit)
 
                 if self.p.valid:
@@ -164,7 +164,7 @@ class OrderExecutionStrategy(bt.Strategy):
 def runstrat():
     args = parse_args()
 
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     data = getdata(args)
     engine.adddata(data)

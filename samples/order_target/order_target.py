@@ -24,10 +24,10 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 from datetime import datetime
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class TheStrategy(bt.Strategy):
+class TheStrategy(trader.Strategy):
     '''
     This strategy is loosely based on some of the examples from the Van
     K. Tharp book: *Trade Your Way To Financial Freedom*. The logic:
@@ -115,7 +115,7 @@ class TheStrategy(bt.Strategy):
 def runstrat(args=None):
     args = parse_args(args)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
     engine.broker.setcash(args.cash)
 
     dkwargs = dict()
@@ -125,7 +125,7 @@ def runstrat(args=None):
         dkwargs['todate'] = datetime.strptime(args.todate, '%Y-%m-%d')
 
     # data
-    data = bt.feeds.YahooFinanceCSVData(dataname=args.data, **dkwargs)
+    data = trader.feeds.YahooFinanceCSVData(dataname=args.data, **dkwargs)
     engine.adddata(data)
 
     # strategy

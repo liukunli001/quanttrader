@@ -25,15 +25,15 @@ import argparse
 import datetime
 import random
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class CloseSMA(bt.Strategy):
+class CloseSMA(trader.Strategy):
     params = (('period', 15),)
 
     def __init__(self):
-        sma = bt.indicators.SMA(self.data, period=self.p.period)
-        self.crossover = bt.indicators.CrossOver(self.data, sma)
+        sma = trader.indicators.SMA(self.data, period=self.p.period)
+        self.crossover = trader.indicators.CrossOver(self.data, sma)
 
     def next(self):
         if self.crossover > 0:
@@ -43,7 +43,7 @@ class CloseSMA(bt.Strategy):
             self.sell()
 
 
-class LongOnly(bt.Sizer):
+class LongOnly(trader.Sizer):
     params = (('stake', 1),)
 
     def _getsizing(self, comminfo, cash, data, isbuy):
@@ -58,7 +58,7 @@ class LongOnly(bt.Sizer):
         return self.p.stake
 
 
-class FixedReverser(bt.Sizer):
+class FixedReverser(trader.Sizer):
     params = (('stake', 1),)
 
     def _getsizing(self, comminfo, cash, data, isbuy):
@@ -70,7 +70,7 @@ class FixedReverser(bt.Sizer):
 def runstrat(args=None):
     args = parse_args(args)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
     engine.broker.set_cash(args.cash)
 
     dkwargs = dict()
@@ -82,7 +82,7 @@ def runstrat(args=None):
         todate = datetime.datetime.strptime(args.todate, '%Y-%m-%d')
         dkwargs['todate'] = todate
 
-    data0 = bt.feeds.YahooFinanceCSVData(dataname=args.data0, **dkwargs)
+    data0 = trader.feeds.YahooFinanceCSVData(dataname=args.data0, **dkwargs)
     engine.adddata(data0, name='Data0')
 
     engine.addstrategy(CloseSMA, period=args.period)
@@ -90,7 +90,7 @@ def runstrat(args=None):
     if args.longonly:
         engine.addsizer(LongOnly, stake=args.stake)
     else:
-        engine.addsizer(bt.sizers.FixedReverser, stake=args.stake)
+        engine.addsizer(trader.sizers.FixedReverser, stake=args.stake)
 
     engine.run()
     if args.plot:

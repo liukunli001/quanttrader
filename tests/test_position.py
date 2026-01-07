@@ -23,8 +23,8 @@ from __future__ import (absolute_import, division, print_function,
 
 import testcommon
 
-import quantrader as bt
-from quantrader import position
+import quanttrader as trader
+from trader import position
 
 
 def test_run(main=False):

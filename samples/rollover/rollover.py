@@ -27,10 +27,10 @@ import bisect
 import calendar
 import datetime
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class TheStrategy(bt.Strategy):
+class TheStrategy(trader.Strategy):
     def start(self):
         header = ['Len', 'Name', 'RollName', 'Datetime', 'WeekDay', 'Open',
                   'High', 'Low', 'Close', 'Volume', 'OpenInterest']
@@ -92,10 +92,10 @@ def checkvolume(d0, d1):
 def runstrat(args=None):
     args = parse_args(args)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     fcodes = ['199FESXM4', '199FESXU4', '199FESXZ4', '199FESXH5', '199FESXM5']
-    store = bt.stores.VChartFile()
+    store = trader.stores.VChartFile()
     ffeeds = [store.getdata(dataname=x) for x in fcodes]
 
     rollkwargs = dict()
@@ -111,7 +111,7 @@ def runstrat(args=None):
         else:
             engine.chaindata(name='FESX', *ffeeds)
     else:
-        drollover = bt.feeds.RollOver(*ffeeds, dataname='FESX', **rollkwargs)
+        drollover = trader.feeds.RollOver(*ffeeds, dataname='FESX', **rollkwargs)
         engine.adddata(drollover)
 
     engine.addstrategy(TheStrategy)

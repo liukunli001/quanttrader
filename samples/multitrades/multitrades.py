@@ -26,14 +26,14 @@ import datetime
 import itertools
 
 # The above could be sent to an independent module
-import quantrader as bt
-import quantrader.feeds as btfeeds
-import quantrader.indicators as btind
+import quanttrader as trader
+import trader.feeds
+import trader.indicators
 
 import mtradeobserver
 
 
-class MultiTradeStrategy(bt.Strategy):
+class MultiTradeStrategy(trader.Strategy):
     '''This strategy buys/sells upong the close price crossing
     upwards/downwards a Simple Moving Average.
 
@@ -50,7 +50,7 @@ class MultiTradeStrategy(bt.Strategy):
     def log(self, txt, dt=None):
         if self.p.printout:
             dt = dt or self.data.datetime[0]
-            dt = bt.num2date(dt)
+            dt = trader.num2date(dt)
             print('%s, %s' % (dt.isoformat(), txt))
 
     def __init__(self):
@@ -92,7 +92,7 @@ class MultiTradeStrategy(bt.Strategy):
                 self.sell(size=self.p.stake, tradeid=self.curtradeid)
 
     def notify_order(self, order):
-        if order.status in [bt.Order.Submitted, bt.Order.Accepted]:
+        if order.status in [trader.Order.Submitted, trader.Order.Accepted]:
             return  # Await further notifications
 
         if order.status == order.Completed:
@@ -123,7 +123,7 @@ def runstrategy():
     args = parse_args()
 
     # Create a engine
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     # Get the dates from the args
     fromdate = datetime.datetime.strptime(args.fromdate, '%Y-%m-%d')

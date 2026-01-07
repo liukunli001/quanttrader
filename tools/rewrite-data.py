@@ -28,26 +28,26 @@ import time
 import sys
 
 
-import quantrader as bt
-from quantrader.utils.py3 import bytes
+import quanttrader as trader
+from trader.utils.py3 import bytes
 
 
 DATAFORMATS = dict(
-    btcsv=bt.feeds.BacktraderCSVData,
-    vchartcsv=bt.feeds.VChartCSVData,
-    vchart=bt.feeds.VChartData,
-    vcdata=bt.feeds.VCData,
-    vcfile=bt.feeds.VChartFile,
-    ibdata=bt.feeds.IBData,
-    sierracsv=bt.feeds.SierraChartCSVData,
-    mt4csv=bt.feeds.MT4CSVData,
-    yahoocsv=bt.feeds.YahooFinanceCSVData,
-    yahoocsv_unreversed=bt.feeds.YahooFinanceCSVData,
-    yahoo=bt.feeds.YahooFinanceData,
+    btcsv=trader.feeds.BacktraderCSVData,
+    vchartcsv=trader.feeds.VChartCSVData,
+    vchart=trader.feeds.VChartData,
+    vcdata=trader.feeds.VCData,
+    vcfile=trader.feeds.VChartFile,
+    ibdata=trader.feeds.IBData,
+    sierracsv=trader.feeds.SierraChartCSVData,
+    mt4csv=trader.feeds.MT4CSVData,
+    yahoocsv=trader.feeds.YahooFinanceCSVData,
+    yahoocsv_unreversed=trader.feeds.YahooFinanceCSVData,
+    yahoo=trader.feeds.YahooFinanceData,
 )
 
 
-class RewriteStrategy(bt.Strategy):
+class RewriteStrategy(trader.Strategy):
     params = (
         ('separator', ','),
         ('outfile', None),
@@ -59,7 +59,7 @@ class RewriteStrategy(bt.Strategy):
         else:
             self.f = open(self.p.outfile, 'wb')
 
-        if self.data._timeframe < bt.TimeFrame.Days:
+        if self.data._timeframe < trader.TimeFrame.Days:
             headers = 'Date,Time,Open,High,Low,Close,Volume,OpenInterest'
         else:
             headers = 'Date,Open,High,Low,Close,Volume,OpenInterest'
@@ -71,7 +71,7 @@ class RewriteStrategy(bt.Strategy):
         fields = list()
         dt = self.data.datetime.date(0).strftime('%Y-%m-%d')
         fields.append(dt)
-        if self.data._timeframe < bt.TimeFrame.Days:
+        if self.data._timeframe < trader.TimeFrame.Days:
             tm = self.data.datetime.time(0).strftime('%H:%M:%S')
             fields.append(tm)
 
@@ -96,7 +96,7 @@ class RewriteStrategy(bt.Strategy):
 def runstrat(pargs=None):
     args = parse_args(pargs)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     dfkwargs = dict()
     if args.format == 'yahoo_unreversed':

@@ -23,8 +23,8 @@ from __future__ import (absolute_import, division, print_function,
 
 import testcommon
 
-import quantrader as bt
-from quantrader import trade
+import quanttrader as trader
+from trader import trade
 
 
 class FakeCommInfo(object):
@@ -55,9 +55,9 @@ class FakeData(object):
 def test_run(main=False):
     tr = trade.Trade(data=FakeData())
 
-    order = bt.BuyOrder(data=FakeData(),
+    order = trader.BuyOrder(data=FakeData(),
                         size=0, price=1.0,
-                        exectype=bt.Order.Market,
+                        exectype=trader.Order.Market,
                         simulated=True)
 
     commrate = 0.025

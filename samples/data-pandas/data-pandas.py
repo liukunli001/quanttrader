@@ -23,8 +23,8 @@ from __future__ import (absolute_import, division, print_function,
 
 import argparse
 
-import quantrader as bt
-import quantrader.feeds as btfeeds
+import quanttrader as trader
+import trader.feeds
 
 import pandas
 
@@ -33,10 +33,10 @@ def runstrat():
     args = parse_args()
 
     # Create a engine entity
-    engine = bt.Engine(stdstats=False)
+    engine = trader.Engine(stdstats=False)
 
     # Add a strategy
-    engine.addstrategy(bt.Strategy)
+    engine.addstrategy(trader.Strategy)
 
     # Get a pandas dataframe
     datapath = ('../../datas/2006-day-001.txt')
@@ -59,8 +59,8 @@ def runstrat():
         print(dataframe)
         print('--------------------------------------------------')
 
-    # Pass it to the quantrader datafeed and add it to the engine
-    data = bt.feeds.PandasData(dataname=dataframe,
+    # Pass it to the quanttrader datafeed and add it to the engine
+    data = trader.feeds.PandasData(dataname=dataframe,
                                # datetime='Date',
                                nocase=True,
                                )

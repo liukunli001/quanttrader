@@ -24,20 +24,20 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import quantrader as bt
-import quantrader.indicators as btind
-import quantrader.feeds as btfeeds
-import quantrader.filters as btfilters
+import quanttrader as trader
+import trader.indicators
+import trader.feeds
+import trader.filters
 
 
 def runstrat():
     args = parse_args()
 
     # Create a engine entity
-    engine = bt.Engine(stdstats=False)
+    engine = trader.Engine(stdstats=False)
 
     # Add a strategy
-    engine.addstrategy(bt.Strategy)
+    engine.addstrategy(trader.Strategy)
 
     # Get the dates from the args
     fromdate = datetime.datetime.strptime(args.fromdate, '%Y-%m-%d')
@@ -66,7 +66,7 @@ def runstrat():
 
     # Add a writer with CSV
     if args.writer:
-        engine.addwriter(bt.WriterFile, csv=args.wrcsv)
+        engine.addwriter(trader.WriterFile, csv=args.wrcsv)
 
     # Run over everything
     engine.run()

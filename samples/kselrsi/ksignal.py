@@ -24,10 +24,10 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class TheStrategy(bt.SignalStrategy):
+class TheStrategy(trader.SignalStrategy):
     params = dict(rsi_per=14, rsi_upper=65.0, rsi_lower=35.0, rsi_out=50.0,
                   warmup=35)
 
@@ -44,28 +44,28 @@ class TheStrategy(bt.SignalStrategy):
     def __init__(self):
         # Original code needs artificial warmup phase - hidden sma to replic
         if self.p.warmup:
-            bt.indicators.SMA(period=self.p.warmup, plot=False)
+            trader.indicators.SMA(period=self.p.warmup, plot=False)
 
-        rsi = bt.indicators.RSI(period=self.p.rsi_per,
+        rsi = trader.indicators.RSI(period=self.p.rsi_per,
                                 upperband=self.p.rsi_upper,
                                 lowerband=self.p.rsi_lower)
 
-        crossup = bt.ind.CrossUp(rsi, self.p.rsi_lower)
-        self.signal_add(bt.SIGNAL_LONG, crossup)
-        self.signal_add(bt.SIGNAL_LONGEXIT, -(rsi > self.p.rsi_out))
+        crossup = trader.ind.CrossUp(rsi, self.p.rsi_lower)
+        self.signal_add(trader.SIGNAL_LONG, crossup)
+        self.signal_add(trader.SIGNAL_LONGEXIT, -(rsi > self.p.rsi_out))
 
-        crossdown = bt.ind.CrossDown(rsi, self.p.rsi_upper)
-        self.signal_add(bt.SIGNAL_SHORT, -crossdown)
-        self.signal_add(bt.SIGNAL_SHORTEXIT, rsi < self.p.rsi_out)
+        crossdown = trader.ind.CrossDown(rsi, self.p.rsi_upper)
+        self.signal_add(trader.SIGNAL_SHORT, -crossdown)
+        self.signal_add(trader.SIGNAL_SHORTEXIT, rsi < self.p.rsi_out)
 
 
 def runstrat(pargs=None):
     args = parse_args(pargs)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
     engine.broker.set_cash(args.cash)
     engine.broker.set_coc(args.coc)
-    data0 = bt.feeds.YahooFinanceData(
+    data0 = trader.feeds.YahooFinanceData(
         dataname=args.data,
         fromdate=datetime.datetime.strptime(args.fromdate, '%Y-%m-%d'),
         todate=datetime.datetime.strptime(args.todate, '%Y-%m-%d'),
@@ -73,11 +73,11 @@ def runstrat(pargs=None):
 
     engine.adddata(data0)
 
-    engine.addsizer(bt.sizers.FixedSize, stake=args.stake)
+    engine.addsizer(trader.sizers.FixedSize, stake=args.stake)
     engine.addstrategy(TheStrategy, **(eval('dict(' + args.strat + ')')))
-    engine.addobserver(bt.observers.Value)
-    engine.addobserver(bt.observers.Trades)
-    engine.addobserver(bt.observers.BuySell, barplot=True)
+    engine.addobserver(trader.observers.Value)
+    engine.addobserver(trader.observers.Trades)
+    engine.addobserver(trader.observers.BuySell, barplot=True)
 
     engine.run(stdstats=False)
     if args.plot:

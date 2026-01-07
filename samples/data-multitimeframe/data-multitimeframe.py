@@ -23,15 +23,15 @@ from __future__ import (absolute_import, division, print_function,
 
 import argparse
 
-import quantrader as bt
-import quantrader.feeds as btfeeds
-import quantrader.indicators as btind
-from quantrader import ResamplerDaily, ResamplerWeekly, ResamplerMonthly
-from quantrader import ReplayerDaily, ReplayerWeekly, ReplayerMonthly
-from quantrader.utils import flushfile
+import quanttrader as trader
+import trader.feeds
+import trader.indicators
+from trader import ResamplerDaily, ResamplerWeekly, ResamplerMonthly
+from trader import ReplayerDaily, ReplayerWeekly, ReplayerMonthly
+from trader.utils import flushfile
 
 
-class SMAStrategy(bt.Strategy):
+class SMAStrategy(trader.Strategy):
     params = (
         ('period', 10),
         ('onlydaily', False),
@@ -39,11 +39,11 @@ class SMAStrategy(bt.Strategy):
 
     def __init__(self):
         self.sma_small_tf = btind.SMA(self.data, period=self.p.period)
-        bt.indicators.MACD(self.data0)
+        trader.indicators.MACD(self.data0)
 
         if not self.p.onlydaily:
             self.sma_large_tf = btind.SMA(self.data1, period=self.p.period)
-            bt.indicators.MACD(self.data1)
+            trader.indicators.MACD(self.data1)
 
     def prenext(self):
         self.next()
@@ -94,11 +94,11 @@ def runstrat():
     args = parse_args()
 
     # Create a engine entity
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     # Add a strategy
     if not args.indicators:
-        engine.addstrategy(bt.Strategy)
+        engine.addstrategy(trader.Strategy)
     else:
         engine.addstrategy(
             SMAStrategy,
@@ -114,9 +114,9 @@ def runstrat():
         dataname=datapath)
 
     tframes = dict(
-        daily=bt.TimeFrame.Days,
-        weekly=bt.TimeFrame.Weeks,
-        monthly=bt.TimeFrame.Months)
+        daily=trader.TimeFrame.Days,
+        weekly=trader.TimeFrame.Weeks,
+        monthly=trader.TimeFrame.Months)
 
     # Handy dictionary for the argument timeframe conversion
     # Resample the data
@@ -127,18 +127,18 @@ def runstrat():
     else:
         if args.oldrs:
             if args.replay:
-                data2 = bt.DataReplayer(
+                data2 = trader.DataReplayer(
                     dataname=data,
                     timeframe=tframes[args.timeframe],
                     compression=args.compression)
             else:
-                data2 = bt.DataResampler(
+                data2 = trader.DataResampler(
                     dataname=data,
                     timeframe=tframes[args.timeframe],
                     compression=args.compression)
 
         else:
-            data2 = bt.DataClone(dataname=data)
+            data2 = trader.DataClone(dataname=data)
             if args.replay:
                 if args.timeframe == 'daily':
                     data2.addfilter(ReplayerDaily)

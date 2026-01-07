@@ -21,10 +21,10 @@
 from __future__ import (absolute_import, division, print_function,)
 #                        unicode_literals)
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class PivotPoint1(bt.Indicator):
+class PivotPoint1(trader.Indicator):
     lines = ('p', 's1', 's2', 'r1', 'r2',)
 
     def __init__(self):
@@ -43,7 +43,7 @@ class PivotPoint1(bt.Indicator):
         self.lines.r2 = p + hilo  # p + (high - low)
 
 
-class PivotPoint(bt.Indicator):
+class PivotPoint(trader.Indicator):
     lines = ('p', 's1', 's2', 'r1', 'r2',)
     plotinfo = dict(subplot=False)
 

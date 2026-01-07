@@ -29,12 +29,12 @@ except:
 
 import testcommon
 
-import quantrader as bt
-import quantrader.indicators as btind
-from quantrader.utils.py3 import PY2
+import quanttrader as trader
+import trader.indicators
+from trader.utils.py3 import PY2
 
 
-class TestStrategy(bt.Strategy):
+class TestStrategy(trader.Strategy):
     params = (
         ('period', 15),
         ('printdata', True),
@@ -45,17 +45,17 @@ class TestStrategy(bt.Strategy):
     def log(self, txt, dt=None, nodate=False):
         if not nodate:
             dt = dt or self.data.datetime[0]
-            dt = bt.num2date(dt)
+            dt = trader.num2date(dt)
             print('%s, %s' % (dt.isoformat(), txt))
         else:
             print('---------- %s' % (txt))
 
     def notify_order(self, order):
-        if order.status in [bt.Order.Submitted, bt.Order.Accepted]:
+        if order.status in [trader.Order.Submitted, trader.Order.Accepted]:
             return  # Await further notifications
 
         if order.status == order.Completed:
-            if isinstance(order, bt.BuyOrder):
+            if isinstance(order, trader.BuyOrder):
                 if self.p.printops:
                     txt = 'BUY, %.2f' % order.executed.price
                     self.log(txt, order.executed.dt)
@@ -152,8 +152,8 @@ def test_run(main=False):
                                   stocklike=False,
                                   printops=main,
                                   plot=main,
-                                  analyzer=(bt.analyzers.TimeReturn,
-                                            dict(timeframe=bt.TimeFrame.Years))
+                                  analyzer=(trader.analyzers.TimeReturn,
+                                            dict(timeframe=trader.TimeFrame.Years))
                                   )
 
     for engine in engines:

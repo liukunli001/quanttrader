@@ -23,8 +23,8 @@ from __future__ import (absolute_import, division, print_function,
 
 import testcommon
 
-import quantrader as bt
-import quantrader.indicators as btind
+import quanttrader as trader
+import trader.indicators
 
 chkdatas = 1
 chkvals = [
@@ -39,7 +39,7 @@ chkargs = dict()
 def test_run(main=False):
     for runonce in [True, False]:
         data = testcommon.getdata(0)
-        data.resample(timeframe=bt.TimeFrame.Weeks, compression=1)
+        data.resample(timeframe=trader.TimeFrame.Weeks, compression=1)
 
         datas = [data]
         testcommon.runtest(datas,

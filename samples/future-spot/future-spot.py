@@ -23,7 +23,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import argparse
 import random
-import quantrader as bt
+import quanttrader as trader
 
 
 # The filter which changes the close price
@@ -33,14 +33,14 @@ def close_changer(data, *args, **kwargs):
 
 
 # override the standard markers
-class BuySellArrows(bt.observers.BuySell):
+class BuySellArrows(trader.observers.BuySell):
     plotlines = dict(buy=dict(marker='$\u21E7$', markersize=12.0),
                      sell=dict(marker='$\u21E9$', markersize=12.0))
 
 
-class St(bt.Strategy):
+class St(trader.Strategy):
     def __init__(self):
-        bt.obs.BuySell(self.data0, barplot=True)  # done here for
+        trader.obs.BuySell(self.data0, barplot=True)  # done here for
         BuySellArrows(self.data1, barplot=True)  # different markers per data
 
     def next(self):
@@ -56,14 +56,14 @@ class St(bt.Strategy):
 
 def runstrat(args=None):
     args = parse_args(args)
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     dataname = '../../datas/2006-day-001.txt'  # data feed
 
-    data0 = bt.feeds.BacktraderCSVData(dataname=dataname, name='data0')
+    data0 = trader.feeds.BacktraderCSVData(dataname=dataname, name='data0')
     engine.adddata(data0)
 
-    data1 = bt.feeds.BacktraderCSVData(dataname=dataname, name='data1')
+    data1 = trader.feeds.BacktraderCSVData(dataname=dataname, name='data1')
     data1.addfilter(close_changer)
     if not args.no_comp:
         data1.compensate(data0)
@@ -74,8 +74,8 @@ def runstrat(args=None):
 
     engine.addstrategy(St)  # sample strategy
 
-    engine.addobserver(bt.obs.Broker)  # removed below with stdstats=False
-    engine.addobserver(bt.obs.Trades)  # removed below with stdstats=False
+    engine.addobserver(trader.obs.Broker)  # removed below with stdstats=False
+    engine.addobserver(trader.obs.Trades)  # removed below with stdstats=False
 
     engine.broker.set_coc(True)
     engine.run(stdstats=False)  # execute

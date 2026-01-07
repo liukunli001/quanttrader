@@ -25,10 +25,10 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class St(bt.Strategy):
+class St(trader.Strategy):
     params = (
     )
 
@@ -36,11 +36,11 @@ class St(bt.Strategy):
         # self.schedule_once(self.pepe, when=datetime.datetime())
         # This one won't have the expected fidelity in backtesting
         # self.schedule_once(self.pepe, when=datetime.timedelta())
-        # self.schedule_reps(self.pepe, when=datetime.time(), days=bt.sched.)
+        # self.schedule_reps(self.pepe, when=datetime.time(), days=trader.sched.)
 
-        bt.ind.SMA()
-        stoc = bt.ind.Stochastic()
-        bt.ind.CrossOver(stoc.lines.percK, stoc.lines.percD)
+        trader.ind.SMA()
+        stoc = trader.ind.Stochastic()
+        trader.ind.CrossOver(stoc.lines.percK, stoc.lines.percD)
 
     def next(self):
         pass
@@ -49,7 +49,7 @@ class St(bt.Strategy):
 def runstrat(args=None):
     args = parse_args(args)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     # Data feed kwargs
     kwargs = dict()
@@ -62,16 +62,16 @@ def runstrat(args=None):
             kwargs[d] = datetime.datetime.strptime(a, strpfmt)
 
     # Data feed
-    data0 = bt.feeds.BacktraderCSVData(dataname=args.data0, **kwargs)
+    data0 = trader.feeds.BacktraderCSVData(dataname=args.data0, **kwargs)
     engine.adddata(data0)
 
-    engine.resampledata(data0, timeframe=bt.TimeFrame.Weeks)
+    engine.resampledata(data0, timeframe=trader.TimeFrame.Weeks)
 
     # Broker
-    engine.broker = bt.brokers.BackBroker(**eval('dict(' + args.broker + ')'))
+    engine.broker = trader.brokers.BackBroker(**eval('dict(' + args.broker + ')'))
 
     # Sizer
-    engine.addsizer(bt.sizers.FixedSize, **eval('dict(' + args.sizer + ')'))
+    engine.addsizer(trader.sizers.FixedSize, **eval('dict(' + args.sizer + ')'))
 
     # Strategy
     engine.addstrategy(St, **eval('dict(' + args.strat + ')'))

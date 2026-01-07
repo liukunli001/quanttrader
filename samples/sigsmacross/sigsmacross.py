@@ -24,16 +24,16 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class SmaCross(bt.SignalStrategy):
+class SmaCross(trader.SignalStrategy):
     params = dict(sma1=10, sma2=20)
 
     def notify_order(self, order):
         if not order.alive():
             print('{} {} {}@{}'.format(
-                bt.num2date(order.executed.dt),
+                trader.num2date(order.executed.dt),
                 'buy' if order.isbuy() else 'sell',
                 order.executed.size,
                 order.executed.price)
@@ -44,26 +44,26 @@ class SmaCross(bt.SignalStrategy):
             print('profit {}'.format(trade.pnlcomm))
 
     def __init__(self):
-        sma1 = bt.ind.SMA(period=self.params.sma1)
-        sma2 = bt.ind.SMA(period=self.params.sma2)
-        crossover = bt.ind.CrossOver(sma1, sma2)
-        self.signal_add(bt.SIGNAL_LONG, crossover)
+        sma1 = trader.ind.SMA(period=self.params.sma1)
+        sma2 = trader.ind.SMA(period=self.params.sma2)
+        crossover = trader.ind.CrossOver(sma1, sma2)
+        self.signal_add(trader.SIGNAL_LONG, crossover)
 
 
 def runstrat(pargs=None):
     args = parse_args(pargs)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
     engine.broker.set_cash(args.cash)
 
-    data0 = bt.feeds.YahooFinanceData(
+    data0 = trader.feeds.YahooFinanceData(
         dataname=args.data,
         fromdate=datetime.datetime.strptime(args.fromdate, '%Y-%m-%d'),
         todate=datetime.datetime.strptime(args.todate, '%Y-%m-%d'))
     engine.adddata(data0)
 
     engine.addstrategy(SmaCross, **(eval('dict(' + args.strat + ')')))
-    engine.addsizer(bt.sizers.FixedSize, stake=args.stake)
+    engine.addsizer(trader.sizers.FixedSize, stake=args.stake)
 
     engine.run()
     if args.plot:

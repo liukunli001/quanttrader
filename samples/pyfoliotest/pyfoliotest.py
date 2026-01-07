@@ -26,10 +26,10 @@ import argparse
 import datetime
 import random
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class St(bt.Strategy):
+class St(trader.Strategy):
     params = (
         ('printout', False),
         ('stake', 1000),
@@ -85,7 +85,7 @@ class St(bt.Strategy):
 def runstrat(args=None):
     args = parse_args(args)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
     engine.broker.set_cash(args.cash)
 
     dkwargs = dict()
@@ -97,18 +97,18 @@ def runstrat(args=None):
         todate = datetime.datetime.strptime(args.todate, '%Y-%m-%d')
         dkwargs['todate'] = todate
 
-    data0 = bt.feeds.YahooFinanceCSVData(dataname=args.data0, **dkwargs)
+    data0 = trader.feeds.YahooFinanceCSVData(dataname=args.data0, **dkwargs)
     engine.adddata(data0, name='Data0')
 
-    data1 = bt.feeds.YahooFinanceCSVData(dataname=args.data1, **dkwargs)
+    data1 = trader.feeds.YahooFinanceCSVData(dataname=args.data1, **dkwargs)
     engine.adddata(data1, name='Data1')
 
-    data2 = bt.feeds.YahooFinanceCSVData(dataname=args.data2, **dkwargs)
+    data2 = trader.feeds.YahooFinanceCSVData(dataname=args.data2, **dkwargs)
     engine.adddata(data2, name='Data2')
 
     engine.addstrategy(St, printout=args.printout)
     if not args.no_pyfolio:
-        engine.addanalyzer(bt.analyzers.PyFolio, _name='pyfolio')
+        engine.addanalyzer(trader.analyzers.PyFolio, _name='pyfolio')
 
     results = engine.run()
     if not args.no_pyfolio:

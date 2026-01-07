@@ -26,24 +26,24 @@ import collections
 import datetime
 import itertools
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class SMACrossOver(bt.Indicator):
+class SMACrossOver(trader.Indicator):
     lines = ('signal',)
     params = (('p1', 10), ('p2', 30),)
 
     def __init__(self):
-        sma1 = bt.indicators.SMA(period=self.p.p1)
-        sma2 = bt.indicators.SMA(period=self.p.p2)
-        self.lines.signal = bt.indicators.CrossOver(sma1, sma2)
+        sma1 = trader.indicators.SMA(period=self.p.p1)
+        sma2 = trader.indicators.SMA(period=self.p.p2)
+        self.lines.signal = trader.indicators.CrossOver(sma1, sma2)
 
 
-class SlipSt(bt.SignalStrategy):
+class SlipSt(trader.SignalStrategy):
     opcounter = itertools.count(1)
 
     def notify_order(self, order):
-        if order.status == bt.Order.Completed:
+        if order.status == trader.Order.Completed:
             t = ''
             t += '{:02d}'.format(next(self.opcounter))
             t += ' {}'.format(order.data.datetime.datetime())
@@ -55,7 +55,7 @@ class SlipSt(bt.SignalStrategy):
 def runstrat(args=None):
     args = parse_args(args)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
     engine.broker.set_cash(args.cash)
 
     dkwargs = dict()
@@ -68,14 +68,14 @@ def runstrat(args=None):
         dkwargs['todate'] = todate
 
     # if dataset is None, args.data has been given
-    data = bt.feeds.BacktraderCSVData(dataname=args.data, **dkwargs)
+    data = trader.feeds.BacktraderCSVData(dataname=args.data, **dkwargs)
     engine.adddata(data)
 
     engine.signal_strategy(SlipSt)
     if not args.longonly:
-        stype = bt.signal.SIGNAL_LONGSHORT
+        stype = trader.signal.SIGNAL_LONGSHORT
     else:
-        stype = bt.signal.SIGNAL_LONG
+        stype = trader.signal.SIGNAL_LONG
 
     engine.add_signal(stype, SMACrossOver, p1=args.period1, p2=args.period2)
 

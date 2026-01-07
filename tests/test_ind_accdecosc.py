@@ -23,7 +23,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import testcommon
 
-import quantrader as bt
+import quanttrader as trader
 
 chkdatas = 1
 chkvals = [
@@ -31,7 +31,7 @@ chkvals = [
 ]
 
 chkmin = 38
-chkind = bt.ind.AccelerationDecelerationOscillator
+chkind = trader.ind.AccelerationDecelerationOscillator
 
 
 def test_run(main=False):

@@ -22,11 +22,11 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 
-import quantrader as bt
-import quantrader.indicators as btind
+import quanttrader as trader
+import trader.indicators
 
 
-class RelativeVolume(bt.Indicator):
+class RelativeVolume(trader.Indicator):
     csv = True  # show up in csv output (default for indicators is False)
 
     lines = ('relvol',)
@@ -42,7 +42,7 @@ class RelativeVolume(bt.Indicator):
             relvol = self.data.volume(-self.p.period) / self.data.volume
         else:
             # Else do a controlled Div with a built-in function
-            relvol = bt.DivByZero(
+            relvol = trader.DivByZero(
                 self.data.volume(-self.p.period),
                 self.data.volume,
                 zero=0.0)

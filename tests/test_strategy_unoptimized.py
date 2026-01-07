@@ -29,8 +29,8 @@ except:
 
 import testcommon
 
-import quantrader as bt
-import quantrader.indicators as btind
+import quanttrader as trader
+import trader.indicators
 
 BUYCREATE = [
     '3641.42', '3798.46', '3874.61', '3860.00', '3843.08', '3648.33',
@@ -53,7 +53,7 @@ SELLEXEC = [
 ]
 
 
-class TestStrategy(bt.Strategy):
+class TestStrategy(trader.Strategy):
     params = (
         ('period', 15),
         ('printdata', True),
@@ -64,17 +64,17 @@ class TestStrategy(bt.Strategy):
     def log(self, txt, dt=None, nodate=False):
         if not nodate:
             dt = dt or self.data.datetime[0]
-            dt = bt.num2date(dt)
+            dt = trader.num2date(dt)
             print('%s, %s' % (dt.isoformat(), txt))
         else:
             print('---------- %s' % (txt))
 
     def notify_order(self, order):
-        if order.status in [bt.Order.Submitted, bt.Order.Accepted]:
+        if order.status in [trader.Order.Submitted, trader.Order.Accepted]:
             return  # Await further notifications
 
         if order.status == order.Completed:
-            if isinstance(order, bt.BuyOrder):
+            if isinstance(order, trader.BuyOrder):
                 if self.p.printops:
                     txt = 'BUY, %.2f' % order.executed.price
                     self.log(txt, order.executed.dt)

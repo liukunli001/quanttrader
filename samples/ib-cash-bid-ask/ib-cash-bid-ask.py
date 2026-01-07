@@ -27,11 +27,11 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import quantrader as bt
+import quanttrader as trader
 import datetime
 
 
-class St(bt.Strategy):
+class St(trader.Strategy):
     def logdata(self):
         txt = []
         txt.append('{}'.format(len(self)))
@@ -81,25 +81,25 @@ ib_symbol = 'EUR.USD-CASH-IDEALPRO'
 compression = 5
 
 def run(args=None):
-    engine = bt.Engine(stdstats=False)
-    store = bt.stores.IBStore(port=7497,
+    engine = trader.Engine(stdstats=False)
+    store = trader.stores.IBStore(port=7497,
                               # _debug=True
                               )
 
     data0 = store.getdata(dataname=ib_symbol,
-                          timeframe=bt.TimeFrame.Ticks,
+                          timeframe=trader.TimeFrame.Ticks,
                           )
     engine.resampledata(data0,
-                         timeframe=bt.TimeFrame.Seconds,
+                         timeframe=trader.TimeFrame.Seconds,
                          compression=compression
                          )
 
     data1 = store.getdata(dataname=ib_symbol,
-                          timeframe=bt.TimeFrame.Ticks,
+                          timeframe=trader.TimeFrame.Ticks,
                           what='ASK'
                           )
     engine.resampledata(data1,
-                         timeframe=bt.TimeFrame.Seconds,
+                         timeframe=trader.TimeFrame.Seconds,
                          compression=compression
                          )
 

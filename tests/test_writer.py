@@ -25,14 +25,14 @@ import time
 
 import testcommon
 
-import quantrader as bt
-import quantrader.indicators as btind
+import quanttrader as trader
+import trader.indicators
 
 
 chkdatas = 1
 
 
-class TestStrategy(bt.Strategy):
+class TestStrategy(trader.Strategy):
     params = dict(main=False)
 
     def __init__(self):
@@ -45,7 +45,7 @@ def test_run(main=False):
                                   TestStrategy,
                                   main=main,
                                   plot=main,
-                                  writer=(bt.WriterStringIO, dict(csv=True)))
+                                  writer=(trader.WriterStringIO, dict(csv=True)))
 
     for engine in engines:
         writer = engine.runwriters[0]

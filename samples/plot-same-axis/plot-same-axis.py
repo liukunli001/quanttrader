@@ -25,12 +25,12 @@ import argparse
 import datetime
 
 # The above could be sent to an independent module
-import quantrader as bt
-import quantrader.feeds as btfeeds
-import quantrader.indicators as btind
+import quanttrader as trader
+import trader.feeds
+import trader.indicators
 
 
-class PlotStrategy(bt.Strategy):
+class PlotStrategy(trader.Strategy):
     '''
     The strategy does nothing but create indicators for plotting purposes
     '''
@@ -67,7 +67,7 @@ def runstrategy():
     args = parse_args()
 
     # Create a engine
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     # Get the dates from the args
     fromdate = datetime.datetime.strptime(args.fromdate, '%Y-%m-%d')

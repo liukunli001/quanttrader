@@ -25,43 +25,43 @@ import argparse
 import collections
 import datetime
 
-import quantrader as bt
+import quanttrader as trader
 
 MAINSIGNALS = collections.OrderedDict(
-    (('longshort', bt.SIGNAL_LONGSHORT),
-     ('longonly', bt.SIGNAL_LONG),
-     ('shortonly', bt.SIGNAL_SHORT),)
+    (('longshort', trader.SIGNAL_LONGSHORT),
+     ('longonly', trader.SIGNAL_LONG),
+     ('shortonly', trader.SIGNAL_SHORT),)
 )
 
 
 EXITSIGNALS = {
-    'longexit': bt.SIGNAL_LONGEXIT,
-    'shortexit': bt.SIGNAL_LONGEXIT,
+    'longexit': trader.SIGNAL_LONGEXIT,
+    'shortexit': trader.SIGNAL_LONGEXIT,
 }
 
 
-class SMACloseSignal(bt.Indicator):
+class SMACloseSignal(trader.Indicator):
     lines = ('signal',)
     params = (('period', 30),)
 
     def __init__(self):
-        self.lines.signal = self.data - bt.indicators.SMA(period=self.p.period)
+        self.lines.signal = self.data - trader.indicators.SMA(period=self.p.period)
 
 
-class SMAExitSignal(bt.Indicator):
+class SMAExitSignal(trader.Indicator):
     lines = ('signal',)
     params = (('p1', 5), ('p2', 30),)
 
     def __init__(self):
-        sma1 = bt.indicators.SMA(period=self.p.p1)
-        sma2 = bt.indicators.SMA(period=self.p.p2)
+        sma1 = trader.indicators.SMA(period=self.p.p1)
+        sma2 = trader.indicators.SMA(period=self.p.p2)
         self.lines.signal = sma1 - sma2
 
 
 def runstrat(args=None):
     args = parse_args(args)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
     engine.broker.set_cash(args.cash)
 
     dkwargs = dict()
@@ -74,7 +74,7 @@ def runstrat(args=None):
         dkwargs['todate'] = todate
 
     # if dataset is None, args.data has been given
-    data = bt.feeds.BacktraderCSVData(dataname=args.data, **dkwargs)
+    data = trader.feeds.BacktraderCSVData(dataname=args.data, **dkwargs)
     engine.adddata(data)
 
     engine.add_signal(MAINSIGNALS[args.signal],

@@ -25,10 +25,10 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class TestSizer(bt.Sizer):
+class TestSizer(trader.Sizer):
     params = dict(stake=1)
 
     def _getsizing(self, comminfo, cash, data, isbuy):
@@ -40,7 +40,7 @@ class TestSizer(bt.Sizer):
         return s
 
 
-class St(bt.Strategy):
+class St(trader.Strategy):
     params = dict(
         enter=[1, 3, 4],  # data ids are 1 based
         hold=[7, 10, 15],  # data ids are 1 based
@@ -93,14 +93,14 @@ class St(bt.Strategy):
                         valid = datetime.timedelta(self.p.valid)
 
                         if self.p.rawbracket:
-                            o1 = self.buy(data=d, exectype=bt.Order.Limit,
+                            o1 = self.buy(data=d, exectype=trader.Order.Limit,
                                           price=p, valid=valid, transmit=False)
 
-                            o2 = self.sell(data=d, exectype=bt.Order.Stop,
+                            o2 = self.sell(data=d, exectype=trader.Order.Stop,
                                            price=pstp, size=o1.size,
                                            transmit=False, parent=o1)
 
-                            o3 = self.sell(data=d, exectype=bt.Order.Limit,
+                            o3 = self.sell(data=d, exectype=trader.Order.Limit,
                                            price=plmt, size=o1.size,
                                            transmit=True, parent=o1)
 
@@ -130,7 +130,7 @@ class St(bt.Strategy):
 def runstrat(args=None):
     args = parse_args(args)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     # Data feed kwargs
     kwargs = dict()
@@ -143,23 +143,23 @@ def runstrat(args=None):
             kwargs[d] = datetime.datetime.strptime(a, strpfmt)
 
     # Data feed
-    data0 = bt.feeds.YahooFinanceCSVData(dataname=args.data0, **kwargs)
+    data0 = trader.feeds.YahooFinanceCSVData(dataname=args.data0, **kwargs)
     engine.adddata(data0, name='d0')
 
-    data1 = bt.feeds.YahooFinanceCSVData(dataname=args.data1, **kwargs)
+    data1 = trader.feeds.YahooFinanceCSVData(dataname=args.data1, **kwargs)
     data1.plotinfo.plotmaster = data0
     engine.adddata(data1, name='d1')
 
-    data2 = bt.feeds.YahooFinanceCSVData(dataname=args.data2, **kwargs)
+    data2 = trader.feeds.YahooFinanceCSVData(dataname=args.data2, **kwargs)
     data2.plotinfo.plotmaster = data0
     engine.adddata(data2, name='d2')
 
     # Broker
-    engine.broker = bt.brokers.BackBroker(**eval('dict(' + args.broker + ')'))
+    engine.broker = trader.brokers.BackBroker(**eval('dict(' + args.broker + ')'))
     engine.broker.setcommission(commission=0.001)
 
     # Sizer
-    # engine.addsizer(bt.sizers.FixedSize, **eval('dict(' + args.sizer + ')'))
+    # engine.addsizer(trader.sizers.FixedSize, **eval('dict(' + args.sizer + ')'))
     engine.addsizer(TestSizer, **eval('dict(' + args.sizer + ')'))
 
     # Strategy

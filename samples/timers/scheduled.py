@@ -24,12 +24,12 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class St(bt.Strategy):
+class St(trader.Strategy):
     params = dict(
-        when=bt.timer.SESSION_START,
+        when=trader.timer.SESSION_START,
         timer=True,
         cheat=False,
         offset=datetime.timedelta(),
@@ -38,7 +38,7 @@ class St(bt.Strategy):
     )
 
     def __init__(self):
-        bt.ind.SMA()
+        trader.ind.SMA()
         if self.p.timer:
             self.add_timer(
                 when=self.p.when,
@@ -86,11 +86,11 @@ class St(bt.Strategy):
 def runstrat(args=None):
     args = parse_args(args)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     # Data feed kwargs
     kwargs = dict(
-        timeframe=bt.TimeFrame.Days,
+        timeframe=trader.TimeFrame.Days,
         compression=1,
         sessionstart=datetime.time(9, 0),
         sessionend=datetime.time(17, 30),
@@ -104,14 +104,14 @@ def runstrat(args=None):
             kwargs[d] = datetime.datetime.strptime(a, strpfmt)
 
     # Data feed
-    data0 = bt.feeds.BacktraderCSVData(dataname=args.data0, **kwargs)
+    data0 = trader.feeds.BacktraderCSVData(dataname=args.data0, **kwargs)
     engine.adddata(data0)
 
     # Broker
-    engine.broker = bt.brokers.BackBroker(**eval('dict(' + args.broker + ')'))
+    engine.broker = trader.brokers.BackBroker(**eval('dict(' + args.broker + ')'))
 
     # Sizer
-    engine.addsizer(bt.sizers.FixedSize, **eval('dict(' + args.sizer + ')'))
+    engine.addsizer(trader.sizers.FixedSize, **eval('dict(' + args.sizer + ')'))
 
     # Strategy
     engine.addstrategy(St, **eval('dict(' + args.strat + ')'))

@@ -23,10 +23,10 @@ from __future__ import (absolute_import, division, print_function,
 
 import math
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class MTradeObserver(bt.observer.Observer):
+class MTradeObserver(trader.observer.Observer):
     lines = ('Id_0', 'Id_1', 'Id_2')
 
     plotinfo = dict(plot=True, subplot=True, plotlinelabels=True)

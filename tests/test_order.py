@@ -21,8 +21,8 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import quantrader as bt
-from quantrader import Order, Position
+import quanttrader as trader
+from trader import Order, Position
 
 
 class FakeCommInfo(object):
@@ -87,9 +87,9 @@ def _execute(position, order, size, price, partial):
 def test_run(main=False):
     position = Position()
     comminfo = FakeCommInfo()
-    order = bt.BuyOrder(data=FakeData(),
+    order = trader.BuyOrder(data=FakeData(),
                         size=100, price=1.0,
-                        exectype=bt.Order.Market,
+                        exectype=trader.Order.Market,
                         simulated=True)
     order.addcomminfo(comminfo)
 

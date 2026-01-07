@@ -23,7 +23,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import testcommon
 
-import quantrader as bt
+import quanttrader as trader
 
 chkdatas = 1
 chkvals = [
@@ -31,7 +31,7 @@ chkvals = [
 ]
 
 chkmin = 29  # 28 from longest SumN/Sum + 1 extra from truelow/truerange
-chkind = bt.indicators.UltimateOscillator
+chkind = trader.indicators.UltimateOscillator
 
 
 def test_run(main=False):

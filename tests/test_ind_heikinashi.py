@@ -23,7 +23,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import testcommon
 
-import quantrader as bt
+import quanttrader as trader
 
 chkdatas = 1
 chkvals = [
@@ -34,7 +34,7 @@ chkvals = [
 ]
 
 chkmin = 2
-chkind = bt.ind.HeikinAshi
+chkind = trader.ind.HeikinAshi
 
 
 def test_run(main=False):

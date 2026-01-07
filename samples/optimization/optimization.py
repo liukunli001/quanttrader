@@ -25,14 +25,14 @@ import argparse
 import datetime
 import time
 
-from quantrader.utils.py3 import range
+from trader.utils.py3 import range
 
-import quantrader as bt
-import quantrader.indicators as btind
-import quantrader.feeds as btfeeds
+import quanttrader as trader
+import trader.indicators
+import trader.feeds
 
 
-class OptimizeStrategy(bt.Strategy):
+class OptimizeStrategy(trader.Strategy):
     params = (('smaperiod', 15),
               ('macdperiod1', 12),
               ('macdperiod2', 26),
@@ -52,7 +52,7 @@ def runstrat():
     args = parse_args()
 
     # Create a engine entity
-    engine = bt.Engine(maxcpus=args.maxcpus,
+    engine = trader.Engine(maxcpus=args.maxcpus,
                          runonce=not args.no_runonce,
                          exactbars=args.exactbars,
                          optdatas=not args.no_optdatas,

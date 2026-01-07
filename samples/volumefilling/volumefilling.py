@@ -28,10 +28,10 @@ import time
 import sys
 
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class St(bt.Strategy):
+class St(trader.Strategy):
     params = (
         ('stakeperc', 10.0),
         ('opbreak', 10),
@@ -91,9 +91,9 @@ class St(bt.Strategy):
 
 
 FILLERS = {
-    'FixedSize': bt.broker.fillers.FixedSize,
-    'FixedBarPerc': bt.broker.fillers.FixedBarPerc,
-    'BarPointPerc': bt.broker.fillers.BarPointPerc,
+    'FixedSize': trader.broker.fillers.FixedSize,
+    'FixedBarPerc': trader.broker.fillers.FixedBarPerc,
+    'BarPointPerc': trader.broker.fillers.BarPointPerc,
 }
 
 
@@ -109,9 +109,9 @@ def runstrat():
         todate = datetime.datetime.strptime(args.todate, '%Y-%m-%d')
         datakwargs['todate'] = todate
 
-    data = bt.feeds.BacktraderCSVData(dataname=args.data, **datakwargs)
+    data = trader.feeds.BacktraderCSVData(dataname=args.data, **datakwargs)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
     engine.adddata(data)
 
     engine.broker.set_cash(args.cash)

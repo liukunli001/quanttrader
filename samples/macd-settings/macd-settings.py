@@ -26,12 +26,12 @@ import argparse
 import datetime
 import random
 
-import quantrader as bt
+import quanttrader as trader
 
-BTVERSION = tuple(int(x) for x in bt.__version__.split('.'))
+BTVERSION = tuple(int(x) for x in trader.__version__.split('.'))
 
 
-class FixedPerc(bt.Sizer):
+class FixedPerc(trader.Sizer):
     '''This sizer simply returns a fixed size for any operation
 
     Params:
@@ -51,7 +51,7 @@ class FixedPerc(bt.Sizer):
         return size
 
 
-class TheStrategy(bt.Strategy):
+class TheStrategy(trader.Strategy):
     '''
     This strategy is loosely based on some of the examples from the Van
     K. Tharp book: *Trade Your Way To Financial Freedom*. The logic:
@@ -90,19 +90,19 @@ class TheStrategy(bt.Strategy):
             self.order = None  # indicate no order is pending
 
     def __init__(self):
-        self.macd = bt.indicators.MACD(self.data,
+        self.macd = trader.indicators.MACD(self.data,
                                        period_me1=self.p.macd1,
                                        period_me2=self.p.macd2,
                                        period_signal=self.p.macdsig)
 
         # Cross of macd.macd and macd.signal
-        self.mcross = bt.indicators.CrossOver(self.macd.macd, self.macd.signal)
+        self.mcross = trader.indicators.CrossOver(self.macd.macd, self.macd.signal)
 
         # To set the stop price
-        self.atr = bt.indicators.ATR(self.data, period=self.p.atrperiod)
+        self.atr = trader.indicators.ATR(self.data, period=self.p.atrperiod)
 
         # Control market trend
-        self.sma = bt.indicators.SMA(self.data, period=self.p.smaperiod)
+        self.sma = trader.indicators.SMA(self.data, period=self.p.smaperiod)
         self.smadir = self.sma - self.sma(-self.p.dirperiod)
 
     def start(self):
@@ -140,9 +140,9 @@ DATASETS = {
 def runstrat(args=None):
     args = parse_args(args)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
     engine.broker.set_cash(args.cash)
-    comminfo = bt.commissions.CommInfo_Stocks_Perc(commission=args.commperc,
+    comminfo = trader.commissions.CommInfo_Stocks_Perc(commission=args.commperc,
                                                    percabs=True)
 
     engine.broker.addcommissioninfo(comminfo)
@@ -158,7 +158,7 @@ def runstrat(args=None):
 
     # if dataset is None, args.data has been given
     dataname = DATASETS.get(args.dataset, args.data)
-    data0 = bt.feeds.YahooFinanceCSVData(dataname=dataname, **dkwargs)
+    data0 = trader.feeds.YahooFinanceCSVData(dataname=dataname, **dkwargs)
     engine.adddata(data0)
 
     engine.addstrategy(TheStrategy,
@@ -172,21 +172,21 @@ def runstrat(args=None):
     engine.addsizer(FixedPerc, perc=args.cashalloc)
 
     # Add TimeReturn Analyzers for self and the benchmark data
-    engine.addanalyzer(bt.analyzers.TimeReturn, _name='alltime_roi',
-                        timeframe=bt.TimeFrame.NoTimeFrame)
+    engine.addanalyzer(trader.analyzers.TimeReturn, _name='alltime_roi',
+                        timeframe=trader.TimeFrame.NoTimeFrame)
 
-    engine.addanalyzer(bt.analyzers.TimeReturn, data=data0, _name='benchmark',
-                        timeframe=bt.TimeFrame.NoTimeFrame)
+    engine.addanalyzer(trader.analyzers.TimeReturn, data=data0, _name='benchmark',
+                        timeframe=trader.TimeFrame.NoTimeFrame)
 
     # Add TimeReturn Analyzers fot the annuyl returns
-    engine.addanalyzer(bt.analyzers.TimeReturn, timeframe=bt.TimeFrame.Years)
+    engine.addanalyzer(trader.analyzers.TimeReturn, timeframe=trader.TimeFrame.Years)
     # Add a SharpeRatio
-    engine.addanalyzer(bt.analyzers.SharpeRatio, timeframe=bt.TimeFrame.Years,
+    engine.addanalyzer(trader.analyzers.SharpeRatio, timeframe=trader.TimeFrame.Years,
                         riskfreerate=args.riskfreerate)
 
     # Add SQN to qualify the trades
-    engine.addanalyzer(bt.analyzers.SQN)
-    engine.addobserver(bt.observers.DrawDown)  # visualize the drawdown evol
+    engine.addanalyzer(trader.analyzers.SQN)
+    engine.addobserver(trader.observers.DrawDown)  # visualize the drawdown evol
 
     results = engine.run()
     st0 = results[0]

@@ -30,11 +30,11 @@ except:
 
 import testcommon
 
-import quantrader as bt
-import quantrader.indicators as btind
+import quanttrader as trader
+import trader.indicators
 
 
-class TestStrategy(bt.Strategy):
+class TestStrategy(trader.Strategy):
     params = (
         ('period', 15),
         ('maxtrades', None),
@@ -46,7 +46,7 @@ class TestStrategy(bt.Strategy):
     def log(self, txt, dt=None, nodate=False):
         if not nodate:
             dt = dt or self.data.datetime[0]
-            dt = bt.num2date(dt)
+            dt = trader.num2date(dt)
             print('%s, %s' % (dt.isoformat(), txt))
         else:
             print('---------- %s' % (txt))
@@ -56,11 +56,11 @@ class TestStrategy(bt.Strategy):
             self.tradecount += 1
 
     def notify_order(self, order):
-        if order.status in [bt.Order.Submitted, bt.Order.Accepted]:
+        if order.status in [trader.Order.Submitted, trader.Order.Accepted]:
             return  # Await further notifications
 
         if order.status == order.Completed:
-            if isinstance(order, bt.BuyOrder):
+            if isinstance(order, trader.BuyOrder):
                 if self.p.printops:
                     txt = 'BUY, %.2f' % order.executed.price
                     self.log(txt, order.executed.dt)
@@ -162,7 +162,7 @@ def test_run(main=False):
                                       maxtrades=maxtrades,
                                       printops=main,
                                       plot=main,
-                                      analyzer=(bt.analyzers.SQN, {}))
+                                      analyzer=(trader.analyzers.SQN, {}))
 
         for engine in engines:
             strat = engine.runstrats[0][0]  # no optimization, only 1

@@ -26,10 +26,10 @@ import argparse
 import datetime
 import random
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class St(bt.Strategy):
+class St(trader.Strategy):
     params = (
         ('period', 10),
         ('printout', False),
@@ -37,8 +37,8 @@ class St(bt.Strategy):
     )
 
     def __init__(self):
-        sma = bt.indicators.SMA(self.data, period=self.p.period)
-        self.crossover = bt.indicators.CrossOver(self.data, sma)
+        sma = trader.indicators.SMA(self.data, period=self.p.period)
+        self.crossover = trader.indicators.CrossOver(self.data, sma)
 
     def start(self):
         if self.p.printout:
@@ -84,18 +84,18 @@ class St(bt.Strategy):
 
 TIMEFRAMES = {
     None: None,
-    'days': bt.TimeFrame.Days,
-    'weeks': bt.TimeFrame.Weeks,
-    'months': bt.TimeFrame.Months,
-    'years': bt.TimeFrame.Years,
-    'notimeframe': bt.TimeFrame.NoTimeFrame,
+    'days': trader.TimeFrame.Days,
+    'weeks': trader.TimeFrame.Weeks,
+    'months': trader.TimeFrame.Months,
+    'years': trader.TimeFrame.Years,
+    'notimeframe': trader.TimeFrame.NoTimeFrame,
 }
 
 
 def runstrat(args=None):
     args = parse_args(args)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
     engine.broker.set_cash(args.cash)
 
     dkwargs = dict()
@@ -107,7 +107,7 @@ def runstrat(args=None):
         todate = datetime.datetime.strptime(args.todate, '%Y-%m-%d')
         dkwargs['todate'] = todate
 
-    data0 = bt.feeds.YahooFinanceCSVData(dataname=args.data0, **dkwargs)
+    data0 = trader.feeds.YahooFinanceCSVData(dataname=args.data0, **dkwargs)
     engine.adddata(data0, name='Data0')
 
     engine.addstrategy(St,
@@ -116,16 +116,16 @@ def runstrat(args=None):
                         printout=args.printout)
 
     if args.timereturn:
-        engine.addobserver(bt.observers.TimeReturn,
+        engine.addobserver(trader.observers.TimeReturn,
                             timeframe=TIMEFRAMES[args.timeframe])
     else:
         benchdata = data0
         if args.benchdata1:
-            data1 = bt.feeds.YahooFinanceCSVData(dataname=args.data1, **dkwargs)
+            data1 = trader.feeds.YahooFinanceCSVData(dataname=args.data1, **dkwargs)
             engine.adddata(data1, name='Data1')
             benchdata = data1
 
-        engine.addobserver(bt.observers.Benchmark,
+        engine.addobserver(trader.observers.Benchmark,
                             data=benchdata,
                             timeframe=TIMEFRAMES[args.timeframe])
 

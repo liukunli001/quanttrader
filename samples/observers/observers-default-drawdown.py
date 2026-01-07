@@ -28,19 +28,19 @@ import time
 import sys
 
 
-import quantrader as bt
-import quantrader.feeds as btfeeds
-import quantrader.indicators as btind
+import quanttrader as trader
+import trader.feeds
+import trader.indicators
 
 
-class MyStrategy(bt.Strategy):
+class MyStrategy(trader.Strategy):
     params = (('smaperiod', 15),)
 
     def log(self, txt, dt=None):
         ''' Logging function fot this strategy'''
         dt = dt or self.data.datetime[0]
         if isinstance(dt, float):
-            dt = bt.num2date(dt)
+            dt = trader.num2date(dt)
         print('%s, %s' % (dt.isoformat(), txt))
 
     def __init__(self):
@@ -71,13 +71,13 @@ class MyStrategy(bt.Strategy):
 
 
 def runstrat():
-    engine = bt.Engine()
+    engine = trader.Engine()
 
-    data = bt.feeds.BacktraderCSVData(dataname='../../datas/2006-day-001.txt')
+    data = trader.feeds.BacktraderCSVData(dataname='../../datas/2006-day-001.txt')
     engine.adddata(data)
 
-    engine.addobserver(bt.observers.DrawDown)
-    engine.addobserver(bt.observers.DrawDown_Old)
+    engine.addobserver(trader.observers.DrawDown)
+    engine.addobserver(trader.observers.DrawDown_Old)
 
     engine.addstrategy(MyStrategy)
     engine.run()

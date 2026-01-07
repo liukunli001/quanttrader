@@ -26,10 +26,10 @@ import argparse
 import datetime
 import random
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class TheStrategy(bt.Strategy):
+class TheStrategy(trader.Strategy):
     '''
     This strategy is capable of:
 
@@ -72,17 +72,17 @@ class TheStrategy(bt.Strategy):
         self.dtarget = self.getdatabyname(self.p.dtarget)
 
         # Create indicators
-        sma1 = bt.ind.SMA(self.dtarget, period=self.p.sma1)
-        sma2 = bt.ind.SMA(self.dtarget, period=self.p.sma2)
-        self.smasig = bt.ind.CrossOver(sma1, sma2)
+        sma1 = trader.ind.SMA(self.dtarget, period=self.p.sma1)
+        sma2 = trader.ind.SMA(self.dtarget, period=self.p.sma2)
+        self.smasig = trader.ind.CrossOver(sma1, sma2)
 
-        macd = bt.ind.MACD(self.dtarget,
+        macd = trader.ind.MACD(self.dtarget,
                            period_me1=self.p.macd1,
                            period_me2=self.p.macd2,
                            period_signal=self.p.macdsig)
 
         # Cross of macd.macd and macd.signal
-        self.macdsig = bt.ind.CrossOver(macd.macd, macd.signal)
+        self.macdsig = trader.ind.CrossOver(macd.macd, macd.signal)
 
     def start(self):
         self.order = 0  # sentinel to avoid operrations on pending order
@@ -139,7 +139,7 @@ class TheStrategy2(TheStrategy):
 def runstrat(args=None):
     args = parse_args(args)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
     engine.broker.set_cash(args.cash)
 
     dkwargs = dict()
@@ -152,7 +152,7 @@ def runstrat(args=None):
         dkwargs['todate'] = todate
 
     # if dataset is None, args.data has been given
-    data0 = bt.feeds.YahooFinanceCSVData(dataname=args.data0, **dkwargs)
+    data0 = trader.feeds.YahooFinanceCSVData(dataname=args.data0, **dkwargs)
     engine.adddata(data0, name='MyData0')
 
     st0kwargs = dict()

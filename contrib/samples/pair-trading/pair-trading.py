@@ -1,6 +1,6 @@
 # coding: utf-8
 # ##################################################################
-# Pair Trading adapted to quantrader
+# Pair Trading adapted to quanttrader
 # with PD.OLS and info for StatsModel.API
 # author: Remi Roche
 ##################################################################
@@ -12,12 +12,12 @@ import argparse
 import datetime
 
 # The above could be sent to an independent module
-import quantrader as bt
-import quantrader.feeds as btfeeds
-import quantrader.indicators as btind
+import quanttrader as trader
+import trader.feeds
+import trader.indicators
 
 
-class PairTradingStrategy(bt.Strategy):
+class PairTradingStrategy(trader.Strategy):
     params = dict(
         period=10,
         stake=10,
@@ -35,11 +35,11 @@ class PairTradingStrategy(bt.Strategy):
     def log(self, txt, dt=None):
         if self.p.printout:
             dt = dt or self.data.datetime[0]
-            dt = bt.num2date(dt)
+            dt = trader.num2date(dt)
             print('%s, %s' % (dt.isoformat(), txt))
 
     def notify_order(self, order):
-        if order.status in [bt.Order.Submitted, bt.Order.Accepted]:
+        if order.status in [trader.Order.Submitted, trader.Order.Accepted]:
             return  # Await further notifications
 
         if order.status == order.Completed:
@@ -164,7 +164,7 @@ def runstrategy():
     args = parse_args()
 
     # Create a engine
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     # Get the dates from the args
     fromdate = datetime.datetime.strptime(args.fromdate, '%Y-%m-%d')

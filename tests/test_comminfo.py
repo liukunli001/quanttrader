@@ -23,13 +23,13 @@ from __future__ import (absolute_import, division, print_function,
 
 import testcommon
 
-import quantrader as bt
-from quantrader import CommissionInfo, Position
+import quanttrader as trader
+from trader import CommissionInfo, Position
 
 
 def check_stocks():
     commission = 0.5
-    comm = bt.CommissionInfo(commission=commission)
+    comm = trader.CommissionInfo(commission=commission)
 
     price = 10.0
     cash = 10000.0
@@ -57,7 +57,7 @@ def check_futures():
     commission = 0.5
     margin = 10.0
     mult = 10.0
-    comm = bt.CommissionInfo(commission=commission, mult=mult, margin=margin)
+    comm = trader.CommissionInfo(commission=commission, mult=mult, margin=margin)
 
     price = 10.0
     cash = 10000.0

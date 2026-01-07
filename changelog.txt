@@ -1135,7 +1135,7 @@
   - Simplified engine return values for run: single list if not optimizing and
     list of lists if optimizing
   - Order Execution Sample script added
-  - SMA_CrosssOver Strategy included in submodule quantrader.strategies
+  - SMA_CrosssOver Strategy included in submodule quanttrader.strategies
 
 1.1.2.88:
   - Generic Data Feed Development Documentation

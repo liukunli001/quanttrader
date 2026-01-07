@@ -25,8 +25,8 @@ import argparse
 import datetime
 
 # The above could be sent to an independent module
-import quantrader as bt
-import quantrader.feeds as btfeeds
+import quanttrader as trader
+import trader.feeds
 
 from relvolbybar import RelativeVolumeByBar
 
@@ -35,7 +35,7 @@ def runstrategy():
     args = parse_args()
 
     # Create a engine
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     # Get the dates from the args
     fromdate = datetime.datetime.strptime(args.fromdate, '%Y-%m-%d')
@@ -52,7 +52,7 @@ def runstrategy():
     engine.adddata(data)
 
     # Add an empty strategy
-    engine.addstrategy(bt.Strategy)
+    engine.addstrategy(trader.Strategy)
 
     # Get the session times to pass them to the indicator
     prestart = datetime.datetime.strptime(args.prestart, '%H:%M').time()
@@ -65,7 +65,7 @@ def runstrategy():
 
     # Add a writer with CSV
     if args.writer:
-        engine.addwriter(bt.WriterFile, csv=args.wrcsv)
+        engine.addwriter(trader.WriterFile, csv=args.wrcsv)
 
     # And run it
     engine.run(stdstats=False)

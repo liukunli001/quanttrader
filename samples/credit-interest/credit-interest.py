@@ -26,28 +26,28 @@ import collections
 import datetime
 import itertools
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class SMACrossOver(bt.Signal):
+class SMACrossOver(trader.Signal):
     params = (('p1', 10), ('p2', 30),)
 
     def __init__(self):
-        sma1 = bt.indicators.SMA(period=self.p.p1)
-        sma2 = bt.indicators.SMA(period=self.p.p2)
-        self.lines.signal = bt.indicators.CrossOver(sma1, sma2)
+        sma1 = trader.indicators.SMA(period=self.p.p1)
+        sma2 = trader.indicators.SMA(period=self.p.p2)
+        self.lines.signal = trader.indicators.CrossOver(sma1, sma2)
 
 
-class NoExit(bt.Signal):
+class NoExit(trader.Signal):
     def next(self):
         self.lines.signal[0] = 0.0
 
 
-class St(bt.SignalStrategy):
+class St(trader.SignalStrategy):
     opcounter = itertools.count(1)
 
     def notify_order(self, order):
-        if order.status == bt.Order.Completed:
+        if order.status == trader.Order.Completed:
             t = ''
             t += '{:02d}'.format(next(self.opcounter))
             t += ' {}'.format(order.data.datetime.datetime())
@@ -64,7 +64,7 @@ class St(bt.SignalStrategy):
 def runstrat(args=None):
     args = parse_args(args)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
     engine.broker.set_cash(args.cash)
     engine.broker.set_int2pnl(args.no_int2pnl)
 
@@ -78,28 +78,28 @@ def runstrat(args=None):
         dkwargs['todate'] = todate
 
     # if dataset is None, args.data has been given
-    data = bt.feeds.BacktraderCSVData(dataname=args.data, **dkwargs)
+    data = trader.feeds.BacktraderCSVData(dataname=args.data, **dkwargs)
     engine.adddata(data)
 
     engine.signal_strategy(St)
-    engine.addsizer(bt.sizers.FixedSize, stake=args.stake)
+    engine.addsizer(trader.sizers.FixedSize, stake=args.stake)
 
-    sigtype = bt.signal.SIGNAL_LONGSHORT
+    sigtype = trader.signal.SIGNAL_LONGSHORT
     if args.long:
-        sigtype = bt.signal.SIGNAL_LONG
+        sigtype = trader.signal.SIGNAL_LONG
     elif args.short:
-        sigtype = bt.signal.SIGNAL_SHORT
+        sigtype = trader.signal.SIGNAL_SHORT
 
     engine.add_signal(sigtype,
                        SMACrossOver, p1=args.period1, p2=args.period2)
 
     if args.no_exit:
         if args.long:
-            engine.add_signal(bt.signal.SIGNAL_LONGEXIT, NoExit)
+            engine.add_signal(trader.signal.SIGNAL_LONGEXIT, NoExit)
         elif args.short:
-            engine.add_signal(bt.signal.SIGNAL_SHORTEXIT, NoExit)
+            engine.add_signal(trader.signal.SIGNAL_SHORTEXIT, NoExit)
 
-    comminfo = bt.CommissionInfo(
+    comminfo = trader.CommissionInfo(
         mult=args.mult,
         margin=args.margin,
         stocklike=args.stocklike,

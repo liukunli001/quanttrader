@@ -23,18 +23,18 @@ from __future__ import (absolute_import, division, print_function,
 
 import argparse
 
-import quantrader as bt
-import quantrader.feeds as btfeeds
-import quantrader.utils.flushfile
+import quanttrader as trader
+import trader.feeds
+import trader.utils.flushfile
 
 
-class St(bt.Strategy):
+class St(trader.Strategy):
     params = (('usepp1', False),
               ('plot_on_daily', False))
 
     def __init__(self):
         autoplot = self.p.plot_on_daily
-        self.pp = pp = bt.ind.PivotPoint(self.data1, _autoplot=autoplot)
+        self.pp = pp = trader.ind.PivotPoint(self.data1, _autoplot=autoplot)
 
     def next(self):
         txt = ','.join(
@@ -51,10 +51,10 @@ class St(bt.Strategy):
 def runstrat():
     args = parse_args()
 
-    engine = bt.Engine()
+    engine = trader.Engine()
     data = btfeeds.BacktraderCSVData(dataname=args.data)
     engine.adddata(data)
-    engine.resampledata(data, timeframe=bt.TimeFrame.Months)
+    engine.resampledata(data, timeframe=trader.TimeFrame.Months)
 
     engine.addstrategy(St,
                         usepp1=args.usepp1,

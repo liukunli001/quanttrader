@@ -23,7 +23,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import testcommon
 
-import quantrader as bt
+import quanttrader as trader
 
 
 chkdatas = 1
@@ -33,7 +33,7 @@ chkvals = [
 ]
 
 chkmin = 5
-chkind = bt.studies.Fractal
+chkind = trader.studies.Fractal
 
 
 def test_run(main=False):

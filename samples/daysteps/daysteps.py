@@ -23,10 +23,10 @@ from __future__ import (absolute_import, division, print_function,
 
 import argparse
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class St(bt.Strategy):
+class St(trader.Strategy):
     params = ()
 
     def __init__(self):
@@ -74,10 +74,10 @@ class St(bt.Strategy):
 def runstrat():
     args = parse_args()
 
-    engine = bt.Engine()
-    data = bt.feeds.BacktraderCSVData(dataname=args.data)
+    engine = trader.Engine()
+    data = trader.feeds.BacktraderCSVData(dataname=args.data)
 
-    data.addfilter(bt.filters.DayStepsFilter)
+    data.addfilter(trader.filters.DayStepsFilter)
     engine.adddata(data)
 
     engine.addstrategy(St)

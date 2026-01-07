@@ -25,16 +25,16 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class St(bt.SignalStrategy):
+class St(trader.SignalStrategy):
     params = (
     )
 
     def __init__(self):
-        ma1, ma2, = bt.ind.SMA(period=15), bt.ind.SMA(period=50)
-        self.signal_add(bt.signal.SIGNAL_LONG, bt.ind.CrossOver(ma1, ma2))
+        ma1, ma2, = trader.ind.SMA(period=15), trader.ind.SMA(period=50)
+        self.signal_add(trader.signal.SIGNAL_LONG, trader.ind.CrossOver(ma1, ma2))
 
     def next2(self):
         pass
@@ -43,7 +43,7 @@ class St(bt.SignalStrategy):
 def runstrat(args=None):
     args = parse_args(args)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     # Data feed kwargs
     kwargs = dict()
@@ -56,15 +56,15 @@ def runstrat(args=None):
             kwargs[d] = datetime.datetime.strptime(a, strpfmt)
 
     # Data feed
-    data0 = bt.feeds.YahooFinanceCSVData(dataname=args.data0, **kwargs)
+    data0 = trader.feeds.YahooFinanceCSVData(dataname=args.data0, **kwargs)
     engine.adddata(data0)
 
     # Broker
-    engine.broker = bt.brokers.BackBroker(**eval('dict(' + args.broker + ')'))
+    engine.broker = trader.brokers.BackBroker(**eval('dict(' + args.broker + ')'))
 
-    engine.addanalyzer(bt.analyzers.Calmar)
+    engine.addanalyzer(trader.analyzers.Calmar)
     # Sizer
-    engine.addsizer(bt.sizers.FixedSize, **eval('dict(' + args.sizer + ')'))
+    engine.addsizer(trader.sizers.FixedSize, **eval('dict(' + args.sizer + ')'))
 
     # Strategy
     engine.addstrategy(St, **eval('dict(' + args.strat + ')'))

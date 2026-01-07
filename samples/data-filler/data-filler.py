@@ -26,10 +26,10 @@ import datetime
 import math
 
 # The above could be sent to an independent module
-import quantrader as bt
-import quantrader.feeds as btfeeds
-import quantrader.utils.flushfile
-import quantrader.filters as btfilters
+import quanttrader as trader
+import trader.feeds
+import trader.utils.flushfile
+import trader.filters
 
 from relativevolume import RelativeVolume
 
@@ -38,7 +38,7 @@ def runstrategy():
     args = parse_args()
 
     # Create a engine
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     # Get the dates from the args
     fromdate = datetime.datetime.strptime(args.fromdate, '%Y-%m-%d')
@@ -54,7 +54,7 @@ def runstrategy():
         dataname=args.data,
         fromdate=fromdate,
         todate=todate,
-        timeframe=bt.TimeFrame.Minutes,
+        timeframe=trader.TimeFrame.Minutes,
         compression=1,
         sessionstart=dtstart,  # internally just the "time" part will be used
         sessionend=dtend,  # internally just the "time" part will be used
@@ -78,11 +78,11 @@ def runstrategy():
                              volisnan=math.isnan(args.fvol))
 
     # Add an empty strategy
-    engine.addstrategy(bt.Strategy)
+    engine.addstrategy(trader.Strategy)
 
     # Add a writer with CSV
     if args.writer:
-        engine.addwriter(bt.WriterFile, csv=args.wrcsv)
+        engine.addwriter(trader.WriterFile, csv=args.wrcsv)
 
     # And run it - no trading - disable stdstats
     engine.run(stdstats=False)

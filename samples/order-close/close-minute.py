@@ -24,11 +24,11 @@ from __future__ import (absolute_import, division, print_function,)
 import argparse
 import datetime
 
-import quantrader as bt
-import quantrader.feeds as btfeeds
+import quanttrader as trader
+import trader.feeds
 
 
-class St(bt.Strategy):
+class St(trader.Strategy):
     def __init__(self):
         self.curdate = datetime.date.min
         self.elapsed = 0
@@ -37,7 +37,7 @@ class St(bt.Strategy):
     def notify_order(self, order):
         curdtstr = self.data.datetime.datetime().strftime('%a %Y-%m-%d %H:%M:%S')
         if order.status in [order.Completed]:
-            dtstr = bt.num2date(order.executed.dt).strftime('%a %Y-%m-%d %H:%M:%S')
+            dtstr = trader.num2date(order.executed.dt).strftime('%a %Y-%m-%d %H:%M:%S')
             if order.isbuy():
                 print('%s: BUY  EXECUTED, on:' % curdtstr, dtstr)
                 self.order = None
@@ -53,18 +53,18 @@ class St(bt.Strategy):
         dtstr = self.data.datetime.datetime().strftime('%a %Y-%m-%d %H:%M:%S')
         if self.position and self.elapsed == 2:
             print('%s: SELL CREATED' % dtstr)
-            self.close(exectype=bt.Order.Close)
+            self.close(exectype=trader.Order.Close)
             self.elapsed = 0
         elif self.order is None and self.elapsed == 2:  # no pending order
             print('%s: BUY  CREATED' % dtstr)
-            self.order = self.buy(exectype=bt.Order.Close)
+            self.order = self.buy(exectype=trader.Order.Close)
             self.elapsed = 0
 
 
 def runstrat():
     args = parse_args()
 
-    engine = bt.Engine()
+    engine = trader.Engine()
     engine.adddata(getdata(args))
     engine.addstrategy(St)
     if args.eosbar:

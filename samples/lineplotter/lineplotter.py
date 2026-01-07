@@ -24,10 +24,10 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class St(bt.Strategy):
+class St(trader.Strategy):
     params = (
         ('ondata', False),
     )
@@ -38,14 +38,14 @@ class St(bt.Strategy):
         else:
             a = 1.05 * (self.data.high + self.data.low) / 2.0
 
-        b = bt.LinePlotterIndicator(a, name='hilo')
+        b = trader.LinePlotterIndicator(a, name='hilo')
         b.plotinfo.subplot = not self.p.ondata
 
 
 def runstrat(pargs=None):
     args = parse_args(pargs)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     dkwargs = dict()
     # Get the dates from the args
@@ -56,7 +56,7 @@ def runstrat(pargs=None):
         todate = datetime.datetime.strptime(args.todate, '%Y-%m-%d')
         dkwargs['todate'] = todate
 
-    data = bt.feeds.BacktraderCSVData(dataname=args.data, **dkwargs)
+    data = trader.feeds.BacktraderCSVData(dataname=args.data, **dkwargs)
     engine.adddata(data)
 
     engine.addstrategy(St, ondata=args.ondata)

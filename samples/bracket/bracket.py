@@ -25,12 +25,12 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class St(bt.Strategy):
+class St(trader.Strategy):
     params = dict(
-        ma=bt.ind.SMA,
+        ma=trader.ind.SMA,
         p1=5,
         p2=15,
         limit=0.005,
@@ -55,7 +55,7 @@ class St(bt.Strategy):
 
     def __init__(self):
         ma1, ma2 = self.p.ma(period=self.p.p1), self.p.ma(period=self.p.p2)
-        self.cross = bt.ind.CrossOver(ma1, ma2)
+        self.cross = trader.ind.CrossOver(ma1, ma2)
 
         self.orefs = list()
 
@@ -82,7 +82,7 @@ class St(bt.Strategy):
                     valid1, valid2 = valid2, valid1
 
                 if not self.p.usebracket:
-                    o1 = self.buy(exectype=bt.Order.Limit,
+                    o1 = self.buy(exectype=trader.Order.Limit,
                                   price=p1,
                                   valid=valid1,
                                   transmit=False)
@@ -90,7 +90,7 @@ class St(bt.Strategy):
                     print('{}: Oref {} / Buy at {}'.format(
                         self.datetime.date(), o1.ref, p1))
 
-                    o2 = self.sell(exectype=bt.Order.Stop,
+                    o2 = self.sell(exectype=trader.Order.Stop,
                                    price=p2,
                                    valid=valid2,
                                    parent=o1,
@@ -99,7 +99,7 @@ class St(bt.Strategy):
                     print('{}: Oref {} / Sell Stop at {}'.format(
                         self.datetime.date(), o2.ref, p2))
 
-                    o3 = self.sell(exectype=bt.Order.Limit,
+                    o3 = self.sell(exectype=trader.Order.Limit,
                                    price=p3,
                                    valid=valid3,
                                    parent=o1,
@@ -126,7 +126,7 @@ class St(bt.Strategy):
 def runstrat(args=None):
     args = parse_args(args)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     # Data feed kwargs
     kwargs = dict()
@@ -139,14 +139,14 @@ def runstrat(args=None):
             kwargs[d] = datetime.datetime.strptime(a, strpfmt)
 
     # Data feed
-    data0 = bt.feeds.BacktraderCSVData(dataname=args.data0, **kwargs)
+    data0 = trader.feeds.BacktraderCSVData(dataname=args.data0, **kwargs)
     engine.adddata(data0)
 
     # Broker
-    engine.broker = bt.brokers.BackBroker(**eval('dict(' + args.broker + ')'))
+    engine.broker = trader.brokers.BackBroker(**eval('dict(' + args.broker + ')'))
 
     # Sizer
-    engine.addsizer(bt.sizers.FixedSize, **eval('dict(' + args.sizer + ')'))
+    engine.addsizer(trader.sizers.FixedSize, **eval('dict(' + args.sizer + ')'))
 
     # Strategy
     engine.addstrategy(St, **eval('dict(' + args.strat + ')'))

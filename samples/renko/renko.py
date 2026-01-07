@@ -24,16 +24,16 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class St(bt.Strategy):
+class St(trader.Strategy):
     params = dict(
     )
 
     def __init__(self):
         for d in self.datas:
-            bt.ind.RSI(d)
+            trader.ind.RSI(d)
 
     def next(self):
         pass
@@ -42,7 +42,7 @@ class St(bt.Strategy):
 def runstrat(args=None):
     args = parse_args(args)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     # Data feed kwargs
     kwargs = dict()
@@ -54,25 +54,25 @@ def runstrat(args=None):
             strpfmt = dtfmt + tmfmt * ('T' in a)
             kwargs[d] = datetime.datetime.strptime(a, strpfmt)
 
-    data0 = bt.feeds.BacktraderCSVData(dataname=args.data0, **kwargs)
+    data0 = trader.feeds.BacktraderCSVData(dataname=args.data0, **kwargs)
 
     fkwargs = dict()
     fkwargs.update(**eval('dict(' + args.renko + ')'))
 
     if not args.dual:
-        data0.addfilter(bt.filters.Renko, **fkwargs)
+        data0.addfilter(trader.filters.Renko, **fkwargs)
         engine.adddata(data0)
     else:
         engine.adddata(data0)
         data1 = data0.clone()
-        data1.addfilter(bt.filters.Renko, **fkwargs)
+        data1.addfilter(trader.filters.Renko, **fkwargs)
         engine.adddata(data1)
 
     # Broker
-    engine.broker = bt.brokers.BackBroker(**eval('dict(' + args.broker + ')'))
+    engine.broker = trader.brokers.BackBroker(**eval('dict(' + args.broker + ')'))
 
     # Sizer
-    engine.addsizer(bt.sizers.FixedSize, **eval('dict(' + args.sizer + ')'))
+    engine.addsizer(trader.sizers.FixedSize, **eval('dict(' + args.sizer + ')'))
 
     # Strategy
     engine.addstrategy(St, **eval('dict(' + args.strat + ')'))

@@ -23,21 +23,21 @@ from __future__ import (absolute_import, division, print_function,
 
 import argparse
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class St0(bt.SignalStrategy):
+class St0(trader.SignalStrategy):
     def __init__(self):
-        sma1, sma2 = bt.ind.SMA(period=10), bt.ind.SMA(period=30)
-        crossover = bt.ind.CrossOver(sma1, sma2)
-        self.signal_add(bt.SIGNAL_LONG, crossover)
+        sma1, sma2 = trader.ind.SMA(period=10), trader.ind.SMA(period=30)
+        crossover = trader.ind.CrossOver(sma1, sma2)
+        self.signal_add(trader.SIGNAL_LONG, crossover)
 
 
-class St1(bt.SignalStrategy):
+class St1(trader.SignalStrategy):
     def __init__(self):
-        sma1 = bt.ind.SMA(period=10)
-        crossover = bt.ind.CrossOver(self.data.close, sma1)
-        self.signal_add(bt.SIGNAL_LONG, crossover)
+        sma1 = trader.ind.SMA(period=10)
+        crossover = trader.ind.CrossOver(self.data.close, sma1)
+        self.signal_add(trader.SIGNAL_LONG, crossover)
 
 
 class StFetcher(object):
@@ -53,11 +53,11 @@ class StFetcher(object):
 def runstrat(pargs=None):
     args = parse_args(pargs)
 
-    engine = bt.Engine()
-    data = bt.feeds.BacktraderCSVData(dataname=args.data)
+    engine = trader.Engine()
+    data = trader.feeds.BacktraderCSVData(dataname=args.data)
     engine.adddata(data)
 
-    engine.addanalyzer(bt.analyzers.Returns)
+    engine.addanalyzer(trader.analyzers.Returns)
     engine.optstrategy(StFetcher, idx=[0, 1])
     results = engine.run(maxcpus=args.maxcpus, optreturn=args.optreturn)
 

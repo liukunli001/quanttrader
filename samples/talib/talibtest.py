@@ -24,10 +24,10 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class TALibStrategy(bt.Strategy):
+class TALibStrategy(trader.Strategy):
     params = (('ind', 'sma'), ('doji', True),)
 
     INDS = ['sma', 'ema', 'stoc', 'rsi', 'macd', 'bollinger', 'aroon',
@@ -36,88 +36,88 @@ class TALibStrategy(bt.Strategy):
 
     def __init__(self):
         if self.p.doji:
-            bt.talib.CDLDOJI(self.data.open, self.data.high,
+            trader.talib.CDLDOJI(self.data.open, self.data.high,
                              self.data.low, self.data.close)
 
         if self.p.ind == 'sma':
-            bt.talib.SMA(self.data.close, timeperiod=25, plotname='TA_SMA')
-            bt.indicators.SMA(self.data, period=25)
+            trader.talib.SMA(self.data.close, timeperiod=25, plotname='TA_SMA')
+            trader.indicators.SMA(self.data, period=25)
         elif self.p.ind == 'ema':
-            bt.talib.EMA(timeperiod=25, plotname='TA_SMA')
-            bt.indicators.EMA(period=25)
+            trader.talib.EMA(timeperiod=25, plotname='TA_SMA')
+            trader.indicators.EMA(period=25)
         elif self.p.ind == 'stoc':
-            bt.talib.STOCH(self.data.high, self.data.low, self.data.close,
+            trader.talib.STOCH(self.data.high, self.data.low, self.data.close,
                            fastk_period=14, slowk_period=3, slowd_period=3,
                            plotname='TA_STOCH')
 
-            bt.indicators.Stochastic(self.data)
+            trader.indicators.Stochastic(self.data)
 
         elif self.p.ind == 'macd':
-            bt.talib.MACD(self.data, plotname='TA_MACD')
-            bt.indicators.MACD(self.data)
-            bt.indicators.MACDHisto(self.data)
+            trader.talib.MACD(self.data, plotname='TA_MACD')
+            trader.indicators.MACD(self.data)
+            trader.indicators.MACDHisto(self.data)
         elif self.p.ind == 'bollinger':
-            bt.talib.BBANDS(self.data, timeperiod=25,
+            trader.talib.BBANDS(self.data, timeperiod=25,
                             plotname='TA_BBANDS')
-            bt.indicators.BollingerBands(self.data, period=25)
+            trader.indicators.BollingerBands(self.data, period=25)
 
         elif self.p.ind == 'rsi':
-            bt.talib.RSI(self.data, plotname='TA_RSI')
-            bt.indicators.RSI(self.data)
+            trader.talib.RSI(self.data, plotname='TA_RSI')
+            trader.indicators.RSI(self.data)
 
         elif self.p.ind == 'aroon':
-            bt.talib.AROON(self.data.high, self.data.low, plotname='TA_AROON')
-            bt.indicators.AroonIndicator(self.data)
+            trader.talib.AROON(self.data.high, self.data.low, plotname='TA_AROON')
+            trader.indicators.AroonIndicator(self.data)
 
         elif self.p.ind == 'ultimate':
-            bt.talib.ULTOSC(self.data.high, self.data.low, self.data.close,
+            trader.talib.ULTOSC(self.data.high, self.data.low, self.data.close,
                             plotname='TA_ULTOSC')
-            bt.indicators.UltimateOscillator(self.data)
+            trader.indicators.UltimateOscillator(self.data)
 
         elif self.p.ind == 'trix':
-            bt.talib.TRIX(self.data, timeperiod=25,  plotname='TA_TRIX')
-            bt.indicators.Trix(self.data, period=25)
+            trader.talib.TRIX(self.data, timeperiod=25,  plotname='TA_TRIX')
+            trader.indicators.Trix(self.data, period=25)
 
         elif self.p.ind == 'adxr':
-            bt.talib.ADXR(self.data.high, self.data.low, self.data.close,
+            trader.talib.ADXR(self.data.high, self.data.low, self.data.close,
                           plotname='TA_ADXR')
-            bt.indicators.ADXR(self.data)
+            trader.indicators.ADXR(self.data)
 
         elif self.p.ind == 'kama':
-            bt.talib.KAMA(self.data, timeperiod=25, plotname='TA_KAMA')
-            bt.indicators.KAMA(self.data, period=25)
+            trader.talib.KAMA(self.data, timeperiod=25, plotname='TA_KAMA')
+            trader.indicators.KAMA(self.data, period=25)
 
         elif self.p.ind == 'dema':
-            bt.talib.DEMA(self.data, timeperiod=25, plotname='TA_DEMA')
-            bt.indicators.DEMA(self.data, period=25)
+            trader.talib.DEMA(self.data, timeperiod=25, plotname='TA_DEMA')
+            trader.indicators.DEMA(self.data, period=25)
 
         elif self.p.ind == 'ppo':
-            bt.talib.PPO(self.data, plotname='TA_PPO')
-            bt.indicators.PPO(self.data, _movav=bt.indicators.SMA)
+            trader.talib.PPO(self.data, plotname='TA_PPO')
+            trader.indicators.PPO(self.data, _movav=trader.indicators.SMA)
 
         elif self.p.ind == 'tema':
-            bt.talib.TEMA(self.data, timeperiod=25, plotname='TA_TEMA')
-            bt.indicators.TEMA(self.data, period=25)
+            trader.talib.TEMA(self.data, timeperiod=25, plotname='TA_TEMA')
+            trader.indicators.TEMA(self.data, period=25)
 
         elif self.p.ind == 'roc':
-            bt.talib.ROC(self.data, timeperiod=12, plotname='TA_ROC')
-            bt.talib.ROCP(self.data, timeperiod=12, plotname='TA_ROCP')
-            bt.talib.ROCR(self.data, timeperiod=12, plotname='TA_ROCR')
-            bt.talib.ROCR100(self.data, timeperiod=12, plotname='TA_ROCR100')
-            bt.indicators.ROC(self.data, period=12)
-            bt.indicators.Momentum(self.data, period=12)
-            bt.indicators.MomentumOscillator(self.data, period=12)
+            trader.talib.ROC(self.data, timeperiod=12, plotname='TA_ROC')
+            trader.talib.ROCP(self.data, timeperiod=12, plotname='TA_ROCP')
+            trader.talib.ROCR(self.data, timeperiod=12, plotname='TA_ROCR')
+            trader.talib.ROCR100(self.data, timeperiod=12, plotname='TA_ROCR100')
+            trader.indicators.ROC(self.data, period=12)
+            trader.indicators.Momentum(self.data, period=12)
+            trader.indicators.MomentumOscillator(self.data, period=12)
 
         elif self.p.ind == 'williamsr':
-            bt.talib.WILLR(self.data.high, self.data.low, self.data.close,
+            trader.talib.WILLR(self.data.high, self.data.low, self.data.close,
                            plotname='TA_WILLR')
-            bt.indicators.WilliamsR(self.data)
+            trader.indicators.WilliamsR(self.data)
 
 
 def runstrat(args=None):
     args = parse_args(args)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     dkwargs = dict()
     if args.fromdate:
@@ -128,7 +128,7 @@ def runstrat(args=None):
         todate = datetime.datetime.strptime(args.todate, '%Y-%m-%d')
         dkwargs['todate'] = todate
 
-    data0 = bt.feeds.YahooFinanceCSVData(dataname=args.data0, **dkwargs)
+    data0 = trader.feeds.YahooFinanceCSVData(dataname=args.data0, **dkwargs)
     engine.adddata(data0)
 
     engine.addstrategy(TALibStrategy, ind=args.ind, doji=not args.no_doji)

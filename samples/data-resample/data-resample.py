@@ -23,18 +23,18 @@ from __future__ import (absolute_import, division, print_function,
 
 import argparse
 
-import quantrader as bt
-import quantrader.feeds as btfeeds
+import quanttrader as trader
+import trader.feeds
 
 
 def runstrat():
     args = parse_args()
 
     # Create a engine entity
-    engine = bt.Engine(stdstats=False)
+    engine = trader.Engine(stdstats=False)
 
     # Add a strategy
-    engine.addstrategy(bt.Strategy)
+    engine.addstrategy(trader.Strategy)
 
     # Load the Data
     datapath = args.dataname or '../../datas/2006-day-001.txt'
@@ -43,14 +43,14 @@ def runstrat():
 
     # Handy dictionary for the argument timeframe conversion
     tframes = dict(
-        daily=bt.TimeFrame.Days,
-        weekly=bt.TimeFrame.Weeks,
-        monthly=bt.TimeFrame.Months)
+        daily=trader.TimeFrame.Days,
+        weekly=trader.TimeFrame.Weeks,
+        monthly=trader.TimeFrame.Months)
 
     # Resample the data
     if args.oldrs:
         # Old resampler, fully deprecated
-        data = bt.DataResampler(
+        data = trader.DataResampler(
             dataname=data,
             timeframe=tframes[args.timeframe],
             compression=args.compression)

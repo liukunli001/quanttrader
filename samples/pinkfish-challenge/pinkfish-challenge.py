@@ -24,11 +24,11 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import quantrader as bt
-import quantrader.indicators as btind
+import quanttrader as trader
+import trader.indicators
 
 
-class DayStepsCloseFilter(bt.with_metaclass(bt.MetaParams, object)):
+class DayStepsCloseFilter(trader.with_metaclass(trader.MetaParams, object)):
     '''
     Replays a bar in 2 steps:
 
@@ -92,7 +92,7 @@ class DayStepsCloseFilter(bt.with_metaclass(bt.MetaParams, object)):
         return False  # nothing delivered here
 
 
-class DayStepsReplayFilter(bt.with_metaclass(bt.MetaParams, object)):
+class DayStepsReplayFilter(trader.with_metaclass(trader.MetaParams, object)):
     '''
     Replays a bar in 2 steps:
 
@@ -166,7 +166,7 @@ class DayStepsReplayFilter(bt.with_metaclass(bt.MetaParams, object)):
         return False  # the length of the stream was not changed
 
 
-class St(bt.Strategy):
+class St(trader.Strategy):
     params = (
         ('highperiod', 20),
         ('sellafter', 2),
@@ -230,7 +230,7 @@ class St(bt.Strategy):
                           self.data.high.get(size=19, ago=-1))
                     print('-- BUY on date:',
                           self.data.datetime.date().strftime('%Y-%m-%d'))
-                    ex = bt.Order.Market if self.p.market else bt.Order.Close
+                    ex = trader.Order.Market if self.p.market else trader.Order.Close
                     self.buy(exectype=ex)
                     self.inmarket = len(self)  # reset period in market
 
@@ -244,7 +244,7 @@ class St(bt.Strategy):
 def runstrat():
     args = parse_args()
 
-    engine = bt.Engine()
+    engine = trader.Engine()
     engine.broker.set_cash(args.cash)
     engine.broker.set_eosbar(True)
 
@@ -258,19 +258,19 @@ def runstrat():
         dkwargs['todate'] = todate
 
     if args.no_replay:
-        data = bt.feeds.YahooFinanceCSVData(dataname=args.data,
-                                            timeframe=bt.TimeFrame.Days,
+        data = trader.feeds.YahooFinanceCSVData(dataname=args.data,
+                                            timeframe=trader.TimeFrame.Days,
                                             compression=1,
                                             **dkwargs)
         data.addfilter(DayStepsCloseFilter)
         engine.adddata(data)
     else:
-        data = bt.feeds.YahooFinanceCSVData(dataname=args.data,
-                                            timeframe=bt.TimeFrame.Minutes,
+        data = trader.feeds.YahooFinanceCSVData(dataname=args.data,
+                                            timeframe=trader.TimeFrame.Minutes,
                                             compression=1,
                                             **dkwargs)
         data.addfilter(DayStepsReplayFilter)
-        engine.replaydata(data, timeframe=bt.TimeFrame.Days, compression=1)
+        engine.replaydata(data, timeframe=trader.TimeFrame.Days, compression=1)
 
     engine.addstrategy(St,
                         sellafter=args.sellafter,

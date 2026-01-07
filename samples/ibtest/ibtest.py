@@ -25,16 +25,16 @@ import argparse
 import datetime
 
 # The above could be sent to an independent module
-import quantrader as bt
-from quantrader.utils import flushfile  # win32 quick stdout flushing
+import quanttrader as trader
+from trader.utils import flushfile  # win32 quick stdout flushing
 
 
-class TestStrategy(bt.Strategy):
+class TestStrategy(trader.Strategy):
     params = dict(
         smaperiod=5,
         trade=False,
         stake=10,
-        exectype=bt.Order.Market,
+        exectype=trader.Order.Market,
         stopafter=0,
         valid=None,
         cancel=0,
@@ -57,7 +57,7 @@ class TestStrategy(bt.Strategy):
         self.datastatus = 0
 
         # Create SMA on 2nd data
-        self.sma = bt.indicators.MovAv.SMA(self.data, period=self.p.smaperiod)
+        self.sma = trader.indicators.MovAv.SMA(self.data, period=self.p.smaperiod)
 
         print('--------------------------------------------------')
         print('Strategy Created')
@@ -130,7 +130,7 @@ class TestStrategy(bt.Strategy):
             return
 
         if self.datastatus and not self.position and len(self.orderid) < 1:
-            exectype = self.p.exectype if not self.p.oca else bt.Order.Limit
+            exectype = self.p.exectype if not self.p.oca else trader.Order.Limit
             close = self.data0.close[0]
             price = round(close * 0.90, 2)
             self.order = self.buy(size=self.p.stake,
@@ -144,7 +144,7 @@ class TestStrategy(bt.Strategy):
             if self.p.bracket:
                 # low side
                 self.sell(size=self.p.stake,
-                          exectype=bt.Order.Stop,
+                          exectype=trader.Order.Stop,
                           price=round(price * 0.90, 2),
                           valid=self.p.valid,
                           transmit=False,
@@ -152,7 +152,7 @@ class TestStrategy(bt.Strategy):
 
                 # high side
                 self.sell(size=self.p.stake,
-                          exectype=bt.Order.Limit,
+                          exectype=trader.Order.Limit,
                           price=round(close * 1.10, 2),
                           valid=self.p.valid,
                           transmit=True,
@@ -160,13 +160,13 @@ class TestStrategy(bt.Strategy):
 
             elif self.p.oca:
                 self.buy(size=self.p.stake,
-                         exectype=bt.Order.Limit,
+                         exectype=trader.Order.Limit,
                          price=round(self.data0.close[0] * 0.80, 2),
                          oco=self.order)
 
             elif self.p.stoptrail:
                 self.sell(size=self.p.stake,
-                          exectype=bt.Order.StopTrail,
+                          exectype=trader.Order.StopTrail,
                           # price=round(self.data0.close[0] * 0.90, 2),
                           valid=self.p.valid,
                           trailamount=self.p.trailamount,
@@ -176,7 +176,7 @@ class TestStrategy(bt.Strategy):
                 p = round(self.data0.close[0] - self.p.trailamount, 2)
                 # p = self.data0.close[0]
                 self.sell(size=self.p.stake,
-                          exectype=bt.Order.StopTrailLimit,
+                          exectype=trader.Order.StopTrailLimit,
                           price=p,
                           plimit=p + self.p.limitoffset,
                           valid=self.p.valid,
@@ -186,7 +186,7 @@ class TestStrategy(bt.Strategy):
         elif self.position.size > 0 and not self.p.donotsell:
             if self.order is None:
                 self.order = self.sell(size=self.p.stake // 2,
-                                       exectype=bt.Order.Market,
+                                       exectype=trader.Order.Market,
                                        price=self.data0.close[0])
 
         elif self.order is not None and self.p.cancel:
@@ -212,7 +212,7 @@ def runstrategy():
     args = parse_args()
 
     # Create a engine
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     storekwargs = dict(
         host=args.host, port=args.port,
@@ -222,25 +222,25 @@ def runstrategy():
     )
 
     if args.usestore:
-        ibstore = bt.stores.IBStore(**storekwargs)
+        ibstore = trader.stores.IBStore(**storekwargs)
 
     if args.broker:
         if args.usestore:
             broker = ibstore.getbroker()
         else:
-            broker = bt.brokers.IBBroker(**storekwargs)
+            broker = trader.brokers.IBBroker(**storekwargs)
 
         engine.setbroker(broker)
 
-    timeframe = bt.TimeFrame.TFrame(args.timeframe)
+    timeframe = trader.TimeFrame.TFrame(args.timeframe)
     # Manage data1 parameters
     tf1 = args.timeframe1
-    tf1 = bt.TimeFrame.TFrame(tf1) if tf1 is not None else timeframe
+    tf1 = trader.TimeFrame.TFrame(tf1) if tf1 is not None else timeframe
     cp1 = args.compression1
     cp1 = cp1 if cp1 is not None else args.compression
 
     if args.resample or args.replay:
-        datatf = datatf1 = bt.TimeFrame.Ticks
+        datatf = datatf1 = trader.TimeFrame.Ticks
         datacomp = datacomp1 = 1
     else:
         datatf = timeframe
@@ -253,7 +253,7 @@ def runstrategy():
         dtformat = '%Y-%m-%d' + ('T%H:%M:%S' * ('T' in args.fromdate))
         fromdate = datetime.datetime.strptime(args.fromdate, dtformat)
 
-    IBDataFactory = ibstore.getdata if args.usestore else bt.feeds.IBData
+    IBDataFactory = ibstore.getdata if args.usestore else trader.feeds.IBData
 
     datakwargs = dict(
         timeframe=datatf, compression=datacomp,
@@ -318,7 +318,7 @@ def runstrategy():
     engine.addstrategy(TestStrategy,
                         smaperiod=args.smaperiod,
                         trade=args.trade,
-                        exectype=bt.Order.ExecType(args.exectype),
+                        exectype=trader.Order.ExecType(args.exectype),
                         stake=args.stake,
                         stopafter=args.stopafter,
                         valid=valid,
@@ -455,8 +455,8 @@ def parse_args():
                         required=False, action='store_true',
                         help='resample to chosen timeframe')
 
-    parser.add_argument('--timeframe', default=bt.TimeFrame.Names[0],
-                        choices=bt.TimeFrame.Names,
+    parser.add_argument('--timeframe', default=trader.TimeFrame.Names[0],
+                        choices=trader.TimeFrame.Names,
                         required=False, action='store',
                         help='TimeFrame for Resample/Replay')
 
@@ -465,7 +465,7 @@ def parse_args():
                         help='Compression for Resample/Replay')
 
     parser.add_argument('--timeframe1', default=None,
-                        choices=bt.TimeFrame.Names,
+                        choices=trader.TimeFrame.Names,
                         required=False, action='store',
                         help='TimeFrame for Resample/Replay - Data1')
 
@@ -503,8 +503,8 @@ def parse_args():
                         required=False, action='store_true',
                         help='Do not sell after a buy')
 
-    parser.add_argument('--exectype', default=bt.Order.ExecTypes[0],
-                        choices=bt.Order.ExecTypes,
+    parser.add_argument('--exectype', default=trader.Order.ExecTypes[0],
+                        choices=trader.Order.ExecTypes,
                         required=False, action='store',
                         help='Execution to Use when opening position')
 

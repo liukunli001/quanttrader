@@ -24,13 +24,13 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import sys
 
-import quantrader as bt
-import quantrader.feeds as btfeeds
-import quantrader.indicators as btind
-import quantrader.utils.flushfile
+import quanttrader as trader
+import trader.feeds
+import trader.indicators
+import trader.utils.flushfile
 
 
-class TestInd(bt.Indicator):
+class TestInd(trader.Indicator):
     lines = ('a', 'b')
 
     def __init__(self):
@@ -38,7 +38,7 @@ class TestInd(bt.Indicator):
         self.lines.b = btind.SMA(b, period=20)
 
 
-class St(bt.Strategy):
+class St(trader.Strategy):
     params = (
         ('datalines', False),
         ('lendetails', False),
@@ -123,7 +123,7 @@ class St(bt.Strategy):
 def runstrat():
     args = parse_args()
 
-    engine = bt.Engine()
+    engine = trader.Engine()
     data = btfeeds.YahooFinanceCSVData(dataname=args.data)
     engine.adddata(data)
     engine.addstrategy(

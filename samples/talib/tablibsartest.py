@@ -24,19 +24,19 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class TALibStrategy(bt.Strategy):
+class TALibStrategy(trader.Strategy):
     def __init__(self):
-        bt.talib.SAR(self.data.high, self.data.low)
-        bt.ind.PSAR()
+        trader.talib.SAR(self.data.high, self.data.low)
+        trader.ind.PSAR()
 
 
 def runstrat(args=None):
     args = parse_args(args)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     dkwargs = dict()
     if args.fromdate:
@@ -47,7 +47,7 @@ def runstrat(args=None):
         todate = datetime.datetime.strptime(args.todate, '%Y-%m-%d')
         dkwargs['todate'] = todate
 
-    data0 = bt.feeds.YahooFinanceCSVData(dataname=args.data0, **dkwargs)
+    data0 = trader.feeds.YahooFinanceCSVData(dataname=args.data0, **dkwargs)
     engine.adddata(data0)
 
     engine.addstrategy(TALibStrategy)

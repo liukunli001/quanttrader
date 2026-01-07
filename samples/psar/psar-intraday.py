@@ -25,16 +25,16 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class St(bt.Strategy):
+class St(trader.Strategy):
     params = (
     )
 
     def __init__(self):
-        self.psar0 = bt.ind.ParabolicSAR(self.data0)
-        self.psar1 = bt.ind.ParabolicSAR(self.data1)
+        self.psar0 = trader.ind.ParabolicSAR(self.data0)
+        self.psar1 = trader.ind.ParabolicSAR(self.data1)
         pass
 
     def next(self):
@@ -58,11 +58,11 @@ class St(bt.Strategy):
 def runstrat(args=None):
     args = parse_args(args)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     # Data feed kwargs
     kwargs = dict(
-        timeframe=bt.TimeFrame.Minutes,
+        timeframe=trader.TimeFrame.Minutes,
         compression=5,
     )
 
@@ -74,16 +74,16 @@ def runstrat(args=None):
             kwargs[d] = datetime.datetime.strptime(a, strpfmt)
 
     # Data feed
-    data0 = bt.feeds.BacktraderCSVData(dataname=args.data0, **kwargs)
+    data0 = trader.feeds.BacktraderCSVData(dataname=args.data0, **kwargs)
     engine.adddata(data0)
 
-    engine.resampledata(data0, timeframe=bt.TimeFrame.Minutes, compression=15)
+    engine.resampledata(data0, timeframe=trader.TimeFrame.Minutes, compression=15)
 
     # Broker
-    engine.broker = bt.brokers.BackBroker(**eval('dict(' + args.broker + ')'))
+    engine.broker = trader.brokers.BackBroker(**eval('dict(' + args.broker + ')'))
 
     # Sizer
-    engine.addsizer(bt.sizers.FixedSize, **eval('dict(' + args.sizer + ')'))
+    engine.addsizer(trader.sizers.FixedSize, **eval('dict(' + args.sizer + ')'))
 
     # Strategy
     engine.addstrategy(St, **eval('dict(' + args.strat + ')'))

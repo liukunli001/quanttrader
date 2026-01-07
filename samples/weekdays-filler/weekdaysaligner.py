@@ -24,16 +24,16 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import quantrader as bt
-import quantrader.feeds as btfeeds
-import quantrader.indicators as btind
-import quantrader.utils.flushfile
+import quanttrader as trader
+import trader.feeds
+import trader.indicators
+import trader.utils.flushfile
 
 # from wkdaysfiller import WeekDaysFiller
 from weekdaysfiller import WeekDaysFiller
 
 
-class St(bt.Strategy):
+class St(trader.Strategy):
     params = (('sma', 0),)
 
     def __init__(self):
@@ -58,7 +58,7 @@ def runstrat():
     fromdate = datetime.datetime.strptime(args.fromdate, '%Y-%m-%d')
     todate = datetime.datetime.strptime(args.todate, '%Y-%m-%d')
 
-    engine = bt.Engine(stdstats=False)
+    engine = trader.Engine(stdstats=False)
 
     DataFeed = btfeeds.YahooFinanceCSVData
     if args.online:

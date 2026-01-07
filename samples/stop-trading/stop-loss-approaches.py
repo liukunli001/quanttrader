@@ -24,10 +24,10 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class BaseStrategy(bt.Strategy):
+class BaseStrategy(trader.Strategy):
     params = dict(
         fast_ma=10,
         slow_ma=20,
@@ -35,10 +35,10 @@ class BaseStrategy(bt.Strategy):
 
     def __init__(self):
         # omitting a data implies self.datas[0] (aka self.data and self.data0)
-        fast_ma = bt.ind.EMA(period=self.p.fast_ma)
-        slow_ma = bt.ind.EMA(period=self.p.slow_ma)
+        fast_ma = trader.ind.EMA(period=self.p.fast_ma)
+        slow_ma = trader.ind.EMA(period=self.p.slow_ma)
         # our entry point
-        self.crossup = bt.ind.CrossUp(fast_ma, slow_ma)
+        self.crossup = trader.ind.CrossUp(fast_ma, slow_ma)
 
 
 class ManualStopOrStopTrail(BaseStrategy):
@@ -60,9 +60,9 @@ class ManualStopOrStopTrail(BaseStrategy):
 
         if not self.p.trail:
             stop_price = order.executed.price * (1.0 - self.p.stop_loss)
-            self.sell(exectype=bt.Order.Stop, price=stop_price)
+            self.sell(exectype=trader.Order.Stop, price=stop_price)
         else:
-            self.sell(exectype=bt.Order.StopTrail, trailamount=self.p.trail)
+            self.sell(exectype=trader.Order.StopTrail, trailamount=self.p.trail)
 
     def next(self):
         if not self.position and self.crossup > 0:
@@ -98,9 +98,9 @@ class ManualStopOrStopTrailCheat(BaseStrategy):
 
             if not self.p.trail:
                 stop_price = self.data.close[0] * (1.0 - self.p.stop_loss)
-                self.sell(exectype=bt.Order.Stop, price=stop_price)
+                self.sell(exectype=trader.Order.Stop, price=stop_price)
             else:
-                self.sell(exectype=bt.Order.StopTrail,
+                self.sell(exectype=trader.Order.StopTrail,
                           trailamount=self.p.trail)
 
 
@@ -141,16 +141,16 @@ class AutoStopOrStopTrail(BaseStrategy):
                 price = self.data.close[0] * (1.0 - self.p.buy_limit)
 
                 # transmit = False ... await child order before transmission
-                self.buy_order = self.buy(price=price, exectype=bt.Order.Limit,
+                self.buy_order = self.buy(price=price, exectype=trader.Order.Limit,
                                           transmit=False)
 
             # Setting parent=buy_order ... sends both together
             if not self.p.trail:
                 stop_price = self.data.close[0] * (1.0 - self.p.stop_loss)
-                self.sell(exectype=bt.Order.Stop, price=stop_price,
+                self.sell(exectype=trader.Order.Stop, price=stop_price,
                           parent=self.buy_order)
             else:
-                self.sell(exectype=bt.Order.StopTrail,
+                self.sell(exectype=trader.Order.StopTrail,
                           trailamount=self.p.trail,
                           parent=self.buy_order)
 
@@ -165,7 +165,7 @@ APPROACHES = dict(
 def runstrat(args=None):
     args = parse_args(args)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     # Data feed kwargs
     kwargs = dict()
@@ -177,14 +177,14 @@ def runstrat(args=None):
             strpfmt = dtfmt + tmfmt * ('T' in a)
             kwargs[d] = datetime.datetime.strptime(a, strpfmt)
 
-    data0 = bt.feeds.BacktraderCSVData(dataname=args.data0, **kwargs)
+    data0 = trader.feeds.BacktraderCSVData(dataname=args.data0, **kwargs)
     engine.adddata(data0)
 
     # Broker
-    engine.broker = bt.brokers.BackBroker(**eval('dict(' + args.broker + ')'))
+    engine.broker = trader.brokers.BackBroker(**eval('dict(' + args.broker + ')'))
 
     # Sizer
-    engine.addsizer(bt.sizers.FixedSize, **eval('dict(' + args.sizer + ')'))
+    engine.addsizer(trader.sizers.FixedSize, **eval('dict(' + args.sizer + ')'))
 
     # Strategy
     StClass = APPROACHES[args.approach]

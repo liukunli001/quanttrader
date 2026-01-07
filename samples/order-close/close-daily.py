@@ -25,20 +25,20 @@ import argparse
 import datetime
 import random
 
-import quantrader as bt
-import quantrader.feeds as btfeeds
+import quanttrader as trader
+import trader.feeds
 
-from quantrader.utils.py3 import with_metaclass
+from trader.utils.py3 import with_metaclass
 
 
-class St(bt.Strategy):
+class St(trader.Strategy):
     def __init__(self):
         self.order = None
 
     def notify_order(self, order):
         curdtstr = self.data.datetime.datetime().strftime('%a %Y-%m-%d')
         if order.status in [order.Completed]:
-            dtstr = bt.num2date(order.executed.dt).strftime('%a %Y-%m-%d')
+            dtstr = trader.num2date(order.executed.dt).strftime('%a %Y-%m-%d')
             if order.isbuy():
                 print('%s: BUY  EXECUTED, on:' % curdtstr, dtstr)
             else:  # Sell
@@ -55,13 +55,13 @@ class St(bt.Strategy):
         if not random.randint(0, 5):  # roll a dice to decide entering/exit
             if self.position:
                 print('%s: SELL CREATED' % dtstr)
-                self.order = self.close(exectype=bt.Order.Close)
+                self.order = self.close(exectype=trader.Order.Close)
             else:  # no pending order
                 print('%s: BUY  CREATED' % dtstr)
-                self.order = self.buy(exectype=bt.Order.Close)
+                self.order = self.buy(exectype=trader.Order.Close)
 
 
-class SessionEndFiller(with_metaclass(bt.metabase.MetaParams, object)):
+class SessionEndFiller(with_metaclass(trader.metabase.MetaParams, object)):
     '''This data filter simply adds the time given in param ``endtime`` to the
     current data datetime
 
@@ -91,7 +91,7 @@ class SessionEndFiller(with_metaclass(bt.metabase.MetaParams, object)):
 def runstrat():
     args = parse_args()
 
-    engine = bt.Engine()
+    engine = trader.Engine()
     engine.adddata(getdata(args))
     engine.addstrategy(St)
     if args.eosbar:

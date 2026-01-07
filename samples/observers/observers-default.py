@@ -21,14 +21,14 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import quantrader as bt
-import quantrader.feeds as btfeeds
+import quanttrader as trader
+import trader.feeds
 
 if __name__ == '__main__':
-    engine = bt.Engine(stdstats=True)
-    engine.addstrategy(bt.Strategy)
+    engine = trader.Engine(stdstats=True)
+    engine.addstrategy(trader.Strategy)
 
-    data = bt.feeds.BacktraderCSVData(dataname='../../datas/2006-day-001.txt')
+    data = trader.feeds.BacktraderCSVData(dataname='../../datas/2006-day-001.txt')
     engine.adddata(data)
 
     engine.run()

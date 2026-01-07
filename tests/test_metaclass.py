@@ -34,7 +34,7 @@ def test_run(main=False):
     """
     Instantiate the TestFrompackages and see that no exception is raised
     Bug Discussion:
-    https://community.quantrader.com/topic/2661/frompackages-directive-functionality-seems-to-be-broken-when-using-inheritance
+    https://community.trader.com/topic/2661/frompackages-directive-functionality-seems-to-be-broken-when-using-inheritance
     """
     test = TestFrompackages()
 

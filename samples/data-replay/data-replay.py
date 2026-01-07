@@ -23,12 +23,12 @@ from __future__ import (absolute_import, division, print_function,
 
 import argparse
 
-import quantrader as bt
-import quantrader.feeds as btfeeds
-import quantrader.indicators as btind
+import quanttrader as trader
+import trader.feeds
+import trader.indicators
 
 
-class SMAStrategy(bt.Strategy):
+class SMAStrategy(trader.Strategy):
     params = (
         ('period', 10),
         ('onlydaily', False),
@@ -53,7 +53,7 @@ def runstrat():
     args = parse_args()
 
     # Create a engine entity
-    engine = bt.Engine(stdstats=False)
+    engine = trader.Engine(stdstats=False)
 
     engine.addstrategy(
         SMAStrategy,
@@ -67,14 +67,14 @@ def runstrat():
         dataname=datapath)
 
     tframes = dict(
-        daily=bt.TimeFrame.Days,
-        weekly=bt.TimeFrame.Weeks,
-        monthly=bt.TimeFrame.Months)
+        daily=trader.TimeFrame.Days,
+        weekly=trader.TimeFrame.Weeks,
+        monthly=trader.TimeFrame.Months)
 
     # Handy dictionary for the argument timeframe conversion
     # Resample the data
     if args.oldrp:
-        data = bt.DataReplayer(
+        data = trader.DataReplayer(
             dataname=data,
             timeframe=tframes[args.timeframe],
             compression=args.compression)

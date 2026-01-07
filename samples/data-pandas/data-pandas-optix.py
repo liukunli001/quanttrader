@@ -23,8 +23,8 @@ from __future__ import (absolute_import, division, print_function,
 
 import argparse
 
-import quantrader as bt
-import quantrader.feeds as btfeeds
+import quanttrader as trader
+import trader.feeds
 
 import pandas
 
@@ -42,7 +42,7 @@ class PandasDataOptix(btfeeds.PandasData):
             ['optix_close', 'optix_pess', 'optix_opt'])
 
 
-class StrategyOptix(bt.Strategy):
+class StrategyOptix(trader.Strategy):
 
     def next(self):
         print('%03d %f %f, %f' % (
@@ -56,7 +56,7 @@ def runstrat():
     args = parse_args()
 
     # Create a engine entity
-    engine = bt.Engine(stdstats=False)
+    engine = trader.Engine(stdstats=False)
 
     # Add a strategy
     engine.addstrategy(StrategyOptix)
@@ -79,7 +79,7 @@ def runstrat():
         print(dataframe)
         print('--------------------------------------------------')
 
-    # Pass it to the quantrader datafeed and add it to the engine
+    # Pass it to the quanttrader datafeed and add it to the engine
     data = PandasDataOptix(dataname=dataframe)
 
     engine.adddata(data)

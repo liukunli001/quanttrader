@@ -28,10 +28,10 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class ValueUnlever(bt.observers.Value):
+class ValueUnlever(trader.observers.Value):
     '''Extension of regular Value observer to add leveraged view'''
     lines = ('value_lever', 'asset')
     params = (('assetstart', 100000.0), ('lever', True),)
@@ -48,7 +48,7 @@ class ValueUnlever(bt.observers.Value):
             self.lines.asset[0] = change * self.lines.asset[-1]
 
 
-class St(bt.Strategy):
+class St(trader.Strategy):
     params = (
         ('fall', -0.01),
         ('hold', 2),
@@ -142,7 +142,7 @@ class St(bt.Strategy):
 def runstrat(args=None):
     args = parse_args(args)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     # Data feed kwargs
     kwargs = dict()
@@ -153,16 +153,16 @@ def runstrat(args=None):
         kwargs[d] = datetime.datetime.strptime(a, dtfmt + tmfmt * ('T' in a))
 
     if not args.offline:
-        YahooData = bt.feeds.YahooFinanceData
+        YahooData = trader.feeds.YahooFinanceData
     else:
-        YahooData = bt.feeds.YahooFinanceCSVData
+        YahooData = trader.feeds.YahooFinanceCSVData
 
     # Data feed - no plot - observer will do the job
     data = YahooData(dataname=args.data, plot=False, **kwargs)
     engine.adddata(data)
 
     # Broker
-    engine.broker = bt.brokers.BackBroker(**eval('dict(' + args.broker + ')'))
+    engine.broker = trader.brokers.BackBroker(**eval('dict(' + args.broker + ')'))
 
     # Add a commission
     engine.broker.setcommission(**eval('dict(' + args.comminfo + ')'))

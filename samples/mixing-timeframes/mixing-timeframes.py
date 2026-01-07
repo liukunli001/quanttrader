@@ -23,13 +23,13 @@ from __future__ import (absolute_import, division, print_function,
 
 import argparse
 
-import quantrader as bt
-import quantrader.feeds as btfeeds
-import quantrader.indicators as btind
-import quantrader.utils.flushfile
+import quanttrader as trader
+import trader.feeds
+import trader.indicators
+import trader.utils.flushfile
 
 
-class St(bt.Strategy):
+class St(trader.Strategy):
     params = dict(multi=True)
 
     def __init__(self):
@@ -58,10 +58,10 @@ class St(bt.Strategy):
 def runstrat():
     args = parse_args()
 
-    engine = bt.Engine()
+    engine = trader.Engine()
     data = btfeeds.BacktraderCSVData(dataname=args.data)
     engine.adddata(data)
-    engine.resampledata(data, timeframe=bt.TimeFrame.Months)
+    engine.resampledata(data, timeframe=trader.TimeFrame.Months)
 
     engine.addstrategy(St, multi=args.multi)
 

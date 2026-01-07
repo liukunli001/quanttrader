@@ -24,20 +24,20 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import quantrader as bt
+import quanttrader as trader
 
 TFRAMES = dict(
-    days=bt.TimeFrame.Days,
-    weeks=bt.TimeFrame.Weeks,
-    months=bt.TimeFrame.Months,
-    years=bt.TimeFrame.Years)
+    days=trader.TimeFrame.Days,
+    weeks=trader.TimeFrame.Weeks,
+    months=trader.TimeFrame.Months,
+    years=trader.TimeFrame.Years)
 
 
 def runstrat(pargs=None):
     args = parse_args(pargs)
 
     # Create a engine
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     if args.cash is not None:
         engine.broker.set_cash(args.cash)
@@ -52,10 +52,10 @@ def runstrat(pargs=None):
         dkwargs['todate'] = todate
 
     # Create the 1st data
-    data = bt.feeds.BacktraderCSVData(dataname=args.data, **dkwargs)
+    data = trader.feeds.BacktraderCSVData(dataname=args.data, **dkwargs)
     engine.adddata(data)  # Add the data to engine
 
-    engine.addstrategy(bt.strategies.SMA_CrossOver)  # Add the strategy
+    engine.addstrategy(trader.strategies.SMA_CrossOver)  # Add the strategy
 
     lrkwargs = dict()
     if args.tframe is not None:
@@ -64,7 +64,7 @@ def runstrat(pargs=None):
     if args.tann is not None:
         lrkwargs['tann'] = args.tann
 
-    engine.addanalyzer(bt.analyzers.Returns, **lrkwargs)  # Returns
+    engine.addanalyzer(trader.analyzers.Returns, **lrkwargs)  # Returns
 
     vwrkwargs = dict()
     if args.tframe is not None:
@@ -79,17 +79,17 @@ def runstrat(pargs=None):
     if args.tau is not None:
         vwrkwargs['tau'] = args.tau
 
-    engine.addanalyzer(bt.analyzers.SQN)  # VWR Analyzer
-    engine.addanalyzer(bt.analyzers.SharpeRatio_A)  # VWR Analyzer
-    engine.addanalyzer(bt.analyzers.VWR, **vwrkwargs)  # VWR Analyzer
+    engine.addanalyzer(trader.analyzers.SQN)  # VWR Analyzer
+    engine.addanalyzer(trader.analyzers.SharpeRatio_A)  # VWR Analyzer
+    engine.addanalyzer(trader.analyzers.VWR, **vwrkwargs)  # VWR Analyzer
     # Sample time return analyzers
-    engine.addanalyzer(bt.analyzers.TimeReturn,
-                        timeframe=bt.TimeFrame.Months)
-    engine.addanalyzer(bt.analyzers.TimeReturn,
-                        timeframe=bt.TimeFrame.Years)
+    engine.addanalyzer(trader.analyzers.TimeReturn,
+                        timeframe=trader.TimeFrame.Months)
+    engine.addanalyzer(trader.analyzers.TimeReturn,
+                        timeframe=trader.TimeFrame.Years)
 
     # Add a writer to get output
-    engine.addwriter(bt.WriterFile, csv=args.writercsv, rounding=4)
+    engine.addwriter(trader.WriterFile, csv=args.writercsv, rounding=4)
 
     engine.run()  # And run it
 

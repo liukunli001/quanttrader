@@ -23,18 +23,18 @@ from __future__ import (absolute_import, division, print_function,
 
 import argparse
 
-import quantrader as bt
-import quantrader.feeds as btfeeds
+import quanttrader as trader
+import trader.feeds
 
 
 def runstrat():
     args = parse_args()
 
     # Create a engine entity
-    engine = bt.Engine(stdstats=False)
+    engine = trader.Engine(stdstats=False)
 
     # Add a strategy
-    engine.addstrategy(bt.Strategy)
+    engine.addstrategy(trader.Strategy)
 
     # Load the Data
     datapath = args.dataname or '../../datas/ticksample.csv'
@@ -42,18 +42,18 @@ def runstrat():
     data = btfeeds.GenericCSVData(
         dataname=datapath,
         dtformat='%Y-%m-%dT%H:%M:%S.%f',
-        timeframe=bt.TimeFrame.Ticks,
+        timeframe=trader.TimeFrame.Ticks,
     )
 
     # Handy dictionary for the argument timeframe conversion
     tframes = dict(
-        ticks=bt.TimeFrame.Ticks,
-        microseconds=bt.TimeFrame.MicroSeconds,
-        seconds=bt.TimeFrame.Seconds,
-        minutes=bt.TimeFrame.Minutes,
-        daily=bt.TimeFrame.Days,
-        weekly=bt.TimeFrame.Weeks,
-        monthly=bt.TimeFrame.Months)
+        ticks=trader.TimeFrame.Ticks,
+        microseconds=trader.TimeFrame.MicroSeconds,
+        seconds=trader.TimeFrame.Seconds,
+        minutes=trader.TimeFrame.Minutes,
+        daily=trader.TimeFrame.Days,
+        weekly=trader.TimeFrame.Weeks,
+        monthly=trader.TimeFrame.Months)
 
     # Resample the data
     engine.resampledata(
@@ -66,7 +66,7 @@ def runstrat():
 
     if args.writer:
         # add a writer
-        engine.addwriter(bt.WriterFile, csv=args.wrcsv)
+        engine.addwriter(trader.WriterFile, csv=args.wrcsv)
 
     # Run over everything
     engine.run()

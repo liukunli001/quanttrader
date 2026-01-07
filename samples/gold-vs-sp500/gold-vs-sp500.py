@@ -29,10 +29,10 @@ import datetime
 
 import scipy.stats
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class PearsonR(bt.ind.PeriodN):
+class PearsonR(trader.ind.PeriodN):
     _mindatas = 2  # hint to the platform
 
     lines = ('correlation',)
@@ -45,9 +45,9 @@ class PearsonR(bt.ind.PeriodN):
         self.lines.correlation[0] = c
 
 
-class MACrossOver(bt.Strategy):
+class MACrossOver(trader.Strategy):
     params = (
-        ('ma', bt.ind.MovAv.SMA),
+        ('ma', trader.ind.MovAv.SMA),
         ('pd1', 20),
         ('pd2', 20),
     )
@@ -61,7 +61,7 @@ class MACrossOver(bt.Strategy):
 def runstrat(args=None):
     args = parse_args(args)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     # Data feed kwargs
     kwargs = dict()
@@ -74,35 +74,35 @@ def runstrat(args=None):
             kwargs[d] = datetime.datetime.strptime(a, strpfmt)
 
     if not args.offline:
-        YahooData = bt.feeds.YahooFinanceData
+        YahooData = trader.feeds.YahooFinanceData
     else:
-        YahooData = bt.feeds.YahooFinanceCSVData
+        YahooData = trader.feeds.YahooFinanceCSVData
 
     # Data feeds
     data0 = YahooData(dataname=args.data0, **kwargs)
     # engine.adddata(data0)
-    engine.resampledata(data0, timeframe=bt.TimeFrame.Weeks)
+    engine.resampledata(data0, timeframe=trader.TimeFrame.Weeks)
 
     data1 = YahooData(dataname=args.data1, **kwargs)
     # engine.adddata(data1)
-    engine.resampledata(data1, timeframe=bt.TimeFrame.Weeks)
+    engine.resampledata(data1, timeframe=trader.TimeFrame.Weeks)
     data1.plotinfo.plotmaster = data0
 
     # Broker
     kwargs = eval('dict(' + args.broker + ')')
-    engine.broker = bt.brokers.BackBroker(**kwargs)
+    engine.broker = trader.brokers.BackBroker(**kwargs)
 
     # Sizer
     kwargs = eval('dict(' + args.sizer + ')')
-    engine.addsizer(bt.sizers.FixedSize, **kwargs)
+    engine.addsizer(trader.sizers.FixedSize, **kwargs)
 
     # Strategy
     if True:
         kwargs = eval('dict(' + args.strat + ')')
         engine.addstrategy(MACrossOver, **kwargs)
 
-    engine.addobserver(bt.observers.LogReturns2,
-                        timeframe=bt.TimeFrame.Weeks,
+    engine.addobserver(trader.observers.LogReturns2,
+                        timeframe=trader.TimeFrame.Weeks,
                         compression=20)
 
     # Execute

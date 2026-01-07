@@ -24,12 +24,12 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import quantrader as bt
-import quantrader.feeds as btfeeds
-import quantrader.indicators as btind
+import quanttrader as trader
+import trader.feeds
+import trader.indicators
 
 
-class SMACrossOver(bt.Strategy):
+class SMACrossOver(trader.Strategy):
     params = (
         ('stake', 1),
         ('period', 30),
@@ -84,7 +84,7 @@ def runstrategy():
     args = parse_args()
 
     # Create a engine
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     # Get the dates from the args
     fromdate = datetime.datetime.strptime(args.fromdate, '%Y-%m-%d')
@@ -107,8 +107,8 @@ def runstrategy():
 
     commtypes = dict(
         none=None,
-        perc=bt.CommInfoBase.COMM_PERC,
-        fixed=bt.CommInfoBase.COMM_FIXED)
+        perc=trader.CommInfoBase.COMM_PERC,
+        fixed=trader.CommInfoBase.COMM_FIXED)
 
     # Add the commission - only stocks like a for each operation
     engine.broker.setcommission(commission=args.comm,

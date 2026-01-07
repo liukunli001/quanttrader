@@ -26,10 +26,10 @@ import datetime
 import math
 
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class RelativeVolumeByBar(bt.Indicator):
+class RelativeVolumeByBar(trader.Indicator):
     alias = ('RVBB',)
     lines = ('rvbb',)
 
@@ -113,7 +113,7 @@ class RelativeVolumeByBar(bt.Indicator):
         tframe = self.data._timeframe
         tcomp = self.data._compression
 
-        if tframe == bt.TimeFrame.Seconds:
+        if tframe == trader.TimeFrame.Seconds:
             minbuffer = (minperiod * 60)
 
         minbuffer = (minbuffer // tcomp) + tcomp

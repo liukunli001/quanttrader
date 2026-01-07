@@ -24,15 +24,15 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class St(bt.Strategy):
+class St(trader.Strategy):
     params = dict(
-        ma=bt.ind.SMA,
+        ma=trader.ind.SMA,
         p1=10,
         p2=30,
-        stoptype=bt.Order.StopTrail,
+        stoptype=trader.Order.StopTrail,
         trailamount=0.0,
         trailpercent=0.0,
         limitoffset=0.0,
@@ -40,7 +40,7 @@ class St(bt.Strategy):
 
     def __init__(self):
         ma1, ma2 = self.p.ma(period=self.p.p1), self.p.ma(period=self.p.p2)
-        self.crup = bt.ind.CrossUp(ma1, ma2)
+        self.crup = trader.ind.CrossUp(ma1, ma2)
         self.order = None
 
     def next(self):
@@ -51,7 +51,7 @@ class St(bt.Strategy):
                 print('*' * 50)
 
         elif self.order is None:
-            if self.p.stoptype == bt.Order.StopTrailLimit:
+            if self.p.stoptype == trader.Order.StopTrailLimit:
                 price = self.data.close[0]
                 plimit = self.data.close[0] + self.p.limitoffset
             else:
@@ -89,7 +89,7 @@ class St(bt.Strategy):
 def runstrat(args=None):
     args = parse_args(args)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     # Data feed kwargs
     kwargs = dict()
@@ -102,14 +102,14 @@ def runstrat(args=None):
             kwargs[d] = datetime.datetime.strptime(a, strpfmt)
 
     # Data feed
-    data0 = bt.feeds.BacktraderCSVData(dataname=args.data0, **kwargs)
+    data0 = trader.feeds.BacktraderCSVData(dataname=args.data0, **kwargs)
     engine.adddata(data0)
 
     # Broker
-    engine.broker = bt.brokers.BackBroker(**eval('dict(' + args.broker + ')'))
+    engine.broker = trader.brokers.BackBroker(**eval('dict(' + args.broker + ')'))
 
     # Sizer
-    engine.addsizer(bt.sizers.FixedSize, **eval('dict(' + args.sizer + ')'))
+    engine.addsizer(trader.sizers.FixedSize, **eval('dict(' + args.sizer + ')'))
 
     # Strategy
     engine.addstrategy(St, **eval('dict(' + args.strat + ')'))

@@ -25,17 +25,17 @@ import argparse
 import datetime
 
 # The above could be sent to an independent module
-import quantrader as bt
-from quantrader.utils import flushfile  # win32 quick stdout flushing
-from quantrader.utils.py3 import string_types
+import quanttrader as trader
+from trader.utils import flushfile  # win32 quick stdout flushing
+from trader.utils.py3 import string_types
 
 
-class TestStrategy(bt.Strategy):
+class TestStrategy(trader.Strategy):
     params = dict(
         smaperiod=5,
         trade=False,
         stake=10,
-        exectype=bt.Order.Market,
+        exectype=trader.Order.Market,
         stopafter=0,
         valid=None,
         cancel=0,
@@ -53,7 +53,7 @@ class TestStrategy(bt.Strategy):
         self.datastatus = 0
 
         # Create SMA on 2nd data
-        self.sma = bt.indicators.MovAv.SMA(self.data, period=self.p.smaperiod)
+        self.sma = trader.indicators.MovAv.SMA(self.data, period=self.p.smaperiod)
 
         print('--------------------------------------------------')
         print('Strategy Created')
@@ -135,7 +135,7 @@ class TestStrategy(bt.Strategy):
                 size = self.p.stake // 2
                 if not size:
                     size = self.position.size  # use the remaining
-                self.order = self.sell(size=size, exectype=bt.Order.Market)
+                self.order = self.sell(size=size, exectype=trader.Order.Market)
 
         elif self.order is not None and self.p.cancel:
             if self.datastatus > self.p.cancel:
@@ -156,25 +156,25 @@ def runstrategy():
     args = parse_args()
 
     # Create a engine
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     storekwargs = dict()
 
     if not args.nostore:
-        vcstore = bt.stores.VCStore(**storekwargs)
+        vcstore = trader.stores.VCStore(**storekwargs)
 
     if args.broker:
         brokerargs = dict(account=args.account, **storekwargs)
         if not args.nostore:
             broker = vcstore.getbroker(**brokerargs)
         else:
-            broker = bt.brokers.VCBroker(**brokerargs)
+            broker = trader.brokers.VCBroker(**brokerargs)
 
         engine.setbroker(broker)
 
-    timeframe = bt.TimeFrame.TFrame(args.timeframe)
+    timeframe = trader.TimeFrame.TFrame(args.timeframe)
     if args.resample or args.replay:
-        datatf = bt.TimeFrame.Ticks
+        datatf = trader.TimeFrame.Ticks
         datacomp = 1
     else:
         datatf = timeframe
@@ -190,7 +190,7 @@ def runstrategy():
         dtformat = '%Y-%m-%d' + ('T%H:%M:%S' * ('T' in args.todate))
         todate = datetime.datetime.strptime(args.todate, dtformat)
 
-    VCDataFactory = vcstore.getdata if not args.nostore else bt.feeds.VCData
+    VCDataFactory = vcstore.getdata if not args.nostore else trader.feeds.VCData
 
     datakwargs = dict(
         timeframe=datatf, compression=datacomp,
@@ -249,7 +249,7 @@ def runstrategy():
     engine.addstrategy(TestStrategy,
                         smaperiod=args.smaperiod,
                         trade=args.trade,
-                        exectype=bt.Order.ExecType(args.exectype),
+                        exectype=trader.Order.ExecType(args.exectype),
                         stake=args.stake,
                         stopafter=args.stopafter,
                         valid=valid,
@@ -340,8 +340,8 @@ def parse_args():
                         required=False, action='store_true',
                         help='resample to chosen timeframe')
 
-    parser.add_argument('--timeframe', default=bt.TimeFrame.Names[0],
-                        choices=bt.TimeFrame.Names,
+    parser.add_argument('--timeframe', default=trader.TimeFrame.Names[0],
+                        choices=trader.TimeFrame.Names,
                         required=False, action='store',
                         help='TimeFrame for Resample/Replay')
 
@@ -377,8 +377,8 @@ def parse_args():
                         required=False, action='store_true',
                         help='Do not sell after a buy')
 
-    parser.add_argument('--exectype', default=bt.Order.ExecTypes[0],
-                        choices=bt.Order.ExecTypes,
+    parser.add_argument('--exectype', default=trader.Order.ExecTypes[0],
+                        choices=trader.Order.ExecTypes,
                         required=False, action='store',
                         help='Execution to Use when opening position')
 

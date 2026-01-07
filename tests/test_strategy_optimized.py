@@ -30,9 +30,9 @@ except:
 
 import testcommon
 
-from quantrader.utils.py3 import range
-import quantrader as bt
-import quantrader.indicators as btind
+from trader.utils.py3 import range
+import quanttrader as trader
+import trader.indicators
 
 CHKVALUES = [
     '14525.80', '14525.80', '15408.20', '15408.20', '14763.90',
@@ -60,7 +60,7 @@ _chkvalues = []
 _chkcash = []
 
 
-class TestStrategy(bt.Strategy):
+class TestStrategy(trader.Strategy):
     params = (
         ('period', 15),
         ('printdata', True),
@@ -69,7 +69,7 @@ class TestStrategy(bt.Strategy):
 
     def log(self, txt, dt=None):
         dt = dt or self.data.datetime[0]
-        dt = bt.num2date(dt)
+        dt = trader.num2date(dt)
         print('%s, %s' % (dt.isoformat(), txt))
 
     def __init__(self):

@@ -24,7 +24,7 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import quantrader as bt
+import quanttrader as trader
 
 
 ORDER_HISTORY = (
@@ -58,7 +58,7 @@ ORDER_HISTORY = (
 )
 
 
-class SmaCross(bt.SignalStrategy):
+class SmaCross(trader.SignalStrategy):
     params = dict(sma1=10, sma2=20)
 
     def notify_order(self, order):
@@ -74,13 +74,13 @@ class SmaCross(bt.SignalStrategy):
 
     def __init__(self):
         print('Creating Signal Strategy')
-        sma1 = bt.ind.SMA(period=self.params.sma1)
-        sma2 = bt.ind.SMA(period=self.params.sma2)
-        crossover = bt.ind.CrossOver(sma1, sma2)
-        self.signal_add(bt.SIGNAL_LONG, crossover)
+        sma1 = trader.ind.SMA(period=self.params.sma1)
+        sma2 = trader.ind.SMA(period=self.params.sma2)
+        crossover = trader.ind.CrossOver(sma1, sma2)
+        self.signal_add(trader.SIGNAL_LONG, crossover)
 
 
-class St(bt.Strategy):
+class St(trader.Strategy):
     params = dict(
     )
 
@@ -106,7 +106,7 @@ class St(bt.Strategy):
 def runstrat(args=None):
     args = parse_args(args)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
 
     # Data feed kwargs
     kwargs = dict()
@@ -118,14 +118,14 @@ def runstrat(args=None):
             strpfmt = dtfmt + tmfmt * ('T' in a)
             kwargs[d] = datetime.datetime.strptime(a, strpfmt)
 
-    data0 = bt.feeds.BacktraderCSVData(dataname=args.data0, **kwargs)
+    data0 = trader.feeds.BacktraderCSVData(dataname=args.data0, **kwargs)
     engine.adddata(data0)
 
     # Broker
-    engine.broker = bt.brokers.BackBroker(**eval('dict(' + args.broker + ')'))
+    engine.broker = trader.brokers.BackBroker(**eval('dict(' + args.broker + ')'))
 
     # Sizer
-    engine.addsizer(bt.sizers.FixedSize, **eval('dict(' + args.sizer + ')'))
+    engine.addsizer(trader.sizers.FixedSize, **eval('dict(' + args.sizer + ')'))
 
     # Strategy
     if not args.order_history:
@@ -134,9 +134,9 @@ def runstrat(args=None):
         engine.addstrategy(St, **eval('dict(' + args.strat + ')'))
         engine.add_order_history(ORDER_HISTORY, notify=True)
 
-    engine.addanalyzer(bt.analyzers.TimeReturn, timeframe=bt.TimeFrame.Months)
-    engine.addanalyzer(bt.analyzers.TimeReturn, timeframe=bt.TimeFrame.Years)
-    engine.addanalyzer(bt.analyzers.TradeAnalyzer)
+    engine.addanalyzer(trader.analyzers.TimeReturn, timeframe=trader.TimeFrame.Months)
+    engine.addanalyzer(trader.analyzers.TimeReturn, timeframe=trader.TimeFrame.Years)
+    engine.addanalyzer(trader.analyzers.TradeAnalyzer)
 
     # Execute
     engine.run(**eval('dict(' + args.engine + ')'))

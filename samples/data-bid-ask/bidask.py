@@ -23,9 +23,9 @@ from __future__ import (absolute_import, division, print_function,
 
 import argparse
 
-import quantrader as bt
-import quantrader.feeds as btfeeds
-import quantrader.indicators as btind
+import quanttrader as trader
+import trader.feeds
+import trader.indicators
 
 
 class BidAskCSV(btfeeds.GenericCSVData):
@@ -40,7 +40,7 @@ class BidAskCSV(btfeeds.GenericCSVData):
     )
 
 
-class St(bt.Strategy):
+class St(trader.Strategy):
     params = (('sma', False), ('period', 3))
 
     def __init__(self):
@@ -85,7 +85,7 @@ def parse_args():
 def runstrategy():
     args = parse_args()
 
-    engine = bt.Engine()  # Create a engine
+    engine = trader.Engine()  # Create a engine
 
     data = BidAskCSV(dataname=args.data, dtformat=args.dtformat)
     engine.adddata(data)  # Add the 1st data to engine

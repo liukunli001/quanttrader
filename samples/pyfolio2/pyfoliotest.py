@@ -27,10 +27,10 @@ import collections
 import datetime
 
 
-import quantrader as bt
+import quanttrader as trader
 
 
-class St(bt.SignalStrategy):
+class St(trader.SignalStrategy):
     params = (
         ('pfast', 13),
         ('pslow', 50),
@@ -40,13 +40,13 @@ class St(bt.SignalStrategy):
     )
 
     def __init__(self):
-        self.sfast = bt.indicators.SMA(period=self.p.pfast)
-        self.sslow = bt.indicators.SMA(period=self.p.pslow)
-        self.cover = bt.indicators.CrossOver(self.sfast, self.sslow)
+        self.sfast = trader.indicators.SMA(period=self.p.pfast)
+        self.sslow = trader.indicators.SMA(period=self.p.pslow)
+        self.cover = trader.indicators.CrossOver(self.sfast, self.sslow)
         if self.p.short:
-            self.signal_add(bt.SIGNAL_LONGSHORT, self.cover)
+            self.signal_add(trader.SIGNAL_LONGSHORT, self.cover)
         else:
-            self.signal_add(bt.SIGNAL_LONG, self.cover)
+            self.signal_add(trader.SIGNAL_LONG, self.cover)
 
     def start(self):
         super(self.__class__, self).start()
@@ -80,11 +80,11 @@ class St(bt.SignalStrategy):
 
 _TFRAMES = collections.OrderedDict(
     (
-        ('minutes', bt.TimeFrame.Minutes),
-        ('days', bt.TimeFrame.Days),
-        ('weeks', bt.TimeFrame.Weeks),
-        ('months', bt.TimeFrame.Months),
-        ('years', bt.TimeFrame.Years),
+        ('minutes', trader.TimeFrame.Minutes),
+        ('days', trader.TimeFrame.Days),
+        ('weeks', trader.TimeFrame.Weeks),
+        ('months', trader.TimeFrame.Months),
+        ('years', trader.TimeFrame.Years),
     )
 )
 
@@ -94,7 +94,7 @@ _TFS = _TFRAMES.keys()
 def runstrat(args=None):
     args = parse_args(args)
 
-    engine = bt.Engine()
+    engine = trader.Engine()
     engine.broker.set_cash(args.cash)
 
     dkwargs = dict()
@@ -112,20 +112,20 @@ def runstrat(args=None):
     if args.compression:
         dkwargs['compression'] = args.compression
 
-    # data0 = bt.feeds.BacktraderCSVData(dataname=args.data0, **dkwargs)
-    data0 = bt.feeds.VCData(dataname=args.data0, historical=True, **dkwargs)
+    # data0 = trader.feeds.BacktraderCSVData(dataname=args.data0, **dkwargs)
+    data0 = trader.feeds.VCData(dataname=args.data0, historical=True, **dkwargs)
     engine.adddata(data0, name='Data0')
 
     engine.addstrategy(St, short=args.short, printdata=args.printdata)
-    engine.addsizer(bt.sizers.FixedSize, stake=args.stake)
+    engine.addsizer(trader.sizers.FixedSize, stake=args.stake)
 
     # Own analyzerset
-    engine.addanalyzer(bt.analyzers.TimeReturn, timeframe=bt.TimeFrame.Years)
-    engine.addanalyzer(bt.analyzers.SharpeRatio, timeframe=bt.TimeFrame.Years)
-    engine.addanalyzer(bt.analyzers.SQN,)
+    engine.addanalyzer(trader.analyzers.TimeReturn, timeframe=trader.TimeFrame.Years)
+    engine.addanalyzer(trader.analyzers.SharpeRatio, timeframe=trader.TimeFrame.Years)
+    engine.addanalyzer(trader.analyzers.SQN,)
 
     if args.pyfolio:
-        engine.addanalyzer(bt.analyzers.PyFolio, _name='pyfolio',
+        engine.addanalyzer(trader.analyzers.PyFolio, _name='pyfolio',
                             timeframe=_TFRAMES[args.pftimeframe])
 
     if args.printout:
