@@ -26,7 +26,7 @@ import collections
 import datetime
 import itertools
 
-import backtrader as bt
+import quantrader as bt
 
 
 class SMACrossOver(bt.Indicator):
@@ -55,8 +55,8 @@ class SlipSt(bt.SignalStrategy):
 def runstrat(args=None):
     args = parse_args(args)
 
-    cerebro = bt.Cerebro()
-    cerebro.broker.set_cash(args.cash)
+    engine = bt.Engine()
+    engine.broker.set_cash(args.cash)
 
     dkwargs = dict()
     if args.fromdate is not None:
@@ -69,36 +69,36 @@ def runstrat(args=None):
 
     # if dataset is None, args.data has been given
     data = bt.feeds.BacktraderCSVData(dataname=args.data, **dkwargs)
-    cerebro.adddata(data)
+    engine.adddata(data)
 
-    cerebro.signal_strategy(SlipSt)
+    engine.signal_strategy(SlipSt)
     if not args.longonly:
         stype = bt.signal.SIGNAL_LONGSHORT
     else:
         stype = bt.signal.SIGNAL_LONG
 
-    cerebro.add_signal(stype, SMACrossOver, p1=args.period1, p2=args.period2)
+    engine.add_signal(stype, SMACrossOver, p1=args.period1, p2=args.period2)
 
     if args.slip_perc is not None:
-        cerebro.broker.set_slippage_perc(args.slip_perc,
+        engine.broker.set_slippage_perc(args.slip_perc,
                                          slip_open=args.slip_open,
                                          slip_match=not args.no_slip_match,
                                          slip_out=args.slip_out)
 
     elif args.slip_fixed is not None:
-        cerebro.broker.set_slippage_fixed(args.slip_fixed,
+        engine.broker.set_slippage_fixed(args.slip_fixed,
                                           slip_open=args.slip_open,
                                           slip_match=not args.no_slip_match,
                                           slip_out=args.slip_out)
 
-    cerebro.run()
+    engine.run()
     if args.plot:
         pkwargs = dict(style='bar')
         if args.plot is not True:  # evals to True but is not True
             npkwargs = eval('dict(' + args.plot + ')')  # args were passed
             pkwargs.update(npkwargs)
 
-        cerebro.plot(**pkwargs)
+        engine.plot(**pkwargs)
 
 
 def parse_args(pargs=None):

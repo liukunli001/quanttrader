@@ -25,10 +25,10 @@ import argparse
 import datetime
 
 # The above could be sent to an independent module
-import backtrader as bt
-import backtrader.feeds as btfeeds
-import backtrader.indicators as btind
-from backtrader.analyzers import (SQN, AnnualReturn, TimeReturn, SharpeRatio,
+import quantrader as bt
+import quantrader.feeds as btfeeds
+import quantrader.indicators as btind
+from quantrader.analyzers import (SQN, AnnualReturn, TimeReturn, SharpeRatio,
                                   TradeAnalyzer)
 
 
@@ -120,8 +120,8 @@ class LongShortStrategy(bt.Strategy):
 def runstrategy():
     args = parse_args()
 
-    # Create a cerebro
-    cerebro = bt.Cerebro()
+    # Create a engine
+    engine = bt.Engine()
 
     # Get the dates from the args
     fromdate = datetime.datetime.strptime(args.fromdate, '%Y-%m-%d')
@@ -133,21 +133,21 @@ def runstrategy():
         fromdate=fromdate,
         todate=todate)
 
-    # Add the 1st data to cerebro
-    cerebro.adddata(data)
+    # Add the 1st data to engine
+    engine.adddata(data)
 
     # Add the strategy
-    cerebro.addstrategy(LongShortStrategy,
+    engine.addstrategy(LongShortStrategy,
                         period=args.period,
                         onlylong=args.onlylong,
                         csvcross=args.csvcross,
                         stake=args.stake)
 
     # Add the commission - only stocks like a for each operation
-    cerebro.broker.setcash(args.cash)
+    engine.broker.setcash(args.cash)
 
     # Add the commission - only stocks like a for each operation
-    cerebro.broker.setcommission(commission=args.comm,
+    engine.broker.setcommission(commission=args.comm,
                                  mult=args.mult,
                                  margin=args.margin)
 
@@ -158,24 +158,24 @@ def runstrategy():
         years=bt.TimeFrame.Years)
 
     # Add the Analyzers
-    cerebro.addanalyzer(SQN)
+    engine.addanalyzer(SQN)
     if args.legacyannual:
-        cerebro.addanalyzer(AnnualReturn)
-        cerebro.addanalyzer(SharpeRatio, legacyannual=True)
+        engine.addanalyzer(AnnualReturn)
+        engine.addanalyzer(SharpeRatio, legacyannual=True)
     else:
-        cerebro.addanalyzer(TimeReturn, timeframe=tframes[args.tframe])
-        cerebro.addanalyzer(SharpeRatio, timeframe=tframes[args.tframe])
+        engine.addanalyzer(TimeReturn, timeframe=tframes[args.tframe])
+        engine.addanalyzer(SharpeRatio, timeframe=tframes[args.tframe])
 
-    cerebro.addanalyzer(TradeAnalyzer)
+    engine.addanalyzer(TradeAnalyzer)
 
-    cerebro.addwriter(bt.WriterFile, csv=args.writercsv, rounding=4)
+    engine.addwriter(bt.WriterFile, csv=args.writercsv, rounding=4)
 
     # And run it
-    cerebro.run()
+    engine.run()
 
     # Plot if requested
     if args.plot:
-        cerebro.plot(numfigs=args.numfigs, volume=False, zdown=False)
+        engine.plot(numfigs=args.numfigs, volume=False, zdown=False)
 
 
 def parse_args():

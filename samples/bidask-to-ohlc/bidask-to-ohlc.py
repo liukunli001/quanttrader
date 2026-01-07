@@ -24,8 +24,8 @@ from __future__ import (absolute_import, division, print_function,)
 import argparse
 import datetime
 
-import backtrader as bt
-import backtrader.feeds as btfeeds
+import quantrader as bt
+import quantrader.feeds as btfeeds
 
 
 class St(bt.Strategy):
@@ -40,7 +40,7 @@ class St(bt.Strategy):
 def runstrat():
     args = parse_args()
 
-    cerebro = bt.Cerebro()
+    engine = bt.Engine()
 
     data = btfeeds.GenericCSVData(
         dataname=args.data,
@@ -56,15 +56,15 @@ def runstrat():
         openinterest=-1,  # -1 for not present
         timeframe=bt.TimeFrame.Ticks)
 
-    cerebro.resampledata(data,
+    engine.resampledata(data,
                          timeframe=bt.TimeFrame.Ticks,
                          compression=args.compression)
 
-    cerebro.addstrategy(St)
+    engine.addstrategy(St)
 
-    cerebro.run()
+    engine.run()
     if args.plot:
-        cerebro.plot(style='bar')
+        engine.plot(style='bar')
 
 
 def parse_args():

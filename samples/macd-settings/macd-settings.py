@@ -26,7 +26,7 @@ import argparse
 import datetime
 import random
 
-import backtrader as bt
+import quantrader as bt
 
 BTVERSION = tuple(int(x) for x in bt.__version__.split('.'))
 
@@ -140,12 +140,12 @@ DATASETS = {
 def runstrat(args=None):
     args = parse_args(args)
 
-    cerebro = bt.Cerebro()
-    cerebro.broker.set_cash(args.cash)
+    engine = bt.Engine()
+    engine.broker.set_cash(args.cash)
     comminfo = bt.commissions.CommInfo_Stocks_Perc(commission=args.commperc,
                                                    percabs=True)
 
-    cerebro.broker.addcommissioninfo(comminfo)
+    engine.broker.addcommissioninfo(comminfo)
 
     dkwargs = dict()
     if args.fromdate is not None:
@@ -159,9 +159,9 @@ def runstrat(args=None):
     # if dataset is None, args.data has been given
     dataname = DATASETS.get(args.dataset, args.data)
     data0 = bt.feeds.YahooFinanceCSVData(dataname=dataname, **dkwargs)
-    cerebro.adddata(data0)
+    engine.adddata(data0)
 
-    cerebro.addstrategy(TheStrategy,
+    engine.addstrategy(TheStrategy,
                         macd1=args.macd1, macd2=args.macd2,
                         macdsig=args.macdsig,
                         atrperiod=args.atrperiod,
@@ -169,26 +169,26 @@ def runstrat(args=None):
                         smaperiod=args.smaperiod,
                         dirperiod=args.dirperiod)
 
-    cerebro.addsizer(FixedPerc, perc=args.cashalloc)
+    engine.addsizer(FixedPerc, perc=args.cashalloc)
 
     # Add TimeReturn Analyzers for self and the benchmark data
-    cerebro.addanalyzer(bt.analyzers.TimeReturn, _name='alltime_roi',
+    engine.addanalyzer(bt.analyzers.TimeReturn, _name='alltime_roi',
                         timeframe=bt.TimeFrame.NoTimeFrame)
 
-    cerebro.addanalyzer(bt.analyzers.TimeReturn, data=data0, _name='benchmark',
+    engine.addanalyzer(bt.analyzers.TimeReturn, data=data0, _name='benchmark',
                         timeframe=bt.TimeFrame.NoTimeFrame)
 
     # Add TimeReturn Analyzers fot the annuyl returns
-    cerebro.addanalyzer(bt.analyzers.TimeReturn, timeframe=bt.TimeFrame.Years)
+    engine.addanalyzer(bt.analyzers.TimeReturn, timeframe=bt.TimeFrame.Years)
     # Add a SharpeRatio
-    cerebro.addanalyzer(bt.analyzers.SharpeRatio, timeframe=bt.TimeFrame.Years,
+    engine.addanalyzer(bt.analyzers.SharpeRatio, timeframe=bt.TimeFrame.Years,
                         riskfreerate=args.riskfreerate)
 
     # Add SQN to qualify the trades
-    cerebro.addanalyzer(bt.analyzers.SQN)
-    cerebro.addobserver(bt.observers.DrawDown)  # visualize the drawdown evol
+    engine.addanalyzer(bt.analyzers.SQN)
+    engine.addobserver(bt.observers.DrawDown)  # visualize the drawdown evol
 
-    results = cerebro.run()
+    results = engine.run()
     st0 = results[0]
 
     for alyzer in st0.analyzers:
@@ -200,7 +200,7 @@ def runstrat(args=None):
             npkwargs = eval('dict(' + args.plot + ')')  # args were passed
             pkwargs.update(npkwargs)
 
-        cerebro.plot(**pkwargs)
+        engine.plot(**pkwargs)
 
 
 def parse_args(pargs=None):

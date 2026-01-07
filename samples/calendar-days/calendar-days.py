@@ -24,20 +24,20 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import backtrader as bt
-import backtrader.indicators as btind
-import backtrader.feeds as btfeeds
-import backtrader.filters as btfilters
+import quantrader as bt
+import quantrader.indicators as btind
+import quantrader.feeds as btfeeds
+import quantrader.filters as btfilters
 
 
 def runstrat():
     args = parse_args()
 
-    # Create a cerebro entity
-    cerebro = bt.Cerebro(stdstats=False)
+    # Create a engine entity
+    engine = bt.Engine(stdstats=False)
 
     # Add a strategy
-    cerebro.addstrategy(bt.Strategy)
+    engine.addstrategy(bt.Strategy)
 
     # Get the dates from the args
     fromdate = datetime.datetime.strptime(args.fromdate, '%Y-%m-%d')
@@ -58,22 +58,22 @@ def runstrat():
             fill_vol=args.fvol)
 
     # Add the resample data instead of the original
-    cerebro.adddata(data)
+    engine.adddata(data)
 
     # Add a simple moving average if requirested
     if args.sma:
-        cerebro.addindicator(btind.SMA, period=args.period)
+        engine.addindicator(btind.SMA, period=args.period)
 
     # Add a writer with CSV
     if args.writer:
-        cerebro.addwriter(bt.WriterFile, csv=args.wrcsv)
+        engine.addwriter(bt.WriterFile, csv=args.wrcsv)
 
     # Run over everything
-    cerebro.run()
+    engine.run()
 
     # Plot if requested
     if args.plot:
-        cerebro.plot(style='bar', numfigs=args.numfigs, volume=False)
+        engine.plot(style='bar', numfigs=args.numfigs, volume=False)
 
 
 def parse_args():
@@ -112,7 +112,7 @@ def parse_args():
                         help='Period to apply to the Simple Moving Average')
 
     parser.add_argument('--writer', '-w', action='store_true',
-                        help='Add a writer to cerebro')
+                        help='Add a writer to engine')
 
     parser.add_argument('--wrcsv', '-wc', action='store_true',
                         help='Enable CSV Output in the writer')

@@ -23,7 +23,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import argparse
 import random
-import backtrader as bt
+import quantrader as bt
 
 
 # The filter which changes the close price
@@ -56,12 +56,12 @@ class St(bt.Strategy):
 
 def runstrat(args=None):
     args = parse_args(args)
-    cerebro = bt.Cerebro()
+    engine = bt.Engine()
 
     dataname = '../../datas/2006-day-001.txt'  # data feed
 
     data0 = bt.feeds.BacktraderCSVData(dataname=dataname, name='data0')
-    cerebro.adddata(data0)
+    engine.adddata(data0)
 
     data1 = bt.feeds.BacktraderCSVData(dataname=dataname, name='data1')
     data1.addfilter(close_changer)
@@ -70,16 +70,16 @@ def runstrat(args=None):
     data1.plotinfo.plotmaster = data0
     if args.sameaxis:
         data1.plotinfo.sameaxis = True
-    cerebro.adddata(data1)
+    engine.adddata(data1)
 
-    cerebro.addstrategy(St)  # sample strategy
+    engine.addstrategy(St)  # sample strategy
 
-    cerebro.addobserver(bt.obs.Broker)  # removed below with stdstats=False
-    cerebro.addobserver(bt.obs.Trades)  # removed below with stdstats=False
+    engine.addobserver(bt.obs.Broker)  # removed below with stdstats=False
+    engine.addobserver(bt.obs.Trades)  # removed below with stdstats=False
 
-    cerebro.broker.set_coc(True)
-    cerebro.run(stdstats=False)  # execute
-    cerebro.plot(volume=False)  # and plot
+    engine.broker.set_coc(True)
+    engine.run(stdstats=False)  # execute
+    engine.plot(volume=False)  # and plot
 
 
 def parse_args(pargs=None):

@@ -26,10 +26,10 @@ import datetime
 import math
 
 # The above could be sent to an independent module
-import backtrader as bt
-import backtrader.feeds as btfeeds
-import backtrader.utils.flushfile
-import backtrader.filters as btfilters
+import quantrader as bt
+import quantrader.feeds as btfeeds
+import quantrader.utils.flushfile
+import quantrader.filters as btfilters
 
 from relativevolume import RelativeVolume
 
@@ -37,8 +37,8 @@ from relativevolume import RelativeVolume
 def runstrategy():
     args = parse_args()
 
-    # Create a cerebro
-    cerebro = bt.Cerebro()
+    # Create a engine
+    engine = bt.Engine()
 
     # Get the dates from the args
     fromdate = datetime.datetime.strptime(args.fromdate, '%Y-%m-%d')
@@ -66,30 +66,30 @@ def runstrategy():
     if args.filler:
         data.addfilter(btfilters.SessionFiller, fill_vol=args.fvol)
 
-    # Add the data to cerebro
-    cerebro.adddata(data)
+    # Add the data to engine
+    engine.adddata(data)
 
     if args.relvol:
         # Calculate backward period - tend tstart are in same day
         # + 1 to include last moment of the interval dstart <-> dtend
         td = ((dtend - dtstart).seconds // 60) + 1
-        cerebro.addindicator(RelativeVolume,
+        engine.addindicator(RelativeVolume,
                              period=td,
                              volisnan=math.isnan(args.fvol))
 
     # Add an empty strategy
-    cerebro.addstrategy(bt.Strategy)
+    engine.addstrategy(bt.Strategy)
 
     # Add a writer with CSV
     if args.writer:
-        cerebro.addwriter(bt.WriterFile, csv=args.wrcsv)
+        engine.addwriter(bt.WriterFile, csv=args.wrcsv)
 
     # And run it - no trading - disable stdstats
-    cerebro.run(stdstats=False)
+    engine.run(stdstats=False)
 
     # Plot if requested
     if args.plot:
-        cerebro.plot(numfigs=args.numfigs, volume=True)
+        engine.plot(numfigs=args.numfigs, volume=True)
 
 
 def parse_args():
@@ -134,7 +134,7 @@ def parse_args():
                         help='Starting date in YYYY-MM-DD format')
 
     parser.add_argument('--writer', '-w', action='store_true',
-                        help='Add a writer to cerebro')
+                        help='Add a writer to engine')
 
     parser.add_argument('--wrcsv', '-wc', action='store_true',
                         help='Enable CSV Output in the writer')

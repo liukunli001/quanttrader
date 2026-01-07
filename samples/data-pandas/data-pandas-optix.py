@@ -23,8 +23,8 @@ from __future__ import (absolute_import, division, print_function,
 
 import argparse
 
-import backtrader as bt
-import backtrader.feeds as btfeeds
+import quantrader as bt
+import quantrader.feeds as btfeeds
 
 import pandas
 
@@ -55,11 +55,11 @@ class StrategyOptix(bt.Strategy):
 def runstrat():
     args = parse_args()
 
-    # Create a cerebro entity
-    cerebro = bt.Cerebro(stdstats=False)
+    # Create a engine entity
+    engine = bt.Engine(stdstats=False)
 
     # Add a strategy
-    cerebro.addstrategy(StrategyOptix)
+    engine.addstrategy(StrategyOptix)
 
     # Get a pandas dataframe
     datapath = ('../../datas/2006-day-001-optix.txt')
@@ -79,17 +79,17 @@ def runstrat():
         print(dataframe)
         print('--------------------------------------------------')
 
-    # Pass it to the backtrader datafeed and add it to the cerebro
+    # Pass it to the quantrader datafeed and add it to the engine
     data = PandasDataOptix(dataname=dataframe)
 
-    cerebro.adddata(data)
+    engine.adddata(data)
 
     # Run over everything
-    cerebro.run()
+    engine.run()
 
     # Plot the result
     if not args.noplot:
-        cerebro.plot(style='bar')
+        engine.plot(style='bar')
 
 
 def parse_args():

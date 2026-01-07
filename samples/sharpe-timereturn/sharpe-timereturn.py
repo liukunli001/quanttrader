@@ -24,17 +24,17 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import backtrader as bt
+import quantrader as bt
 
 
 def runstrat(pargs=None):
     args = parse_args(pargs)
 
-    # Create a cerebro
-    cerebro = bt.Cerebro()
+    # Create a engine
+    engine = bt.Engine()
 
     if args.cash is not None:
-        cerebro.broker.set_cash(args.cash)
+        engine.broker.set_cash(args.cash)
 
     # Get the dates from the args
     fromdate = datetime.datetime.strptime(args.fromdate, '%Y-%m-%d')
@@ -46,10 +46,10 @@ def runstrat(pargs=None):
         fromdate=fromdate,
         todate=todate)
 
-    cerebro.adddata(data)  # Add the data to cerebro
+    engine.adddata(data)  # Add the data to engine
 
     # Add the strategy
-    cerebro.addstrategy(bt.strategies.SMA_CrossOver)
+    engine.addstrategy(bt.strategies.SMA_CrossOver)
 
     tframes = dict(
         days=bt.TimeFrame.Days,
@@ -58,7 +58,7 @@ def runstrat(pargs=None):
         years=bt.TimeFrame.Years)
 
     # Add the Analyzers
-    cerebro.addanalyzer(bt.analyzers.TimeReturn,
+    engine.addanalyzer(bt.analyzers.TimeReturn,
                         timeframe=tframes[args.tframe])
 
     shkwargs = dict()
@@ -77,14 +77,14 @@ def runstrat(pargs=None):
     if args.no_convertrate:
         shkwargs['convertrate'] = False
 
-    cerebro.addanalyzer(bt.analyzers.SharpeRatio,
+    engine.addanalyzer(bt.analyzers.SharpeRatio,
                         timeframe=tframes[args.tframe],
                         **shkwargs)
 
     # Add a writer to get output
-    cerebro.addwriter(bt.WriterFile, csv=args.writercsv, rounding=4)
+    engine.addwriter(bt.WriterFile, csv=args.writercsv, rounding=4)
 
-    cerebro.run()  # And run it
+    engine.run()  # And run it
 
     # Plot if requested
     if args.plot:
@@ -93,7 +93,7 @@ def runstrat(pargs=None):
             npkwargs = eval('dict(' + args.plot + ')')  # args were passed
             pkwargs.update(npkwargs)
 
-        cerebro.plot(**pkwargs)
+        engine.plot(**pkwargs)
 
 
 def parse_args(pargs=None):

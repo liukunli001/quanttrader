@@ -29,7 +29,7 @@ import datetime
 
 import scipy.stats
 
-import backtrader as bt
+import quantrader as bt
 
 
 class PearsonR(bt.ind.PeriodN):
@@ -61,7 +61,7 @@ class MACrossOver(bt.Strategy):
 def runstrat(args=None):
     args = parse_args(args)
 
-    cerebro = bt.Cerebro()
+    engine = bt.Engine()
 
     # Data feed kwargs
     kwargs = dict()
@@ -80,36 +80,36 @@ def runstrat(args=None):
 
     # Data feeds
     data0 = YahooData(dataname=args.data0, **kwargs)
-    # cerebro.adddata(data0)
-    cerebro.resampledata(data0, timeframe=bt.TimeFrame.Weeks)
+    # engine.adddata(data0)
+    engine.resampledata(data0, timeframe=bt.TimeFrame.Weeks)
 
     data1 = YahooData(dataname=args.data1, **kwargs)
-    # cerebro.adddata(data1)
-    cerebro.resampledata(data1, timeframe=bt.TimeFrame.Weeks)
+    # engine.adddata(data1)
+    engine.resampledata(data1, timeframe=bt.TimeFrame.Weeks)
     data1.plotinfo.plotmaster = data0
 
     # Broker
     kwargs = eval('dict(' + args.broker + ')')
-    cerebro.broker = bt.brokers.BackBroker(**kwargs)
+    engine.broker = bt.brokers.BackBroker(**kwargs)
 
     # Sizer
     kwargs = eval('dict(' + args.sizer + ')')
-    cerebro.addsizer(bt.sizers.FixedSize, **kwargs)
+    engine.addsizer(bt.sizers.FixedSize, **kwargs)
 
     # Strategy
     if True:
         kwargs = eval('dict(' + args.strat + ')')
-        cerebro.addstrategy(MACrossOver, **kwargs)
+        engine.addstrategy(MACrossOver, **kwargs)
 
-    cerebro.addobserver(bt.observers.LogReturns2,
+    engine.addobserver(bt.observers.LogReturns2,
                         timeframe=bt.TimeFrame.Weeks,
                         compression=20)
 
     # Execute
-    cerebro.run(**(eval('dict(' + args.cerebro + ')')))
+    engine.run(**(eval('dict(' + args.engine + ')')))
 
     if args.plot:  # Plot if requested to
-        cerebro.plot(**(eval('dict(' + args.plot + ')')))
+        engine.plot(**(eval('dict(' + args.plot + ')')))
 
 
 def parse_args(pargs=None):
@@ -137,7 +137,7 @@ def parse_args(pargs=None):
     parser.add_argument('--todate', required=False, default='2016-01-01',
                         help='Date[time] in YYYY-MM-DD[THH:MM:SS] format')
 
-    parser.add_argument('--cerebro', required=False, default='',
+    parser.add_argument('--engine', required=False, default='',
                         metavar='kwargs', help='kwargs in key=value format')
 
     parser.add_argument('--broker', required=False, default='',

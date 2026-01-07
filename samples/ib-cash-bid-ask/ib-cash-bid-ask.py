@@ -27,7 +27,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import backtrader as bt
+import quantrader as bt
 import datetime
 
 
@@ -81,7 +81,7 @@ ib_symbol = 'EUR.USD-CASH-IDEALPRO'
 compression = 5
 
 def run(args=None):
-    cerebro = bt.Cerebro(stdstats=False)
+    engine = bt.Engine(stdstats=False)
     store = bt.stores.IBStore(port=7497,
                               # _debug=True
                               )
@@ -89,7 +89,7 @@ def run(args=None):
     data0 = store.getdata(dataname=ib_symbol,
                           timeframe=bt.TimeFrame.Ticks,
                           )
-    cerebro.resampledata(data0,
+    engine.resampledata(data0,
                          timeframe=bt.TimeFrame.Seconds,
                          compression=compression
                          )
@@ -98,14 +98,14 @@ def run(args=None):
                           timeframe=bt.TimeFrame.Ticks,
                           what='ASK'
                           )
-    cerebro.resampledata(data1,
+    engine.resampledata(data1,
                          timeframe=bt.TimeFrame.Seconds,
                          compression=compression
                          )
 
-    cerebro.broker = store.getbroker()
-    cerebro.addstrategy(St)
-    cerebro.run()
+    engine.broker = store.getbroker()
+    engine.addstrategy(St)
+    engine.run()
 
 
 if __name__ == '__main__':

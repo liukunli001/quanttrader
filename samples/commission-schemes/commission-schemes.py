@@ -24,9 +24,9 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import backtrader as bt
-import backtrader.feeds as btfeeds
-import backtrader.indicators as btind
+import quantrader as bt
+import quantrader.feeds as btfeeds
+import quantrader.indicators as btind
 
 
 class SMACrossOver(bt.Strategy):
@@ -83,8 +83,8 @@ class SMACrossOver(bt.Strategy):
 def runstrategy():
     args = parse_args()
 
-    # Create a cerebro
-    cerebro = bt.Cerebro()
+    # Create a engine
+    engine = bt.Engine()
 
     # Get the dates from the args
     fromdate = datetime.datetime.strptime(args.fromdate, '%Y-%m-%d')
@@ -96,14 +96,14 @@ def runstrategy():
         fromdate=fromdate,
         todate=todate)
 
-    # Add the 1st data to cerebro
-    cerebro.adddata(data)
+    # Add the 1st data to engine
+    engine.adddata(data)
 
     # Add a strategy
-    cerebro.addstrategy(SMACrossOver, period=args.period, stake=args.stake)
+    engine.addstrategy(SMACrossOver, period=args.period, stake=args.stake)
 
     # Add the commission - only stocks like a for each operation
-    cerebro.broker.setcash(args.cash)
+    engine.broker.setcash(args.cash)
 
     commtypes = dict(
         none=None,
@@ -111,7 +111,7 @@ def runstrategy():
         fixed=bt.CommInfoBase.COMM_FIXED)
 
     # Add the commission - only stocks like a for each operation
-    cerebro.broker.setcommission(commission=args.comm,
+    engine.broker.setcommission(commission=args.comm,
                                  mult=args.mult,
                                  margin=args.margin,
                                  percabs=not args.percrel,
@@ -119,11 +119,11 @@ def runstrategy():
                                  stocklike=args.stocklike)
 
     # And run it
-    cerebro.run()
+    engine.run()
 
     # Plot if requested
     if args.plot:
-        cerebro.plot(numfigs=args.numfigs, volume=False)
+        engine.plot(numfigs=args.numfigs, volume=False)
 
 
 def parse_args():

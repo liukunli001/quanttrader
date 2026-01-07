@@ -28,9 +28,9 @@ import time
 import sys
 
 
-import backtrader as bt
-import backtrader.feeds as btfeeds
-import backtrader.indicators as btind
+import quantrader as bt
+import quantrader.feeds as btfeeds
+import quantrader.indicators as btind
 
 
 class OrderExecutionStrategy(bt.Strategy):
@@ -164,12 +164,12 @@ class OrderExecutionStrategy(bt.Strategy):
 def runstrat():
     args = parse_args()
 
-    cerebro = bt.Cerebro()
+    engine = bt.Engine()
 
     data = getdata(args)
-    cerebro.adddata(data)
+    engine.adddata(data)
 
-    cerebro.addstrategy(
+    engine.addstrategy(
         OrderExecutionStrategy,
         exectype=args.exectype,
         perc1=args.perc1,
@@ -177,10 +177,10 @@ def runstrat():
         valid=args.valid,
         smaperiod=args.smaperiod
     )
-    cerebro.run()
+    engine.run()
 
     if args.plot:
-        cerebro.plot(numfigs=args.numfigs, style=args.plotstyle)
+        engine.plot(numfigs=args.numfigs, style=args.plotstyle)
 
 
 def getdata(args):

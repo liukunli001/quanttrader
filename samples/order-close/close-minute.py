@@ -24,8 +24,8 @@ from __future__ import (absolute_import, division, print_function,)
 import argparse
 import datetime
 
-import backtrader as bt
-import backtrader.feeds as btfeeds
+import quantrader as bt
+import quantrader.feeds as btfeeds
 
 
 class St(bt.Strategy):
@@ -64,13 +64,13 @@ class St(bt.Strategy):
 def runstrat():
     args = parse_args()
 
-    cerebro = bt.Cerebro()
-    cerebro.adddata(getdata(args))
-    cerebro.addstrategy(St)
+    engine = bt.Engine()
+    engine.adddata(getdata(args))
+    engine.addstrategy(St)
     if args.eosbar:
-        cerebro.broker.seteosbar(True)
+        engine.broker.seteosbar(True)
 
-    cerebro.run()
+    engine.run()
 
 
 def getdata(args):

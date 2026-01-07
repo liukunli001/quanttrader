@@ -25,11 +25,11 @@ import argparse
 import datetime
 import time
 
-from backtrader.utils.py3 import range
+from quantrader.utils.py3 import range
 
-import backtrader as bt
-import backtrader.indicators as btind
-import backtrader.feeds as btfeeds
+import quantrader as bt
+import quantrader.indicators as btind
+import quantrader.feeds as btfeeds
 
 
 class OptimizeStrategy(bt.Strategy):
@@ -51,15 +51,15 @@ class OptimizeStrategy(bt.Strategy):
 def runstrat():
     args = parse_args()
 
-    # Create a cerebro entity
-    cerebro = bt.Cerebro(maxcpus=args.maxcpus,
+    # Create a engine entity
+    engine = bt.Engine(maxcpus=args.maxcpus,
                          runonce=not args.no_runonce,
                          exactbars=args.exactbars,
                          optdatas=not args.no_optdatas,
                          optreturn=not args.no_optreturn)
 
     # Add a strategy
-    cerebro.optstrategy(
+    engine.optstrategy(
         OptimizeStrategy,
         smaperiod=range(args.ma_low, args.ma_high),
         macdperiod1=range(args.m1_low, args.m1_high),
@@ -77,14 +77,14 @@ def runstrat():
         fromdate=fromdate,
         todate=todate)
 
-    # Add the Data Feed to Cerebro
-    cerebro.adddata(data)
+    # Add the Data Feed to Engine
+    engine.adddata(data)
 
     # clock the start of the process
     tstart = time.clock()
 
     # Run over everything
-    stratruns = cerebro.run()
+    stratruns = engine.run()
 
     # clock the end of the process
     tend = time.clock()

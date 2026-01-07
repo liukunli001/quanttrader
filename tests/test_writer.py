@@ -25,8 +25,8 @@ import time
 
 import testcommon
 
-import backtrader as bt
-import backtrader.indicators as btind
+import quantrader as bt
+import quantrader.indicators as btind
 
 
 chkdatas = 1
@@ -41,14 +41,14 @@ class TestStrategy(bt.Strategy):
 
 def test_run(main=False):
     datas = [testcommon.getdata(i) for i in range(chkdatas)]
-    cerebros = testcommon.runtest(datas,
+    engines = testcommon.runtest(datas,
                                   TestStrategy,
                                   main=main,
                                   plot=main,
                                   writer=(bt.WriterStringIO, dict(csv=True)))
 
-    for cerebro in cerebros:
-        writer = cerebro.runwriters[0]
+    for engine in engines:
+        writer = engine.runwriters[0]
         if main:
             # writer.out.seek(0)
             for l in writer.out:

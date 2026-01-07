@@ -28,7 +28,7 @@ import time
 import sys
 
 
-import backtrader as bt
+import quantrader as bt
 
 
 class St(bt.Strategy):
@@ -111,23 +111,23 @@ def runstrat():
 
     data = bt.feeds.BacktraderCSVData(dataname=args.data, **datakwargs)
 
-    cerebro = bt.Cerebro()
-    cerebro.adddata(data)
+    engine = bt.Engine()
+    engine.adddata(data)
 
-    cerebro.broker.set_cash(args.cash)
+    engine.broker.set_cash(args.cash)
     if args.filler is not None:
         fillerkwargs = dict()
         if args.filler_args is not None:
             fillerkwargs = eval('dict(' + args.filler_args + ')')
 
         filler = FILLERS[args.filler](**fillerkwargs)
-        cerebro.broker.set_filler(filler)
+        engine.broker.set_filler(filler)
 
-    cerebro.addstrategy(St, stakeperc=args.stakeperc, opbreak=args.opbreak)
+    engine.addstrategy(St, stakeperc=args.stakeperc, opbreak=args.opbreak)
 
-    cerebro.run()
+    engine.run()
     if args.plot:
-        cerebro.plot(style='bar')
+        engine.plot(style='bar')
 
 
 def parse_args():

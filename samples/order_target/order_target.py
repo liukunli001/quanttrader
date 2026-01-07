@@ -24,7 +24,7 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 from datetime import datetime
 
-import backtrader as bt
+import quantrader as bt
 
 
 class TheStrategy(bt.Strategy):
@@ -115,8 +115,8 @@ class TheStrategy(bt.Strategy):
 def runstrat(args=None):
     args = parse_args(args)
 
-    cerebro = bt.Cerebro()
-    cerebro.broker.setcash(args.cash)
+    engine = bt.Engine()
+    engine.broker.setcash(args.cash)
 
     dkwargs = dict()
     if args.fromdate is not None:
@@ -126,15 +126,15 @@ def runstrat(args=None):
 
     # data
     data = bt.feeds.YahooFinanceCSVData(dataname=args.data, **dkwargs)
-    cerebro.adddata(data)
+    engine.adddata(data)
 
     # strategy
-    cerebro.addstrategy(TheStrategy,
+    engine.addstrategy(TheStrategy,
                         use_target_size=args.target_size,
                         use_target_value=args.target_value,
                         use_target_percent=args.target_percent)
 
-    cerebro.run()
+    engine.run()
 
     if args.plot:
         pkwargs = dict(style='bar')
@@ -142,7 +142,7 @@ def runstrat(args=None):
             npkwargs = eval('dict(' + args.plot + ')')  # args were passed
             pkwargs.update(npkwargs)
 
-        cerebro.plot(**pkwargs)
+        engine.plot(**pkwargs)
 
 
 def parse_args(pargs=None):

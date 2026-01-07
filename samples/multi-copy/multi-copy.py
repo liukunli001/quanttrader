@@ -26,7 +26,7 @@ import argparse
 import datetime
 import random
 
-import backtrader as bt
+import quantrader as bt
 
 
 class TheStrategy(bt.Strategy):
@@ -139,8 +139,8 @@ class TheStrategy2(TheStrategy):
 def runstrat(args=None):
     args = parse_args(args)
 
-    cerebro = bt.Cerebro()
-    cerebro.broker.set_cash(args.cash)
+    engine = bt.Engine()
+    engine.broker.set_cash(args.cash)
 
     dkwargs = dict()
     if args.fromdate is not None:
@@ -153,19 +153,19 @@ def runstrat(args=None):
 
     # if dataset is None, args.data has been given
     data0 = bt.feeds.YahooFinanceCSVData(dataname=args.data0, **dkwargs)
-    cerebro.adddata(data0, name='MyData0')
+    engine.adddata(data0, name='MyData0')
 
     st0kwargs = dict()
     if args.st0 is not None:
         tmpdict = eval('dict(' + args.st0 + ')')  # args were passed
         st0kwargs.update(tmpdict)
 
-    cerebro.addstrategy(TheStrategy,
+    engine.addstrategy(TheStrategy,
                         myname='St1', dtarget='MyData0', **st0kwargs)
 
     if args.copydata:
         data1 = data0.copyas('MyData1')
-        cerebro.adddata(data1)
+        engine.adddata(data1)
         dtarget = 'MyData1'
 
     else:  # use same target
@@ -176,10 +176,10 @@ def runstrat(args=None):
         tmpdict = eval('dict(' + args.st1 + ')')  # args were passed
         st1kwargs.update(tmpdict)
 
-    cerebro.addstrategy(TheStrategy2,
+    engine.addstrategy(TheStrategy2,
                         myname='St2', dtarget=dtarget, **st1kwargs)
 
-    results = cerebro.run()
+    results = engine.run()
 
     if args.plot:
         pkwargs = dict(style='bar')
@@ -187,7 +187,7 @@ def runstrat(args=None):
             npkwargs = eval('dict(' + args.plot + ')')  # args were passed
             pkwargs.update(npkwargs)
 
-        cerebro.plot(**pkwargs)
+        engine.plot(**pkwargs)
 
 
 def parse_args(pargs=None):

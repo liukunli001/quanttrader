@@ -30,8 +30,8 @@ except:
 
 import testcommon
 
-import backtrader as bt
-import backtrader.indicators as btind
+import quantrader as bt
+import quantrader.indicators as btind
 
 
 class TestStrategy(bt.Strategy):
@@ -155,7 +155,7 @@ def test_run(main=False):
     datas = [testcommon.getdata(i) for i in range(chkdatas)]
 
     for maxtrades in [None, 0, 1]:
-        cerebros = testcommon.runtest(datas,
+        engines = testcommon.runtest(datas,
                                       TestStrategy,
                                       printdata=main,
                                       stocklike=False,
@@ -164,8 +164,8 @@ def test_run(main=False):
                                       plot=main,
                                       analyzer=(bt.analyzers.SQN, {}))
 
-        for cerebro in cerebros:
-            strat = cerebro.runstrats[0][0]  # no optimization, only 1
+        for engine in engines:
+            strat = engine.runstrats[0][0]  # no optimization, only 1
             analyzer = strat.analyzers[0]  # only 1
             analysis = analyzer.get_analysis()
             if main:

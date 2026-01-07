@@ -27,7 +27,7 @@ import bisect
 import calendar
 import datetime
 
-import backtrader as bt
+import quantrader as bt
 
 
 class TheStrategy(bt.Strategy):
@@ -92,7 +92,7 @@ def checkvolume(d0, d1):
 def runstrat(args=None):
     args = parse_args(args)
 
-    cerebro = bt.Cerebro()
+    engine = bt.Engine()
 
     fcodes = ['199FESXM4', '199FESXU4', '199FESXZ4', '199FESXH5', '199FESXM5']
     store = bt.stores.VChartFile()
@@ -105,17 +105,17 @@ def runstrat(args=None):
         if args.checkcondition:
             rollkwargs['checkcondition'] = checkvolume
 
-    if not args.no_cerebro:
+    if not args.no_engine:
         if args.rollover:
-            cerebro.rolloverdata(name='FESX', *ffeeds, **rollkwargs)
+            engine.rolloverdata(name='FESX', *ffeeds, **rollkwargs)
         else:
-            cerebro.chaindata(name='FESX', *ffeeds)
+            engine.chaindata(name='FESX', *ffeeds)
     else:
         drollover = bt.feeds.RollOver(*ffeeds, dataname='FESX', **rollkwargs)
-        cerebro.adddata(drollover)
+        engine.adddata(drollover)
 
-    cerebro.addstrategy(TheStrategy)
-    cerebro.run(stdstats=False)
+    engine.addstrategy(TheStrategy)
+    engine.run(stdstats=False)
 
     if args.plot:
         pkwargs = dict(style='bar')
@@ -123,7 +123,7 @@ def runstrat(args=None):
             npkwargs = eval('dict(' + args.plot + ')')  # args were passed
             pkwargs.update(npkwargs)
 
-        cerebro.plot(**pkwargs)
+        engine.plot(**pkwargs)
 
 
 def parse_args(pargs=None):
@@ -132,7 +132,7 @@ def parse_args(pargs=None):
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         description='Sample for Roll Over of Futures')
 
-    parser.add_argument('--no-cerebro', required=False, action='store_true',
+    parser.add_argument('--no-engine', required=False, action='store_true',
                         help='Use RollOver Directly')
 
     parser.add_argument('--rollover', required=False, action='store_true')

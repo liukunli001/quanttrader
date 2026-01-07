@@ -23,9 +23,9 @@ from __future__ import (absolute_import, division, print_function,
 
 import argparse
 
-import backtrader as bt
-import backtrader.feeds as btfeeds
-import backtrader.indicators as btind
+import quantrader as bt
+import quantrader.feeds as btfeeds
+import quantrader.indicators as btind
 
 
 class BidAskCSV(btfeeds.GenericCSVData):
@@ -85,13 +85,13 @@ def parse_args():
 def runstrategy():
     args = parse_args()
 
-    cerebro = bt.Cerebro()  # Create a cerebro
+    engine = bt.Engine()  # Create a engine
 
     data = BidAskCSV(dataname=args.data, dtformat=args.dtformat)
-    cerebro.adddata(data)  # Add the 1st data to cerebro
-    # Add the strategy to cerebro
-    cerebro.addstrategy(St, sma=args.sma, period=args.period)
-    cerebro.run()
+    engine.adddata(data)  # Add the 1st data to engine
+    # Add the strategy to engine
+    engine.addstrategy(St, sma=args.sma, period=args.period)
+    engine.run()
 
 
 if __name__ == '__main__':

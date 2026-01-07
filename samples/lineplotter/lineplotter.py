@@ -24,7 +24,7 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import backtrader as bt
+import quantrader as bt
 
 
 class St(bt.Strategy):
@@ -45,7 +45,7 @@ class St(bt.Strategy):
 def runstrat(pargs=None):
     args = parse_args(pargs)
 
-    cerebro = bt.Cerebro()
+    engine = bt.Engine()
 
     dkwargs = dict()
     # Get the dates from the args
@@ -57,10 +57,10 @@ def runstrat(pargs=None):
         dkwargs['todate'] = todate
 
     data = bt.feeds.BacktraderCSVData(dataname=args.data, **dkwargs)
-    cerebro.adddata(data)
+    engine.adddata(data)
 
-    cerebro.addstrategy(St, ondata=args.ondata)
-    cerebro.run(stdstats=False)
+    engine.addstrategy(St, ondata=args.ondata)
+    engine.run(stdstats=False)
 
     # Plot if requested
     if args.plot:
@@ -69,7 +69,7 @@ def runstrat(pargs=None):
             npkwargs = eval('dict(' + args.plot + ')')  # args were passed
             pkwargs.update(npkwargs)
 
-        cerebro.plot(**pkwargs)
+        engine.plot(**pkwargs)
 
 
 def parse_args(pargs=None):

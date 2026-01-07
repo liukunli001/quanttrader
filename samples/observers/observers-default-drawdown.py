@@ -28,9 +28,9 @@ import time
 import sys
 
 
-import backtrader as bt
-import backtrader.feeds as btfeeds
-import backtrader.indicators as btind
+import quantrader as bt
+import quantrader.feeds as btfeeds
+import quantrader.indicators as btind
 
 
 class MyStrategy(bt.Strategy):
@@ -71,18 +71,18 @@ class MyStrategy(bt.Strategy):
 
 
 def runstrat():
-    cerebro = bt.Cerebro()
+    engine = bt.Engine()
 
     data = bt.feeds.BacktraderCSVData(dataname='../../datas/2006-day-001.txt')
-    cerebro.adddata(data)
+    engine.adddata(data)
 
-    cerebro.addobserver(bt.observers.DrawDown)
-    cerebro.addobserver(bt.observers.DrawDown_Old)
+    engine.addobserver(bt.observers.DrawDown)
+    engine.addobserver(bt.observers.DrawDown_Old)
 
-    cerebro.addstrategy(MyStrategy)
-    cerebro.run()
+    engine.addstrategy(MyStrategy)
+    engine.run()
 
-    cerebro.plot()
+    engine.plot()
 
 
 if __name__ == '__main__':

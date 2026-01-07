@@ -23,9 +23,9 @@ from __future__ import (absolute_import, division, print_function,
 
 import argparse
 
-import backtrader as bt
-import backtrader.feeds as btfeeds
-import backtrader.utils.flushfile
+import quantrader as bt
+import quantrader.feeds as btfeeds
+import quantrader.utils.flushfile
 
 
 class St(bt.Strategy):
@@ -51,17 +51,17 @@ class St(bt.Strategy):
 def runstrat():
     args = parse_args()
 
-    cerebro = bt.Cerebro()
+    engine = bt.Engine()
     data = btfeeds.BacktraderCSVData(dataname=args.data)
-    cerebro.adddata(data)
-    cerebro.resampledata(data, timeframe=bt.TimeFrame.Months)
+    engine.adddata(data)
+    engine.resampledata(data, timeframe=bt.TimeFrame.Months)
 
-    cerebro.addstrategy(St,
+    engine.addstrategy(St,
                         usepp1=args.usepp1,
                         plot_on_daily=args.plot_on_daily)
-    cerebro.run(runonce=False)
+    engine.run(runonce=False)
     if args.plot:
-        cerebro.plot(style='bar')
+        engine.plot(style='bar')
 
 
 def parse_args():

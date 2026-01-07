@@ -30,9 +30,9 @@ except:
 
 import testcommon
 
-from backtrader.utils.py3 import range
-import backtrader as bt
-import backtrader.indicators as btind
+from quantrader.utils.py3 import range
+import quantrader as bt
+import quantrader.indicators as btind
 
 CHKVALUES = [
     '14525.80', '14525.80', '15408.20', '15408.20', '14763.90',

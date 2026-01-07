@@ -25,7 +25,7 @@ import argparse
 import collections
 import datetime
 
-import backtrader as bt
+import quantrader as bt
 
 MAINSIGNALS = collections.OrderedDict(
     (('longshort', bt.SIGNAL_LONGSHORT),
@@ -61,8 +61,8 @@ class SMAExitSignal(bt.Indicator):
 def runstrat(args=None):
     args = parse_args(args)
 
-    cerebro = bt.Cerebro()
-    cerebro.broker.set_cash(args.cash)
+    engine = bt.Engine()
+    engine.broker.set_cash(args.cash)
 
     dkwargs = dict()
     if args.fromdate is not None:
@@ -75,25 +75,25 @@ def runstrat(args=None):
 
     # if dataset is None, args.data has been given
     data = bt.feeds.BacktraderCSVData(dataname=args.data, **dkwargs)
-    cerebro.adddata(data)
+    engine.adddata(data)
 
-    cerebro.add_signal(MAINSIGNALS[args.signal],
+    engine.add_signal(MAINSIGNALS[args.signal],
                        SMACloseSignal, period=args.smaperiod)
 
     if args.exitsignal is not None:
-        cerebro.add_signal(EXITSIGNALS[args.exitsignal],
+        engine.add_signal(EXITSIGNALS[args.exitsignal],
                            SMAExitSignal,
                            p1=args.exitperiod,
                            p2=args.smaperiod)
 
-    cerebro.run()
+    engine.run()
     if args.plot:
         pkwargs = dict(style='bar')
         if args.plot is not True:  # evals to True but is not True
             npkwargs = eval('dict(' + args.plot + ')')  # args were passed
             pkwargs.update(npkwargs)
 
-        cerebro.plot(**pkwargs)
+        engine.plot(**pkwargs)
 
 
 def parse_args(pargs=None):

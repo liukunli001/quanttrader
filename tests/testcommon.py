@@ -29,9 +29,9 @@ import sys
 # append module root directory to sys.path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-import backtrader as bt
-import backtrader.utils.flushfile
-from backtrader.metabase import ParamsBase
+import quantrader as bt
+import quantrader.utils.flushfile
+from quantrader.metabase import ParamsBase
 
 
 modpath = os.path.dirname(os.path.abspath(__file__))
@@ -74,11 +74,11 @@ def runtest(datas,
     preloads = [True, False] if preload is None else [preload]
     exbars = [-2, -1, False] if exbar is None else [exbar]
 
-    cerebros = list()
+    engines = list()
     for prload in preloads:
         for ronce in runonces:
             for exbar in exbars:
-                cerebro = bt.Cerebro(runonce=ronce,
+                engine = bt.Engine(runonce=ronce,
                                      preload=prload,
                                      maxcpus=maxcpus,
                                      exactbars=exbar)
@@ -90,31 +90,31 @@ def runtest(datas,
                 if isinstance(datas, bt.LineSeries):
                     datas = [datas]
                 for data in datas:
-                    cerebro.adddata(data)
+                    engine.adddata(data)
 
                 if not optimize:
-                    cerebro.addstrategy(strategy, **kwargs)
+                    engine.addstrategy(strategy, **kwargs)
 
                     if writer:
                         wr = writer[0]
                         wrkwargs = writer[1]
-                        cerebro.addwriter(wr, **wrkwargs)
+                        engine.addwriter(wr, **wrkwargs)
 
                     if analyzer:
                         al = analyzer[0]
                         alkwargs = analyzer[1]
-                        cerebro.addanalyzer(al, **alkwargs)
+                        engine.addanalyzer(al, **alkwargs)
 
                 else:
-                    cerebro.optstrategy(strategy, **kwargs)
+                    engine.optstrategy(strategy, **kwargs)
 
-                cerebro.run()
+                engine.run()
                 if plot:
-                    cerebro.plot()
+                    engine.plot()
 
-                cerebros.append(cerebro)
+                engines.append(engine)
 
-    return cerebros
+    return engines
 
 
 class TestStrategy(bt.Strategy):

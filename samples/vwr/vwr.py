@@ -24,7 +24,7 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import backtrader as bt
+import quantrader as bt
 
 TFRAMES = dict(
     days=bt.TimeFrame.Days,
@@ -36,11 +36,11 @@ TFRAMES = dict(
 def runstrat(pargs=None):
     args = parse_args(pargs)
 
-    # Create a cerebro
-    cerebro = bt.Cerebro()
+    # Create a engine
+    engine = bt.Engine()
 
     if args.cash is not None:
-        cerebro.broker.set_cash(args.cash)
+        engine.broker.set_cash(args.cash)
 
     dkwargs = dict()
     # Get the dates from the args
@@ -53,9 +53,9 @@ def runstrat(pargs=None):
 
     # Create the 1st data
     data = bt.feeds.BacktraderCSVData(dataname=args.data, **dkwargs)
-    cerebro.adddata(data)  # Add the data to cerebro
+    engine.adddata(data)  # Add the data to engine
 
-    cerebro.addstrategy(bt.strategies.SMA_CrossOver)  # Add the strategy
+    engine.addstrategy(bt.strategies.SMA_CrossOver)  # Add the strategy
 
     lrkwargs = dict()
     if args.tframe is not None:
@@ -64,7 +64,7 @@ def runstrat(pargs=None):
     if args.tann is not None:
         lrkwargs['tann'] = args.tann
 
-    cerebro.addanalyzer(bt.analyzers.Returns, **lrkwargs)  # Returns
+    engine.addanalyzer(bt.analyzers.Returns, **lrkwargs)  # Returns
 
     vwrkwargs = dict()
     if args.tframe is not None:
@@ -79,19 +79,19 @@ def runstrat(pargs=None):
     if args.tau is not None:
         vwrkwargs['tau'] = args.tau
 
-    cerebro.addanalyzer(bt.analyzers.SQN)  # VWR Analyzer
-    cerebro.addanalyzer(bt.analyzers.SharpeRatio_A)  # VWR Analyzer
-    cerebro.addanalyzer(bt.analyzers.VWR, **vwrkwargs)  # VWR Analyzer
+    engine.addanalyzer(bt.analyzers.SQN)  # VWR Analyzer
+    engine.addanalyzer(bt.analyzers.SharpeRatio_A)  # VWR Analyzer
+    engine.addanalyzer(bt.analyzers.VWR, **vwrkwargs)  # VWR Analyzer
     # Sample time return analyzers
-    cerebro.addanalyzer(bt.analyzers.TimeReturn,
+    engine.addanalyzer(bt.analyzers.TimeReturn,
                         timeframe=bt.TimeFrame.Months)
-    cerebro.addanalyzer(bt.analyzers.TimeReturn,
+    engine.addanalyzer(bt.analyzers.TimeReturn,
                         timeframe=bt.TimeFrame.Years)
 
     # Add a writer to get output
-    cerebro.addwriter(bt.WriterFile, csv=args.writercsv, rounding=4)
+    engine.addwriter(bt.WriterFile, csv=args.writercsv, rounding=4)
 
-    cerebro.run()  # And run it
+    engine.run()  # And run it
 
     # Plot if requested
     if args.plot:
@@ -100,7 +100,7 @@ def runstrat(pargs=None):
             npkwargs = eval('dict(' + args.plot + ')')  # args were passed
             pkwargs.update(npkwargs)
 
-        cerebro.plot(**pkwargs)
+        engine.plot(**pkwargs)
 
 
 def parse_args(pargs=None):

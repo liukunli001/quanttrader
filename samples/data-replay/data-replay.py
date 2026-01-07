@@ -23,9 +23,9 @@ from __future__ import (absolute_import, division, print_function,
 
 import argparse
 
-import backtrader as bt
-import backtrader.feeds as btfeeds
-import backtrader.indicators as btind
+import quantrader as bt
+import quantrader.feeds as btfeeds
+import quantrader.indicators as btind
 
 
 class SMAStrategy(bt.Strategy):
@@ -52,10 +52,10 @@ class SMAStrategy(bt.Strategy):
 def runstrat():
     args = parse_args()
 
-    # Create a cerebro entity
-    cerebro = bt.Cerebro(stdstats=False)
+    # Create a engine entity
+    engine = bt.Engine(stdstats=False)
 
-    cerebro.addstrategy(
+    engine.addstrategy(
         SMAStrategy,
         # args for the strategy
         period=args.period,
@@ -84,13 +84,13 @@ def runstrat():
             compression=args.compression)
 
     # First add the original data - smaller timeframe
-    cerebro.adddata(data)
+    engine.adddata(data)
 
     # Run over everything
-    cerebro.run(preload=False)
+    engine.run(preload=False)
 
     # Plot the result
-    cerebro.plot(style='bar')
+    engine.plot(style='bar')
 
 
 def parse_args():

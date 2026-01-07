@@ -25,8 +25,8 @@ import argparse
 import datetime
 
 # The above could be sent to an independent module
-import backtrader as bt
-from backtrader.utils import flushfile  # win32 quick stdout flushing
+import quantrader as bt
+from quantrader.utils import flushfile  # win32 quick stdout flushing
 
 StoreCls = bt.stores.OandaStore
 DataCls = bt.feeds.OandaData
@@ -191,8 +191,8 @@ class TestStrategy(bt.Strategy):
 def runstrategy():
     args = parse_args()
 
-    # Create a cerebro
-    cerebro = bt.Cerebro()
+    # Create a engine
+    engine = bt.Engine()
 
     storekwargs = dict(
         token=args.token,
@@ -209,7 +209,7 @@ def runstrategy():
         else:
             broker = store.getbroker()
 
-        cerebro.setbroker(broker)
+        engine.setbroker(broker)
 
     timeframe = bt.TimeFrame.TFrame(args.timeframe)
     # Manage data1 parameters
@@ -269,32 +269,32 @@ def runstrategy():
     )
 
     if args.replay:
-        cerebro.replaydata(data0, **rekwargs)
+        engine.replaydata(data0, **rekwargs)
 
         if data1 is not None:
             rekwargs['timeframe'] = tf1
             rekwargs['compression'] = cp1
-            cerebro.replaydata(data1, **rekwargs)
+            engine.replaydata(data1, **rekwargs)
 
     elif args.resample:
-        cerebro.resampledata(data0, **rekwargs)
+        engine.resampledata(data0, **rekwargs)
 
         if data1 is not None:
             rekwargs['timeframe'] = tf1
             rekwargs['compression'] = cp1
-            cerebro.resampledata(data1, **rekwargs)
+            engine.resampledata(data1, **rekwargs)
 
     else:
-        cerebro.adddata(data0)
+        engine.adddata(data0)
         if data1 is not None:
-            cerebro.adddata(data1)
+            engine.adddata(data1)
 
     if args.valid is None:
         valid = None
     else:
         valid = datetime.timedelta(seconds=args.valid)
     # Add the strategy
-    cerebro.addstrategy(TestStrategy,
+    engine.addstrategy(TestStrategy,
                         smaperiod=args.smaperiod,
                         trade=args.trade,
                         exectype=bt.Order.ExecType(args.exectype),
@@ -307,7 +307,7 @@ def runstrategy():
                         usebracket=args.usebracket)
 
     # Live data ... avoid long data accumulation by switching to "exactbars"
-    cerebro.run(exactbars=args.exactbars)
+    engine.run(exactbars=args.exactbars)
     if args.exactbars < 1:  # plotting is possible
         if args.plot:
             pkwargs = dict(style='line')
@@ -315,7 +315,7 @@ def runstrategy():
                 npkwargs = eval('dict(' + args.plot + ')')  # args were passed
                 pkwargs.update(npkwargs)
 
-            cerebro.plot(**pkwargs)
+            engine.plot(**pkwargs)
 
 
 def parse_args(pargs=None):

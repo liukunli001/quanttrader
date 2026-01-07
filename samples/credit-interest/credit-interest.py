@@ -26,7 +26,7 @@ import collections
 import datetime
 import itertools
 
-import backtrader as bt
+import quantrader as bt
 
 
 class SMACrossOver(bt.Signal):
@@ -64,9 +64,9 @@ class St(bt.SignalStrategy):
 def runstrat(args=None):
     args = parse_args(args)
 
-    cerebro = bt.Cerebro()
-    cerebro.broker.set_cash(args.cash)
-    cerebro.broker.set_int2pnl(args.no_int2pnl)
+    engine = bt.Engine()
+    engine.broker.set_cash(args.cash)
+    engine.broker.set_int2pnl(args.no_int2pnl)
 
     dkwargs = dict()
     if args.fromdate is not None:
@@ -79,10 +79,10 @@ def runstrat(args=None):
 
     # if dataset is None, args.data has been given
     data = bt.feeds.BacktraderCSVData(dataname=args.data, **dkwargs)
-    cerebro.adddata(data)
+    engine.adddata(data)
 
-    cerebro.signal_strategy(St)
-    cerebro.addsizer(bt.sizers.FixedSize, stake=args.stake)
+    engine.signal_strategy(St)
+    engine.addsizer(bt.sizers.FixedSize, stake=args.stake)
 
     sigtype = bt.signal.SIGNAL_LONGSHORT
     if args.long:
@@ -90,14 +90,14 @@ def runstrat(args=None):
     elif args.short:
         sigtype = bt.signal.SIGNAL_SHORT
 
-    cerebro.add_signal(sigtype,
+    engine.add_signal(sigtype,
                        SMACrossOver, p1=args.period1, p2=args.period2)
 
     if args.no_exit:
         if args.long:
-            cerebro.add_signal(bt.signal.SIGNAL_LONGEXIT, NoExit)
+            engine.add_signal(bt.signal.SIGNAL_LONGEXIT, NoExit)
         elif args.short:
-            cerebro.add_signal(bt.signal.SIGNAL_SHORTEXIT, NoExit)
+            engine.add_signal(bt.signal.SIGNAL_SHORTEXIT, NoExit)
 
     comminfo = bt.CommissionInfo(
         mult=args.mult,
@@ -106,16 +106,16 @@ def runstrat(args=None):
         interest=args.interest,
         interest_long=args.interest_long)
 
-    cerebro.broker.addcommissioninfo(comminfo)
+    engine.broker.addcommissioninfo(comminfo)
 
-    cerebro.run()
+    engine.run()
     if args.plot:
         pkwargs = dict(style='bar')
         if args.plot is not True:  # evals to True but is not True
             npkwargs = eval('dict(' + args.plot + ')')  # args were passed
             pkwargs.update(npkwargs)
 
-        cerebro.plot(**pkwargs)
+        engine.plot(**pkwargs)
 
 
 def parse_args(pargs=None):

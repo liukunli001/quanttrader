@@ -1,28 +1,28 @@
-backtrader
+quantrader
 ==========
 
-.. image:: https://img.shields.io/pypi/v/backtrader.svg
+.. image:: https://img.shields.io/pypi/v/quantrader.svg
    :alt: PyPi Version
    :scale: 100%
-   :target: https://pypi.python.org/pypi/backtrader/
+   :target: https://pypi.python.org/pypi/quantrader/
 
-..  .. image:: https://img.shields.io/pypi/dm/backtrader.svg
+..  .. image:: https://img.shields.io/pypi/dm/quantrader.svg
        :alt: PyPi Monthly Donwloads
        :scale: 100%
-       :target: https://pypi.python.org/pypi/backtrader/
+       :target: https://pypi.python.org/pypi/quantrader/
 
-.. image:: https://img.shields.io/pypi/l/backtrader.svg
+.. image:: https://img.shields.io/pypi/l/quantrader.svg
    :alt: License
    :scale: 100%
-   :target: https://github.com/backtrader/backtrader/blob/master/LICENSE
-.. image:: https://travis-ci.org/backtrader/backtrader.png?branch=master
+   :target: https://github.com/quantrader/quantrader/blob/master/LICENSE
+.. image:: https://travis-ci.org/quantrader/quantrader.png?branch=master
    :alt: Travis-ci Build Status
    :scale: 100%
-   :target: https://travis-ci.org/backtrader/backtrader
-.. image:: https://img.shields.io/pypi/pyversions/backtrader.svg
+   :target: https://travis-ci.org/quantrader/quantrader
+.. image:: https://img.shields.io/pypi/pyversions/quantrader.svg
    :alt: Python versions
    :scale: 100%
-   :target: https://pypi.python.org/pypi/backtrader/
+   :target: https://pypi.python.org/pypi/quantrader/
 
 **Yahoo API Note**:
 
@@ -34,14 +34,14 @@ backtrader
   The ticket system is (was, actually) more often than not abused to ask for
   advice about samples.
 
-For **feedback/questions/...** use the `Community <https://community.backtrader.com>`_
+For **feedback/questions/...** use the `Community <https://community.quantrader.com>`_
 
 Here a snippet of a Simple Moving Average CrossOver. It can be done in several
 different ways. Use the docs (and examples) Luke!
 ::
 
   from datetime import datetime
-  import backtrader as bt
+  import quantrader as bt
 
   class SmaCross(bt.SignalStrategy):
       def __init__(self):
@@ -49,15 +49,15 @@ different ways. Use the docs (and examples) Luke!
           crossover = bt.ind.CrossOver(sma1, sma2)
           self.signal_add(bt.SIGNAL_LONG, crossover)
 
-  cerebro = bt.Cerebro()
-  cerebro.addstrategy(SmaCross)
+  engine = bt.Engine()
+  engine.addstrategy(SmaCross)
 
   data0 = bt.feeds.YahooFinanceData(dataname='MSFT', fromdate=datetime(2011, 1, 1),
                                     todate=datetime(2012, 12, 31))
-  cerebro.adddata(data0)
+  engine.adddata(data0)
 
-  cerebro.run()
-  cerebro.plot()
+  engine.run()
+  engine.plot()
 
 Including a full featured chart. Give it a try! This is included in the samples
 as ``sigsmacross/sigsmacross2.py``. Along it is ``sigsmacross.py`` which can be
@@ -105,15 +105,15 @@ Documentation
 
 The blog:
 
-  - `Blog <http://www.backtrader.com/blog>`_
+  - `Blog <http://www.quantrader.com/blog>`_
 
 Read the full documentation at:
 
-  - `Documentation <http://www.backtrader.com/docu>`_
+  - `Documentation <http://www.quantrader.com/docu>`_
 
 List of built-in Indicators (122)
 
-  - `Indicators Reference <http://www.backtrader.com/docu/indautoref.html>`_
+  - `Indicators Reference <http://www.quantrader.com/docu/indautoref.html>`_
 
 Python 2/3 Support
 ==================
@@ -126,14 +126,14 @@ Python 2/3 Support
 Installation
 ============
 
-``backtrader`` is self-contained with no external dependencies (except if you
+``quantrader`` is self-contained with no external dependencies (except if you
 want to plot)
 
 From *pypi*:
 
-  - ``pip install backtrader``
+  - ``pip install quantrader``
 
-  - ``pip install backtrader[plotting]``
+  - ``pip install quantrader[plotting]``
 
     If ``matplotlib`` is not installed and you wish to do some plotting
 
@@ -154,7 +154,7 @@ the dependencies in the documentation.
 
 From source:
 
-  - Place the *backtrader* directory found in the sources inside your project
+  - Place the *quantrader* directory found in the sources inside your project
 
 Version numbering
 =================

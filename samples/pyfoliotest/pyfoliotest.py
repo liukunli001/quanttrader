@@ -26,7 +26,7 @@ import argparse
 import datetime
 import random
 
-import backtrader as bt
+import quantrader as bt
 
 
 class St(bt.Strategy):
@@ -85,8 +85,8 @@ class St(bt.Strategy):
 def runstrat(args=None):
     args = parse_args(args)
 
-    cerebro = bt.Cerebro()
-    cerebro.broker.set_cash(args.cash)
+    engine = bt.Engine()
+    engine.broker.set_cash(args.cash)
 
     dkwargs = dict()
     if args.fromdate:
@@ -98,19 +98,19 @@ def runstrat(args=None):
         dkwargs['todate'] = todate
 
     data0 = bt.feeds.YahooFinanceCSVData(dataname=args.data0, **dkwargs)
-    cerebro.adddata(data0, name='Data0')
+    engine.adddata(data0, name='Data0')
 
     data1 = bt.feeds.YahooFinanceCSVData(dataname=args.data1, **dkwargs)
-    cerebro.adddata(data1, name='Data1')
+    engine.adddata(data1, name='Data1')
 
     data2 = bt.feeds.YahooFinanceCSVData(dataname=args.data2, **dkwargs)
-    cerebro.adddata(data2, name='Data2')
+    engine.adddata(data2, name='Data2')
 
-    cerebro.addstrategy(St, printout=args.printout)
+    engine.addstrategy(St, printout=args.printout)
     if not args.no_pyfolio:
-        cerebro.addanalyzer(bt.analyzers.PyFolio, _name='pyfolio')
+        engine.addanalyzer(bt.analyzers.PyFolio, _name='pyfolio')
 
-    results = cerebro.run()
+    results = engine.run()
     if not args.no_pyfolio:
         strat = results[0]
         pyfoliozer = strat.analyzers.getbyname('pyfolio')
@@ -136,7 +136,7 @@ def runstrat(args=None):
             round_trips=True)
 
     if args.plot:
-        cerebro.plot(style=args.plot_style)
+        engine.plot(style=args.plot_style)
 
 
 def parse_args(args=None):

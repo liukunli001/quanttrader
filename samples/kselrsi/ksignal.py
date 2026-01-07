@@ -24,7 +24,7 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import backtrader as bt
+import quantrader as bt
 
 
 class TheStrategy(bt.SignalStrategy):
@@ -62,26 +62,26 @@ class TheStrategy(bt.SignalStrategy):
 def runstrat(pargs=None):
     args = parse_args(pargs)
 
-    cerebro = bt.Cerebro()
-    cerebro.broker.set_cash(args.cash)
-    cerebro.broker.set_coc(args.coc)
+    engine = bt.Engine()
+    engine.broker.set_cash(args.cash)
+    engine.broker.set_coc(args.coc)
     data0 = bt.feeds.YahooFinanceData(
         dataname=args.data,
         fromdate=datetime.datetime.strptime(args.fromdate, '%Y-%m-%d'),
         todate=datetime.datetime.strptime(args.todate, '%Y-%m-%d'),
         round=False)
 
-    cerebro.adddata(data0)
+    engine.adddata(data0)
 
-    cerebro.addsizer(bt.sizers.FixedSize, stake=args.stake)
-    cerebro.addstrategy(TheStrategy, **(eval('dict(' + args.strat + ')')))
-    cerebro.addobserver(bt.observers.Value)
-    cerebro.addobserver(bt.observers.Trades)
-    cerebro.addobserver(bt.observers.BuySell, barplot=True)
+    engine.addsizer(bt.sizers.FixedSize, stake=args.stake)
+    engine.addstrategy(TheStrategy, **(eval('dict(' + args.strat + ')')))
+    engine.addobserver(bt.observers.Value)
+    engine.addobserver(bt.observers.Trades)
+    engine.addobserver(bt.observers.BuySell, barplot=True)
 
-    cerebro.run(stdstats=False)
+    engine.run(stdstats=False)
     if args.plot:
-        cerebro.plot(**(eval('dict(' + args.plot + ')')))
+        engine.plot(**(eval('dict(' + args.plot + ')')))
 
 
 def parse_args(pargs=None):

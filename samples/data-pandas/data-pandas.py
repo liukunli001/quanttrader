@@ -23,8 +23,8 @@ from __future__ import (absolute_import, division, print_function,
 
 import argparse
 
-import backtrader as bt
-import backtrader.feeds as btfeeds
+import quantrader as bt
+import quantrader.feeds as btfeeds
 
 import pandas
 
@@ -32,11 +32,11 @@ import pandas
 def runstrat():
     args = parse_args()
 
-    # Create a cerebro entity
-    cerebro = bt.Cerebro(stdstats=False)
+    # Create a engine entity
+    engine = bt.Engine(stdstats=False)
 
     # Add a strategy
-    cerebro.addstrategy(bt.Strategy)
+    engine.addstrategy(bt.Strategy)
 
     # Get a pandas dataframe
     datapath = ('../../datas/2006-day-001.txt')
@@ -59,19 +59,19 @@ def runstrat():
         print(dataframe)
         print('--------------------------------------------------')
 
-    # Pass it to the backtrader datafeed and add it to the cerebro
+    # Pass it to the quantrader datafeed and add it to the engine
     data = bt.feeds.PandasData(dataname=dataframe,
                                # datetime='Date',
                                nocase=True,
                                )
 
-    cerebro.adddata(data)
+    engine.adddata(data)
 
     # Run over everything
-    cerebro.run()
+    engine.run()
 
     # Plot the result
-    cerebro.plot(style='bar')
+    engine.plot(style='bar')
 
 
 def parse_args():

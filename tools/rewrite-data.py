@@ -28,8 +28,8 @@ import time
 import sys
 
 
-import backtrader as bt
-from backtrader.utils.py3 import bytes
+import quantrader as bt
+from quantrader.utils.py3 import bytes
 
 
 DATAFORMATS = dict(
@@ -96,7 +96,7 @@ class RewriteStrategy(bt.Strategy):
 def runstrat(pargs=None):
     args = parse_args(pargs)
 
-    cerebro = bt.Cerebro()
+    engine = bt.Engine()
 
     dfkwargs = dict()
     if args.format == 'yahoo_unreversed':
@@ -121,13 +121,13 @@ def runstrat(pargs=None):
 
     dfcls = DATAFORMATS[args.format]
     data = dfcls(dataname=args.infile, **dfkwargs)
-    cerebro.adddata(data)
+    engine.adddata(data)
 
-    cerebro.addstrategy(RewriteStrategy,
+    engine.addstrategy(RewriteStrategy,
                         separator=args.separator,
                         outfile=args.outfile)
 
-    cerebro.run(stdstats=False)
+    engine.run(stdstats=False)
 
     if args.plot:
         pkwargs = dict(style='bar')
@@ -135,7 +135,7 @@ def runstrat(pargs=None):
             npkwargs = eval('dict(' + args.plot + ')')  # args were passed
             pkwargs.update(npkwargs)
 
-        cerebro.plot(**pkwargs)
+        engine.plot(**pkwargs)
 
 
 def parse_args(pargs=None):

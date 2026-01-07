@@ -23,18 +23,18 @@ from __future__ import (absolute_import, division, print_function,
 
 import argparse
 
-import backtrader as bt
-import backtrader.feeds as btfeeds
+import quantrader as bt
+import quantrader.feeds as btfeeds
 
 
 def runstrat():
     args = parse_args()
 
-    # Create a cerebro entity
-    cerebro = bt.Cerebro(stdstats=False)
+    # Create a engine entity
+    engine = bt.Engine(stdstats=False)
 
     # Add a strategy
-    cerebro.addstrategy(bt.Strategy)
+    engine.addstrategy(bt.Strategy)
 
     # Load the Data
     datapath = args.dataname or '../../datas/2006-day-001.txt'
@@ -56,19 +56,19 @@ def runstrat():
             compression=args.compression)
 
         # Add the resample data instead of the original
-        cerebro.adddata(data)
+        engine.adddata(data)
     else:
         # New resampler
-        cerebro.resampledata(
+        engine.resampledata(
             data,
             timeframe=tframes[args.timeframe],
             compression=args.compression)
 
     # Run over everything
-    cerebro.run()
+    engine.run()
 
     # Plot the result
-    cerebro.plot(style='bar')
+    engine.plot(style='bar')
 
 
 def parse_args():

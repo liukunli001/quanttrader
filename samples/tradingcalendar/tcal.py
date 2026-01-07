@@ -24,7 +24,7 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import backtrader as bt
+import quantrader as bt
 
 
 class NYSE_2016(bt.TradingCalendar):
@@ -77,7 +77,7 @@ class St(bt.Strategy):
 def runstrat(args=None):
     args = parse_args(args)
 
-    cerebro = bt.Cerebro()
+    engine = bt.Engine()
 
     # Data feed kwargs
     kwargs = dict()
@@ -95,32 +95,32 @@ def runstrat(args=None):
 
     # Data feed
     data0 = YahooData(dataname=args.data0, **kwargs)
-    cerebro.adddata(data0)
+    engine.adddata(data0)
 
-    d1 = cerebro.resampledata(data0,
+    d1 = engine.resampledata(data0,
                               timeframe=getattr(bt.TimeFrame, args.timeframe))
     d1.plotinfo.plotmaster = data0
     d1.plotinfo.sameaxis = True
 
     if args.pandascal:
-        cerebro.addcalendar(args.pandascal)
+        engine.addcalendar(args.pandascal)
     elif args.owncal:
-        cerebro.addcalendar(NYSE_2016)
+        engine.addcalendar(NYSE_2016)
 
     # Broker
-    cerebro.broker = bt.brokers.BackBroker(**eval('dict(' + args.broker + ')'))
+    engine.broker = bt.brokers.BackBroker(**eval('dict(' + args.broker + ')'))
 
     # Sizer
-    cerebro.addsizer(bt.sizers.FixedSize, **eval('dict(' + args.sizer + ')'))
+    engine.addsizer(bt.sizers.FixedSize, **eval('dict(' + args.sizer + ')'))
 
     # Strategy
-    cerebro.addstrategy(St, **eval('dict(' + args.strat + ')'))
+    engine.addstrategy(St, **eval('dict(' + args.strat + ')'))
 
     # Execute
-    cerebro.run(**eval('dict(' + args.cerebro + ')'))
+    engine.run(**eval('dict(' + args.engine + ')'))
 
     if args.plot:  # Plot if requested to
-        cerebro.plot(**eval('dict(' + args.plot + ')'))
+        engine.plot(**eval('dict(' + args.plot + ')'))
 
 
 def parse_args(pargs=None):
@@ -144,7 +144,7 @@ def parse_args(pargs=None):
     parser.add_argument('--todate', required=False, default='2016-12-31',
                         help='Date[time] in YYYY-MM-DD[THH:MM:SS] format')
 
-    parser.add_argument('--cerebro', required=False, default='',
+    parser.add_argument('--engine', required=False, default='',
                         metavar='kwargs', help='kwargs in key=value format')
 
     parser.add_argument('--broker', required=False, default='',

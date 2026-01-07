@@ -24,7 +24,7 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import backtrader as bt
+import quantrader as bt
 
 
 class TALibStrategy(bt.Strategy):
@@ -36,7 +36,7 @@ class TALibStrategy(bt.Strategy):
 def runstrat(args=None):
     args = parse_args(args)
 
-    cerebro = bt.Cerebro()
+    engine = bt.Engine()
 
     dkwargs = dict()
     if args.fromdate:
@@ -48,17 +48,17 @@ def runstrat(args=None):
         dkwargs['todate'] = todate
 
     data0 = bt.feeds.YahooFinanceCSVData(dataname=args.data0, **dkwargs)
-    cerebro.adddata(data0)
+    engine.adddata(data0)
 
-    cerebro.addstrategy(TALibStrategy)
-    cerebro.run(runonce=not args.use_next, stdstats=False)
+    engine.addstrategy(TALibStrategy)
+    engine.run(runonce=not args.use_next, stdstats=False)
     if args.plot:
         pkwargs = dict(style='candle')
         if args.plot is not True:  # evals to True but is not True
             npkwargs = eval('dict(' + args.plot + ')')  # args were passed
             pkwargs.update(npkwargs)
 
-        cerebro.plot(**pkwargs)
+        engine.plot(**pkwargs)
 
 
 def parse_args(pargs=None):

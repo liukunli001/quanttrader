@@ -27,7 +27,7 @@ import collections
 import datetime
 
 
-import backtrader as bt
+import quantrader as bt
 
 
 class St(bt.SignalStrategy):
@@ -94,8 +94,8 @@ _TFS = _TFRAMES.keys()
 def runstrat(args=None):
     args = parse_args(args)
 
-    cerebro = bt.Cerebro()
-    cerebro.broker.set_cash(args.cash)
+    engine = bt.Engine()
+    engine.broker.set_cash(args.cash)
 
     dkwargs = dict()
     if args.fromdate:
@@ -114,23 +114,23 @@ def runstrat(args=None):
 
     # data0 = bt.feeds.BacktraderCSVData(dataname=args.data0, **dkwargs)
     data0 = bt.feeds.VCData(dataname=args.data0, historical=True, **dkwargs)
-    cerebro.adddata(data0, name='Data0')
+    engine.adddata(data0, name='Data0')
 
-    cerebro.addstrategy(St, short=args.short, printdata=args.printdata)
-    cerebro.addsizer(bt.sizers.FixedSize, stake=args.stake)
+    engine.addstrategy(St, short=args.short, printdata=args.printdata)
+    engine.addsizer(bt.sizers.FixedSize, stake=args.stake)
 
     # Own analyzerset
-    cerebro.addanalyzer(bt.analyzers.TimeReturn, timeframe=bt.TimeFrame.Years)
-    cerebro.addanalyzer(bt.analyzers.SharpeRatio, timeframe=bt.TimeFrame.Years)
-    cerebro.addanalyzer(bt.analyzers.SQN,)
+    engine.addanalyzer(bt.analyzers.TimeReturn, timeframe=bt.TimeFrame.Years)
+    engine.addanalyzer(bt.analyzers.SharpeRatio, timeframe=bt.TimeFrame.Years)
+    engine.addanalyzer(bt.analyzers.SQN,)
 
     if args.pyfolio:
-        cerebro.addanalyzer(bt.analyzers.PyFolio, _name='pyfolio',
+        engine.addanalyzer(bt.analyzers.PyFolio, _name='pyfolio',
                             timeframe=_TFRAMES[args.pftimeframe])
 
     if args.printout:
         print('Start run')
-    results = cerebro.run()
+    results = engine.run()
     if args.printout:
         print('End Run')
     strat = results[0]
@@ -179,7 +179,7 @@ def runstrat(args=None):
         if args.plot is not True:  # evals to True but is not True
             pkwargs = eval('dict(' + args.plot + ')')  # args were passed
 
-        cerebro.plot(**pkwargs)
+        engine.plot(**pkwargs)
 
 
 def parse_args(pargs=None):

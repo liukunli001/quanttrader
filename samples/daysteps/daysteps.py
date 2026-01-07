@@ -23,7 +23,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import argparse
 
-import backtrader as bt
+import quantrader as bt
 
 
 class St(bt.Strategy):
@@ -74,18 +74,18 @@ class St(bt.Strategy):
 def runstrat():
     args = parse_args()
 
-    cerebro = bt.Cerebro()
+    engine = bt.Engine()
     data = bt.feeds.BacktraderCSVData(dataname=args.data)
 
     data.addfilter(bt.filters.DayStepsFilter)
-    cerebro.adddata(data)
+    engine.adddata(data)
 
-    cerebro.addstrategy(St)
+    engine.addstrategy(St)
 
-    cerebro._doreplay = True
-    cerebro.run(**(eval('dict(' + args.cerebro + ')')))
+    engine._doreplay = True
+    engine.run(**(eval('dict(' + args.engine + ')')))
     if args.plot:
-        cerebro.plot(**(eval('dict(' + args.plot + ')')))
+        engine.plot(**(eval('dict(' + args.plot + ')')))
 
 
 def parse_args(pargs=None):
@@ -97,8 +97,8 @@ def parse_args(pargs=None):
                         default='../../datas/2005-2006-day-001.txt',
                         help='Data to be read in')
 
-    parser.add_argument('--cerebro', required=False, action='store',
-                        default='', help=('Arguments for cerebro'))
+    parser.add_argument('--engine', required=False, action='store',
+                        default='', help=('Arguments for engine'))
 
     parser.add_argument('--plot', '-p', nargs='?', required=False,
                         metavar='kwargs', const='{}',

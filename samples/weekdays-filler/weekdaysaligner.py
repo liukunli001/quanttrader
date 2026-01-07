@@ -24,10 +24,10 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import backtrader as bt
-import backtrader.feeds as btfeeds
-import backtrader.indicators as btind
-import backtrader.utils.flushfile
+import quantrader as bt
+import quantrader.feeds as btfeeds
+import quantrader.indicators as btind
+import quantrader.utils.flushfile
 
 # from wkdaysfiller import WeekDaysFiller
 from weekdaysfiller import WeekDaysFiller
@@ -58,7 +58,7 @@ def runstrat():
     fromdate = datetime.datetime.strptime(args.fromdate, '%Y-%m-%d')
     todate = datetime.datetime.strptime(args.todate, '%Y-%m-%d')
 
-    cerebro = bt.Cerebro(stdstats=False)
+    engine = bt.Engine(stdstats=False)
 
     DataFeed = btfeeds.YahooFinanceCSVData
     if args.online:
@@ -77,14 +77,14 @@ def runstrat():
     if args.filler or args.filler1:
         data1.addfilter(WeekDaysFiller, fillclose=args.fillclose)
 
-    cerebro.adddata(data0)
-    cerebro.adddata(data1)
+    engine.adddata(data0)
+    engine.adddata(data1)
 
-    cerebro.addstrategy(St, sma=args.sma)
-    cerebro.run(runonce=True, preload=True)
+    engine.addstrategy(St, sma=args.sma)
+    engine.run(runonce=True, preload=True)
 
     if args.plot:
-        cerebro.plot(style='bar')
+        engine.plot(style='bar')
 
 
 def parse_args():

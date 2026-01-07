@@ -23,12 +23,12 @@ from __future__ import (absolute_import, division, print_function,
 
 import argparse
 
-import backtrader as bt
-import backtrader.feeds as btfeeds
-import backtrader.indicators as btind
-from backtrader import ResamplerDaily, ResamplerWeekly, ResamplerMonthly
-from backtrader import ReplayerDaily, ReplayerWeekly, ReplayerMonthly
-from backtrader.utils import flushfile
+import quantrader as bt
+import quantrader.feeds as btfeeds
+import quantrader.indicators as btind
+from quantrader import ResamplerDaily, ResamplerWeekly, ResamplerMonthly
+from quantrader import ReplayerDaily, ReplayerWeekly, ReplayerMonthly
+from quantrader.utils import flushfile
 
 
 class SMAStrategy(bt.Strategy):
@@ -93,14 +93,14 @@ class SMAStrategy(bt.Strategy):
 def runstrat():
     args = parse_args()
 
-    # Create a cerebro entity
-    cerebro = bt.Cerebro()
+    # Create a engine entity
+    engine = bt.Engine()
 
     # Add a strategy
     if not args.indicators:
-        cerebro.addstrategy(bt.Strategy)
+        engine.addstrategy(bt.Strategy)
     else:
-        cerebro.addstrategy(
+        engine.addstrategy(
             SMAStrategy,
 
             # args for the strategy
@@ -155,20 +155,20 @@ def runstrat():
                     data2.addfilter(ResamplerMonthly)
 
     # First add the original data - smaller timeframe
-    cerebro.adddata(data)
+    engine.adddata(data)
 
     # And then the large timeframe
-    cerebro.adddata(data2)
+    engine.adddata(data2)
 
     # Run over everything
-    cerebro.run(runonce=not args.runnext,
+    engine.run(runonce=not args.runnext,
                 preload=not args.nopreload,
                 oldsync=args.oldsync,
                 stdstats=False)
 
     # Plot the result
     if args.plot:
-        cerebro.plot(style='bar')
+        engine.plot(style='bar')
 
 
 def parse_args():

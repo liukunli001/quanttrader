@@ -25,9 +25,9 @@ import argparse
 import datetime
 
 # The above could be sent to an independent module
-import backtrader as bt
-import backtrader.feeds as btfeeds
-import backtrader.indicators as btind
+import quantrader as bt
+import quantrader.feeds as btfeeds
+import quantrader.indicators as btind
 
 
 class PlotStrategy(bt.Strategy):
@@ -66,8 +66,8 @@ class PlotStrategy(bt.Strategy):
 def runstrategy():
     args = parse_args()
 
-    # Create a cerebro
-    cerebro = bt.Cerebro()
+    # Create a engine
+    engine = bt.Engine()
 
     # Get the dates from the args
     fromdate = datetime.datetime.strptime(args.fromdate, '%Y-%m-%d')
@@ -79,11 +79,11 @@ def runstrategy():
         fromdate=fromdate,
         todate=todate)
 
-    # Add the 1st data to cerebro
-    cerebro.adddata(data)
+    # Add the 1st data to engine
+    engine.adddata(data)
 
     # Add the strategy
-    cerebro.addstrategy(PlotStrategy,
+    engine.addstrategy(PlotStrategy,
                         smasubplot=args.smasubplot,
                         nomacdplot=args.nomacdplot,
                         rsioverstoc=args.rsioverstoc,
@@ -92,10 +92,10 @@ def runstrategy():
                         stocrsilabels=args.stocrsilabels)
 
     # And run it
-    cerebro.run(stdstats=args.stdstats)
+    engine.run(stdstats=args.stdstats)
 
     # Plot
-    cerebro.plot(numfigs=args.numfigs, volume=False)
+    engine.plot(numfigs=args.numfigs, volume=False)
 
 
 def parse_args():

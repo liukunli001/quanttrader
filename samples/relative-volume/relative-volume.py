@@ -25,8 +25,8 @@ import argparse
 import datetime
 
 # The above could be sent to an independent module
-import backtrader as bt
-import backtrader.feeds as btfeeds
+import quantrader as bt
+import quantrader.feeds as btfeeds
 
 from relvolbybar import RelativeVolumeByBar
 
@@ -34,8 +34,8 @@ from relvolbybar import RelativeVolumeByBar
 def runstrategy():
     args = parse_args()
 
-    # Create a cerebro
-    cerebro = bt.Cerebro()
+    # Create a engine
+    engine = bt.Engine()
 
     # Get the dates from the args
     fromdate = datetime.datetime.strptime(args.fromdate, '%Y-%m-%d')
@@ -48,11 +48,11 @@ def runstrategy():
         todate=todate,
         )
 
-    # Add the 1st data to cerebro
-    cerebro.adddata(data)
+    # Add the 1st data to engine
+    engine.adddata(data)
 
     # Add an empty strategy
-    cerebro.addstrategy(bt.Strategy)
+    engine.addstrategy(bt.Strategy)
 
     # Get the session times to pass them to the indicator
     prestart = datetime.datetime.strptime(args.prestart, '%H:%M').time()
@@ -60,19 +60,19 @@ def runstrategy():
     end = datetime.datetime.strptime(args.end, '%H:%M').time()
 
     # Add the Relative volume indicator
-    cerebro.addindicator(RelativeVolumeByBar,
+    engine.addindicator(RelativeVolumeByBar,
                          prestart=prestart, start=start, end=end)
 
     # Add a writer with CSV
     if args.writer:
-        cerebro.addwriter(bt.WriterFile, csv=args.wrcsv)
+        engine.addwriter(bt.WriterFile, csv=args.wrcsv)
 
     # And run it
-    cerebro.run(stdstats=False)
+    engine.run(stdstats=False)
 
     # Plot if requested
     if args.plot:
-        cerebro.plot(numfigs=args.numfigs, volume=True)
+        engine.plot(numfigs=args.numfigs, volume=True)
 
 
 def parse_args():
@@ -103,7 +103,7 @@ def parse_args():
                         help='Starting date in YYYY-MM-DD format')
 
     parser.add_argument('--writer', '-w', action='store_true',
-                        help='Add a writer to cerebro')
+                        help='Add a writer to engine')
 
     parser.add_argument('--wrcsv', '-wc', action='store_true',
                         help='Enable CSV Output in the writer')

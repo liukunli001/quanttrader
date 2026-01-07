@@ -25,7 +25,7 @@ import argparse
 import datetime
 import random
 
-import backtrader as bt
+import quantrader as bt
 
 
 class CloseSMA(bt.Strategy):
@@ -70,8 +70,8 @@ class FixedReverser(bt.Sizer):
 def runstrat(args=None):
     args = parse_args(args)
 
-    cerebro = bt.Cerebro()
-    cerebro.broker.set_cash(args.cash)
+    engine = bt.Engine()
+    engine.broker.set_cash(args.cash)
 
     dkwargs = dict()
     if args.fromdate:
@@ -83,22 +83,22 @@ def runstrat(args=None):
         dkwargs['todate'] = todate
 
     data0 = bt.feeds.YahooFinanceCSVData(dataname=args.data0, **dkwargs)
-    cerebro.adddata(data0, name='Data0')
+    engine.adddata(data0, name='Data0')
 
-    cerebro.addstrategy(CloseSMA, period=args.period)
+    engine.addstrategy(CloseSMA, period=args.period)
 
     if args.longonly:
-        cerebro.addsizer(LongOnly, stake=args.stake)
+        engine.addsizer(LongOnly, stake=args.stake)
     else:
-        cerebro.addsizer(bt.sizers.FixedReverser, stake=args.stake)
+        engine.addsizer(bt.sizers.FixedReverser, stake=args.stake)
 
-    cerebro.run()
+    engine.run()
     if args.plot:
         pkwargs = dict()
         if args.plot is not True:  # evals to True but is not True
             pkwargs = eval('dict(' + args.plot + ')')  # args were passed
 
-        cerebro.plot(**pkwargs)
+        engine.plot(**pkwargs)
 
 
 def parse_args(pargs=None):

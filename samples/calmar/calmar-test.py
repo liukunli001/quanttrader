@@ -25,7 +25,7 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import backtrader as bt
+import quantrader as bt
 
 
 class St(bt.SignalStrategy):
@@ -43,7 +43,7 @@ class St(bt.SignalStrategy):
 def runstrat(args=None):
     args = parse_args(args)
 
-    cerebro = bt.Cerebro()
+    engine = bt.Engine()
 
     # Data feed kwargs
     kwargs = dict()
@@ -57,27 +57,27 @@ def runstrat(args=None):
 
     # Data feed
     data0 = bt.feeds.YahooFinanceCSVData(dataname=args.data0, **kwargs)
-    cerebro.adddata(data0)
+    engine.adddata(data0)
 
     # Broker
-    cerebro.broker = bt.brokers.BackBroker(**eval('dict(' + args.broker + ')'))
+    engine.broker = bt.brokers.BackBroker(**eval('dict(' + args.broker + ')'))
 
-    cerebro.addanalyzer(bt.analyzers.Calmar)
+    engine.addanalyzer(bt.analyzers.Calmar)
     # Sizer
-    cerebro.addsizer(bt.sizers.FixedSize, **eval('dict(' + args.sizer + ')'))
+    engine.addsizer(bt.sizers.FixedSize, **eval('dict(' + args.sizer + ')'))
 
     # Strategy
-    cerebro.addstrategy(St, **eval('dict(' + args.strat + ')'))
+    engine.addstrategy(St, **eval('dict(' + args.strat + ')'))
 
     # Execute
-    st0 = cerebro.run(**eval('dict(' + args.cerebro + ')'))[0]
+    st0 = engine.run(**eval('dict(' + args.engine + ')'))[0]
     i = 1
     for k, v in st0.analyzers.calmar.get_analysis().items():
         print(i, ': '.join((str(k), str(v))))
         i += 1
 
     if args.plot:  # Plot if requested to
-        cerebro.plot(**eval('dict(' + args.plot + ')'))
+        engine.plot(**eval('dict(' + args.plot + ')'))
 
 
 def parse_args(pargs=None):
@@ -98,7 +98,7 @@ def parse_args(pargs=None):
     parser.add_argument('--todate', required=False, default='',
                         help='Date[time] in YYYY-MM-DD[THH:MM:SS] format')
 
-    parser.add_argument('--cerebro', required=False, default='',
+    parser.add_argument('--engine', required=False, default='',
                         metavar='kwargs', help='kwargs in key=value format')
 
     parser.add_argument('--broker', required=False, default='',

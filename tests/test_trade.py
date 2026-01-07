@@ -23,8 +23,8 @@ from __future__ import (absolute_import, division, print_function,
 
 import testcommon
 
-import backtrader as bt
-from backtrader import trade
+import quantrader as bt
+from quantrader import trade
 
 
 class FakeCommInfo(object):

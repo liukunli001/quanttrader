@@ -29,9 +29,9 @@ except:
 
 import testcommon
 
-import backtrader as bt
-import backtrader.indicators as btind
-from backtrader.utils.py3 import PY2
+import quantrader as bt
+import quantrader.indicators as btind
+from quantrader.utils.py3 import PY2
 
 
 class TestStrategy(bt.Strategy):
@@ -146,7 +146,7 @@ chkdatas = 1
 
 def test_run(main=False):
     datas = [testcommon.getdata(i) for i in range(chkdatas)]
-    cerebros = testcommon.runtest(datas,
+    engines = testcommon.runtest(datas,
                                   TestStrategy,
                                   printdata=main,
                                   stocklike=False,
@@ -156,8 +156,8 @@ def test_run(main=False):
                                             dict(timeframe=bt.TimeFrame.Years))
                                   )
 
-    for cerebro in cerebros:
-        strat = cerebro.runstrats[0][0]  # no optimization, only 1
+    for engine in engines:
+        strat = engine.runstrats[0][0]  # no optimization, only 1
         analyzer = strat.analyzers[0]  # only 1
         analysis = analyzer.get_analysis()
         if main:

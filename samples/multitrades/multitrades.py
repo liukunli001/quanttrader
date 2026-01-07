@@ -26,9 +26,9 @@ import datetime
 import itertools
 
 # The above could be sent to an independent module
-import backtrader as bt
-import backtrader.feeds as btfeeds
-import backtrader.indicators as btind
+import quantrader as bt
+import quantrader.feeds as btfeeds
+import quantrader.indicators as btind
 
 import mtradeobserver
 
@@ -122,8 +122,8 @@ class MultiTradeStrategy(bt.Strategy):
 def runstrategy():
     args = parse_args()
 
-    # Create a cerebro
-    cerebro = bt.Cerebro()
+    # Create a engine
+    engine = bt.Engine()
 
     # Get the dates from the args
     fromdate = datetime.datetime.strptime(args.fromdate, '%Y-%m-%d')
@@ -135,11 +135,11 @@ def runstrategy():
         fromdate=fromdate,
         todate=todate)
 
-    # Add the 1st data to cerebro
-    cerebro.adddata(data)
+    # Add the 1st data to engine
+    engine.adddata(data)
 
     # Add the strategy
-    cerebro.addstrategy(MultiTradeStrategy,
+    engine.addstrategy(MultiTradeStrategy,
                         period=args.period,
                         onlylong=args.onlylong,
                         stake=args.stake,
@@ -147,22 +147,22 @@ def runstrategy():
                         mtrade=args.mtrade)
 
     # Add the commission - only stocks like a for each operation
-    cerebro.broker.setcash(args.cash)
+    engine.broker.setcash(args.cash)
 
     # Add the commission - only stocks like a for each operation
-    cerebro.broker.setcommission(commission=args.comm,
+    engine.broker.setcommission(commission=args.comm,
                                  mult=args.mult,
                                  margin=args.margin)
 
     # Add the MultiTradeObserver
-    cerebro.addobserver(mtradeobserver.MTradeObserver)
+    engine.addobserver(mtradeobserver.MTradeObserver)
 
     # And run it
-    cerebro.run()
+    engine.run()
 
     # Plot if requested
     if args.plot:
-        cerebro.plot(numfigs=args.numfigs, volume=False, zdown=False)
+        engine.plot(numfigs=args.numfigs, volume=False, zdown=False)
 
 
 def parse_args():

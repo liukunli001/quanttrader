@@ -24,8 +24,8 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import backtrader as bt
-import backtrader.indicators as btind
+import quantrader as bt
+import quantrader.indicators as btind
 
 
 class DayStepsCloseFilter(bt.with_metaclass(bt.MetaParams, object)):
@@ -244,9 +244,9 @@ class St(bt.Strategy):
 def runstrat():
     args = parse_args()
 
-    cerebro = bt.Cerebro()
-    cerebro.broker.set_cash(args.cash)
-    cerebro.broker.set_eosbar(True)
+    engine = bt.Engine()
+    engine.broker.set_cash(args.cash)
+    engine.broker.set_eosbar(True)
 
     dkwargs = dict()
     if args.fromdate:
@@ -263,28 +263,28 @@ def runstrat():
                                             compression=1,
                                             **dkwargs)
         data.addfilter(DayStepsCloseFilter)
-        cerebro.adddata(data)
+        engine.adddata(data)
     else:
         data = bt.feeds.YahooFinanceCSVData(dataname=args.data,
                                             timeframe=bt.TimeFrame.Minutes,
                                             compression=1,
                                             **dkwargs)
         data.addfilter(DayStepsReplayFilter)
-        cerebro.replaydata(data, timeframe=bt.TimeFrame.Days, compression=1)
+        engine.replaydata(data, timeframe=bt.TimeFrame.Days, compression=1)
 
-    cerebro.addstrategy(St,
+    engine.addstrategy(St,
                         sellafter=args.sellafter,
                         highperiod=args.highperiod,
                         market=args.market)
 
-    cerebro.run(runonce=False, preload=False, oldbuysell=args.oldbuysell)
+    engine.run(runonce=False, preload=False, oldbuysell=args.oldbuysell)
     if args.plot:
         pkwargs = dict(style='bar')
         if args.plot is not True:  # evals to True but is not True
             npkwargs = eval('dict(' + args.plot + ')')  # args were passed
             pkwargs.update(npkwargs)
 
-        cerebro.plot(**pkwargs)
+        engine.plot(**pkwargs)
 
 
 def parse_args(pargs=None):

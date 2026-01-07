@@ -26,7 +26,7 @@ import datetime
 import math
 
 
-import backtrader as bt
+import quantrader as bt
 
 
 class RelativeVolumeByBar(bt.Indicator):

@@ -1,6 +1,6 @@
 # coding: utf-8
 # ##################################################################
-# Pair Trading adapted to backtrader
+# Pair Trading adapted to quantrader
 # with PD.OLS and info for StatsModel.API
 # author: Remi Roche
 ##################################################################
@@ -12,9 +12,9 @@ import argparse
 import datetime
 
 # The above could be sent to an independent module
-import backtrader as bt
-import backtrader.feeds as btfeeds
-import backtrader.indicators as btind
+import quantrader as bt
+import quantrader.feeds as btfeeds
+import quantrader.indicators as btind
 
 
 class PairTradingStrategy(bt.Strategy):
@@ -163,8 +163,8 @@ class PairTradingStrategy(bt.Strategy):
 def runstrategy():
     args = parse_args()
 
-    # Create a cerebro
-    cerebro = bt.Cerebro()
+    # Create a engine
+    engine = bt.Engine()
 
     # Get the dates from the args
     fromdate = datetime.datetime.strptime(args.fromdate, '%Y-%m-%d')
@@ -176,8 +176,8 @@ def runstrategy():
         fromdate=fromdate,
         todate=todate)
 
-    # Add the 1st data to cerebro
-    cerebro.adddata(data0)
+    # Add the 1st data to engine
+    engine.adddata(data0)
 
     # Create the 2nd data
     data1 = btfeeds.YahooFinanceCSVData(
@@ -185,28 +185,28 @@ def runstrategy():
         fromdate=fromdate,
         todate=todate)
 
-    # Add the 2nd data to cerebro
-    cerebro.adddata(data1)
+    # Add the 2nd data to engine
+    engine.adddata(data1)
 
     # Add the strategy
-    cerebro.addstrategy(PairTradingStrategy,
+    engine.addstrategy(PairTradingStrategy,
                         period=args.period,
                         stake=args.stake)
 
     # Add the commission - only stocks like a for each operation
-    cerebro.broker.setcash(args.cash)
+    engine.broker.setcash(args.cash)
 
     # Add the commission - only stocks like a for each operation
-    cerebro.broker.setcommission(commission=args.commperc)
+    engine.broker.setcommission(commission=args.commperc)
 
     # And run it
-    cerebro.run(runonce=not args.runnext,
+    engine.run(runonce=not args.runnext,
                 preload=not args.nopreload,
                 oldsync=args.oldsync)
 
     # Plot if requested
     if args.plot:
-        cerebro.plot(numfigs=args.numfigs, volume=False, zdown=False)
+        engine.plot(numfigs=args.numfigs, volume=False, zdown=False)
 
 
 def parse_args():

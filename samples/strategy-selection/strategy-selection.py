@@ -23,7 +23,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import argparse
 
-import backtrader as bt
+import quantrader as bt
 
 
 class St0(bt.SignalStrategy):
@@ -53,13 +53,13 @@ class StFetcher(object):
 def runstrat(pargs=None):
     args = parse_args(pargs)
 
-    cerebro = bt.Cerebro()
+    engine = bt.Engine()
     data = bt.feeds.BacktraderCSVData(dataname=args.data)
-    cerebro.adddata(data)
+    engine.adddata(data)
 
-    cerebro.addanalyzer(bt.analyzers.Returns)
-    cerebro.optstrategy(StFetcher, idx=[0, 1])
-    results = cerebro.run(maxcpus=args.maxcpus, optreturn=args.optreturn)
+    engine.addanalyzer(bt.analyzers.Returns)
+    engine.optstrategy(StFetcher, idx=[0, 1])
+    results = engine.run(maxcpus=args.maxcpus, optreturn=args.optreturn)
 
     strats = [x[0] for x in results]  # flatten the result
     for i, strat in enumerate(strats):

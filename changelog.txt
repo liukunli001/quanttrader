@@ -189,7 +189,7 @@
   - Simplify live status detection for IB to allow optimization
   - Keep the observer cycles always synchronized with the strategy cycles
     regardless of running mode
-  - Correct arguments for top level cerebro callback for data notifications
+  - Correct arguments for top level engine callback for data notifications
   - Add HeikinAshi candles indicator (plotted as lines)
   - Add HeikinAshi as filter to directly modify the data
   - Plot only last close value if lineonclose is plotted and correct high
@@ -250,7 +250,7 @@
 1.9.44.116
   - Timer calls implementation
   - Broker support for cheat-on-open
-  - Add cheat_on_open to cerebro to allow next_open
+  - Add cheat_on_open to engine to allow next_open
   - Finish trading calendar resampling for weeks
   - Support Yahoo download over proxies
   - Doc corrections/additions
@@ -270,7 +270,7 @@
   - Docs updates
   - Add multi/tradingcalendar samples
   - Add div/floordiv operations to lines
-  - Return data references in all cerebro methods adding data stream
+  - Return data references in all engine methods adding data stream
 
 1.9.41.116
   - Keep processing orders after create in OandaStore after change to process
@@ -567,7 +567,7 @@
 
 1.9.4.99
   - Add DataTrades Observer to plot the trades of multiple datas independently
-  - Make this observer the default in cerebro (old behavior via oldtrades=True)
+  - Make this observer the default in engine (old behavior via oldtrades=True)
 
 1.9.3.99:
   - copyas method in data feeds to let a clone data be seen differently in the
@@ -634,7 +634,7 @@
 
 1.8.7.96:
   - Added indicators (3): Hull MA, ZeroLag Indicator, Dickson MA
-  - Added control of object cache to cerebro (default deactivated)
+  - Added control of object cache to engine (default deactivated)
   - Refactored the support for "next" only indicators
   - Typos and Docs updates (also from pull-requests)
 
@@ -662,7 +662,7 @@
 1.8.3.93:
   - Refactoring of pyfolio and children analyzers following #116 to try to
     support future intraday support in *pyfolio*
-  - Allow adding a specific signal strategy subclass to cerebro
+  - Allow adding a specific signal strategy subclass to engine
   - Refactor SignalStrategy to ease up subclassing
 
 1.8.2.93:
@@ -716,7 +716,7 @@
 
 1.6.4.93:
   - Reworked and published sizers interface (addresses #104) with changes
-    in cerebro and Strategy
+    in engine and Strategy
   - Observers documentation
   - Refactor timereturn analyzer logic for better readability
 
@@ -773,7 +773,7 @@
   - Initial integration fo ib feed/broker. Can operate but it is not yet fully
     ocmplete
   - Comprehensive ib testing sample
-  - Added "store" and "data" notifications to cerebro and strategy for the
+  - Added "store" and "data" notifications to engine and strategy for the
     integration of live feeds
   - Internal datetime clarifications
   - Fixes #94 removing leftover decode('utf-8') after removing 'b' from 'rb'
@@ -782,7 +782,7 @@
   - Some documentation updates
 
 1.3.1.92
-  - Memory saving schemes (exactbars parameter to cerebro) full implemented
+  - Memory saving schemes (exactbars parameter to engine) full implemented
   - Add mixing-timeframes to the docs
   - Add memory-savings to the docs
   - Cosmetic corrections to data-resampling sample
@@ -844,8 +844,8 @@
     the indicator mix for writers
 
 1.2.4.88
-  - Improved detection in cerebro.resampledata of existing datas before cloning
-  - Added detection in cerebro.replaydata of existing datas before cloning
+  - Improved detection in engine.resampledata of existing datas before cloning
+  - Added detection in engine.replaydata of existing datas before cloning
 
 1.2.3.88:
   - Add samples following 'Close' order corrections/improvements for
@@ -857,12 +857,12 @@
     buy/sell and would pass the execution type as plimit
   - PandasData extension sample and data supporting discussion in
     ticket #65
-  - If datas have been passed to cerebro, ensure cerebro has a
+  - If datas have been passed to engine, ensure engine has a
     strategy to run against (which can get indicators, analyzers,
     observers and other through the appropriate interface)
   - Addresses #64 by auto-cloning datas in resampledata if the data
     was already in the system
-  - Return a list in case cerebro.run is not run due to missing datas
+  - Return a list in case engine.run is not run due to missing datas
 
 1.2.2.88:
   - Update of bidask sample
@@ -870,7 +870,7 @@
     the stack and avoid the previous session to fill into new session
 
 1.2.1.88:
-  - Remove old DataReplayer/DataResampler and cerebro resampledata_old and
+  - Remove old DataReplayer/DataResampler and engine resampledata_old and
     replaydata_old which were using them
   - Adapt docs and test to remove DataReplayer/DataResampler and document the
     newer interfaces
@@ -1001,7 +1001,7 @@
   - Refactoring of minute/seconds/microseconds bar compression scheme to allow
     time adjusted bars
   - Added tick_last to datas - alias of tick_close
-  - resampledata and replaydata methods added to cerebro
+  - resampledata and replaydata methods added to engine
   - Added tick_last to datas - alias of tick_close
   - Added multitrade support and sample
   - Added helper time2num and num2time to complement date2num and num2date
@@ -1017,7 +1017,7 @@
   - Further rework of minute (and sub-minute) Data Resampling/Replaying
   - Added tia/visualize-wealth/QSTK/TradingWithPython to README
   - Added tick_last to set of tick variables (open/high/low/close)
-  - Added resampledata and replaydata to cerebro to avoid having to instantiate
+  - Added resampledata and replaydata to engine to avoid having to instantiate
     DataReplayer/DataResampler
 
 1.1.11.88:
@@ -1046,7 +1046,7 @@
   - Removed 2.6 and added 3.5 from setup.py
   - Refactored bt-run.py to internal function and added btrun executable to
     installation
-  - Added cerebro parameters and writers support to btrun
+  - Added engine parameters and writers support to btrun
   - Fixed duplicate writers next call in "next" mode
   - Improved LineSeries objects name printing in WriterFile and changed "csv"
     to False
@@ -1099,7 +1099,7 @@
   - Refactoring of minimum period calculation in LineIterator
   - Refactoring of strategy minimum period calculation to allow indicator
     injection
-  - Cerebro support for addition of indictors to inject into strategies
+  - Engine support for addition of indictors to inject into strategies
   - bt-run rework to support multiple strategies (o none), observers, indicators
     and analyzers with individual kwargs per entry
   - bt-run rework of plotting to single argument with kwargs
@@ -1132,10 +1132,10 @@
   - Analyzers added: SharpeRatio and AnnualReturn
   - Improved Observers which now support (like Indicators/Strategies)
     prenext/nextstart
-  - Simplified cerebro return values for run: single list if not optimizing and
+  - Simplified engine return values for run: single list if not optimizing and
     list of lists if optimizing
   - Order Execution Sample script added
-  - SMA_CrosssOver Strategy included in submodule backtrader.strategies
+  - SMA_CrosssOver Strategy included in submodule quantrader.strategies
 
 1.1.2.88:
   - Generic Data Feed Development Documentation
@@ -1175,8 +1175,8 @@
     the broker (with an updated CommissionInfo profitandloss method) and
     simplified Operations observer along the way
   - Removal of the analyzer paradigm, refactoring the introduction of observers,
-    which now can be done through Cerebro to make them really usable as
-    statistics generators. Default observers get added from Cerebro unless
+    which now can be done through Engine to make them really usable as
+    statistics generators. Default observers get added from Engine unless
     explicitly indicatoed not to do so
   - notify renamed to notify_order (patch support included)
   - notify_operation renamed to notify_trade

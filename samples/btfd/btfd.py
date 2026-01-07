@@ -28,7 +28,7 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import datetime
 
-import backtrader as bt
+import quantrader as bt
 
 
 class ValueUnlever(bt.observers.Value):
@@ -142,7 +142,7 @@ class St(bt.Strategy):
 def runstrat(args=None):
     args = parse_args(args)
 
-    cerebro = bt.Cerebro()
+    engine = bt.Engine()
 
     # Data feed kwargs
     kwargs = dict()
@@ -159,25 +159,25 @@ def runstrat(args=None):
 
     # Data feed - no plot - observer will do the job
     data = YahooData(dataname=args.data, plot=False, **kwargs)
-    cerebro.adddata(data)
+    engine.adddata(data)
 
     # Broker
-    cerebro.broker = bt.brokers.BackBroker(**eval('dict(' + args.broker + ')'))
+    engine.broker = bt.brokers.BackBroker(**eval('dict(' + args.broker + ')'))
 
     # Add a commission
-    cerebro.broker.setcommission(**eval('dict(' + args.comminfo + ')'))
+    engine.broker.setcommission(**eval('dict(' + args.comminfo + ')'))
 
     # Strategy
-    cerebro.addstrategy(St, **eval('dict(' + args.strat + ')'))
+    engine.addstrategy(St, **eval('dict(' + args.strat + ')'))
 
     # Add specific observer
-    cerebro.addobserver(ValueUnlever, **eval('dict(' + args.valobserver + ')'))
+    engine.addobserver(ValueUnlever, **eval('dict(' + args.valobserver + ')'))
 
     # Execute
-    cerebro.run(**eval('dict(' + args.cerebro + ')'))
+    engine.run(**eval('dict(' + args.engine + ')'))
 
     if args.plot:  # Plot if requested to
-        cerebro.plot(**eval('dict(' + args.plot + ')'))
+        engine.plot(**eval('dict(' + args.plot + ')'))
 
 
 def parse_args(pargs=None):
@@ -204,7 +204,7 @@ def parse_args(pargs=None):
                         metavar='YYYY-MM-DD[THH:MM:SS]',
                         help='Ending date[time]')
 
-    parser.add_argument('--cerebro', required=False, default='stdstats=False',
+    parser.add_argument('--engine', required=False, default='stdstats=False',
                         metavar='kwargs', help='kwargs in key=value format')
 
     parser.add_argument('--broker', required=False,

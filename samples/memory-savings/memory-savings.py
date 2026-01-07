@@ -24,10 +24,10 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 import sys
 
-import backtrader as bt
-import backtrader.feeds as btfeeds
-import backtrader.indicators as btind
-import backtrader.utils.flushfile
+import quantrader as bt
+import quantrader.feeds as btfeeds
+import quantrader.indicators as btind
+import quantrader.utils.flushfile
 
 
 class TestInd(bt.Indicator):
@@ -123,15 +123,15 @@ class St(bt.Strategy):
 def runstrat():
     args = parse_args()
 
-    cerebro = bt.Cerebro()
+    engine = bt.Engine()
     data = btfeeds.YahooFinanceCSVData(dataname=args.data)
-    cerebro.adddata(data)
-    cerebro.addstrategy(
+    engine.adddata(data)
+    engine.addstrategy(
         St, datalines=args.datalines, lendetails=args.lendetails)
 
-    cerebro.run(runonce=False, exactbars=args.save)
+    engine.run(runonce=False, exactbars=args.save)
     if args.plot:
-        cerebro.plot(style='bar')
+        engine.plot(style='bar')
 
 
 def parse_args():
