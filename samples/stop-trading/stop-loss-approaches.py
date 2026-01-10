@@ -177,7 +177,7 @@ def runstrat(args=None):
             strpfmt = dtfmt + tmfmt * ('T' in a)
             kwargs[d] = datetime.datetime.strptime(a, strpfmt)
 
-    data0 = trader.feeds.BacktraderCSVData(dataname=args.data0, **kwargs)
+    data0 = trader.feeds.QuanttraderCSVData(dataname=args.data0, **kwargs)
     engine.adddata(data0)
 
     # Broker

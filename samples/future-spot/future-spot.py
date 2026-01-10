@@ -60,10 +60,10 @@ def runstrat(args=None):
 
     dataname = '../../datas/2006-day-001.txt'  # data feed
 
-    data0 = trader.feeds.BacktraderCSVData(dataname=dataname, name='data0')
+    data0 = trader.feeds.QuanttraderCSVData(dataname=dataname, name='data0')
     engine.adddata(data0)
 
-    data1 = trader.feeds.BacktraderCSVData(dataname=dataname, name='data1')
+    data1 = trader.feeds.QuanttraderCSVData(dataname=dataname, name='data1')
     data1.addfilter(close_changer)
     if not args.no_comp:
         data1.compensate(data0)

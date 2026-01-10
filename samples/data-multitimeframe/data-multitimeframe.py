@@ -110,7 +110,7 @@ def runstrat():
 
     # Load the Data
     datapath = args.dataname or '../../datas/2006-day-001.txt'
-    data = btfeeds.BacktraderCSVData(
+    data = trader.feeds.QuanttraderCSVData(
         dataname=datapath)
 
     tframes = dict(
@@ -122,7 +122,7 @@ def runstrat():
     # Resample the data
     if args.noresample:
         datapath = args.dataname2 or '../../datas/2006-week-001.txt'
-        data2 = btfeeds.BacktraderCSVData(
+        data2 = trader.feeds.QuanttraderCSVData(
             dataname=datapath)
     else:
         if args.oldrs:

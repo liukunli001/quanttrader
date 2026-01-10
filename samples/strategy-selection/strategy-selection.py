@@ -54,7 +54,7 @@ def runstrat(pargs=None):
     args = parse_args(pargs)
 
     engine = trader.Engine()
-    data = trader.feeds.BacktraderCSVData(dataname=args.data)
+    data = trader.feeds.QuanttraderCSVData(dataname=args.data)
     engine.adddata(data)
 
     engine.addanalyzer(trader.analyzers.Returns)

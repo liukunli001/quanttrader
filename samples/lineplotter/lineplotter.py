@@ -56,7 +56,7 @@ def runstrat(pargs=None):
         todate = datetime.datetime.strptime(args.todate, '%Y-%m-%d')
         dkwargs['todate'] = todate
 
-    data = trader.feeds.BacktraderCSVData(dataname=args.data, **dkwargs)
+    data = trader.feeds.QuanttraderCSVData(dataname=args.data, **dkwargs)
     engine.adddata(data)
 
     engine.addstrategy(St, ondata=args.ondata)

@@ -42,7 +42,7 @@ def runstrategy():
     todate = datetime.datetime.strptime(args.todate, '%Y-%m-%d')
 
     # Create the 1st data
-    data = btfeeds.BacktraderCSVData(
+    data = trader.feeds.QuanttraderCSVData(
         dataname=args.data,
         fromdate=fromdate,
         todate=todate,

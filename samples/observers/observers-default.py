@@ -28,7 +28,7 @@ if __name__ == '__main__':
     engine = trader.Engine(stdstats=True)
     engine.addstrategy(trader.Strategy)
 
-    data = trader.feeds.BacktraderCSVData(dataname='../../datas/2006-day-001.txt')
+    data = trader.feeds.QuanttraderCSVData(dataname='../../datas/2006-day-001.txt')
     engine.adddata(data)
 
     engine.run()

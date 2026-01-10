@@ -74,7 +74,7 @@ def runstrat(args=None):
         dkwargs['todate'] = todate
 
     # if dataset is None, args.data has been given
-    data = trader.feeds.BacktraderCSVData(dataname=args.data, **dkwargs)
+    data = trader.feeds.QuanttraderCSVData(dataname=args.data, **dkwargs)
     engine.adddata(data)
 
     engine.add_signal(MAINSIGNALS[args.signal],

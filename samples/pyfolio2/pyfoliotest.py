@@ -112,7 +112,7 @@ def runstrat(args=None):
     if args.compression:
         dkwargs['compression'] = args.compression
 
-    # data0 = trader.feeds.BacktraderCSVData(dataname=args.data0, **dkwargs)
+    # data0 = trader.feeds.QuanttraderCSVData(dataname=args.data0, **dkwargs)
     data0 = trader.feeds.VCData(dataname=args.data0, historical=True, **dkwargs)
     engine.adddata(data0, name='Data0')
 

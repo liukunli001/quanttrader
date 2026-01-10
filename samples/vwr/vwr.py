@@ -52,7 +52,7 @@ def runstrat(pargs=None):
         dkwargs['todate'] = todate
 
     # Create the 1st data
-    data = trader.feeds.BacktraderCSVData(dataname=args.data, **dkwargs)
+    data = trader.feeds.QuanttraderCSVData(dataname=args.data, **dkwargs)
     engine.adddata(data)  # Add the data to engine
 
     engine.addstrategy(trader.strategies.SMA_CrossOver)  # Add the strategy

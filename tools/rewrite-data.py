@@ -33,7 +33,7 @@ from trader.utils.py3 import bytes
 
 
 DATAFORMATS = dict(
-    btcsv=trader.feeds.BacktraderCSVData,
+    btcsv=trader.feeds.QuanttraderCSVData,
     vchartcsv=trader.feeds.VChartCSVData,
     vchart=trader.feeds.VChartData,
     vcdata=trader.feeds.VCData,
@@ -141,7 +141,7 @@ def runstrat(pargs=None):
 def parse_args(pargs=None):
     parser = argparse.ArgumentParser(
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-        description='Rewrite formats to BacktraderCSVData format')
+        description='Rewrite formats to QuanttraderCSVData format')
 
     parser.add_argument('--format', '-fmt', required=False,
                         choices=DATAFORMATS.keys(),

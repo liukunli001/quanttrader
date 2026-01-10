@@ -50,7 +50,7 @@ def runstrategy():
     dtend = datetime.datetime.strptime(args.tend, '%H:%M')
 
     # Create the 1st data
-    data = btfeeds.BacktraderCSVData(
+    data = trader.feeds.QuanttraderCSVData(
         dataname=args.data,
         fromdate=fromdate,
         todate=todate,

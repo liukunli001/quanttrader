@@ -63,7 +63,7 @@ def runstrat():
 
     # Load the Data
     datapath = args.dataname or '../../datas//2006-day-001.txt'
-    data = btfeeds.BacktraderCSVData(
+    data = trader.feeds.QuanttraderCSVData(
         dataname=datapath)
 
     tframes = dict(

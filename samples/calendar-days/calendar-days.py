@@ -43,7 +43,7 @@ def runstrat():
     fromdate = datetime.datetime.strptime(args.fromdate, '%Y-%m-%d')
     todate = datetime.datetime.strptime(args.todate, '%Y-%m-%d')
 
-    data = btfeeds.BacktraderCSVData(
+    data = trader.feeds.QuanttraderCSVData(
         dataname=args.data,
         fromdate=fromdate,
         todate=todate)

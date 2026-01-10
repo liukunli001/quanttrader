@@ -52,7 +52,7 @@ def runstrat():
     args = parse_args()
 
     engine = trader.Engine()
-    data = btfeeds.BacktraderCSVData(dataname=args.data)
+    data = trader.feeds.QuanttraderCSVData(dataname=args.data)
     engine.adddata(data)
     engine.resampledata(data, timeframe=trader.TimeFrame.Months)
 

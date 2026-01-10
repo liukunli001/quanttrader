@@ -75,7 +75,7 @@ def runstrat():
     args = parse_args()
 
     engine = trader.Engine()
-    data = trader.feeds.BacktraderCSVData(dataname=args.data)
+    data = trader.feeds.QuanttraderCSVData(dataname=args.data)
 
     data.addfilter(trader.filters.DayStepsFilter)
     engine.adddata(data)

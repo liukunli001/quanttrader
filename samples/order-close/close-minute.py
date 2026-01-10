@@ -76,7 +76,7 @@ def runstrat():
 def getdata(args):
 
     dataformat = dict(
-        bt=btfeeds.BacktraderCSVData,
+        bt=trader.feeds.QuanttraderCSVData,
         visualchart=btfeeds.VChartCSVData,
         sierrachart=btfeeds.SierraChartCSVData,
         yahoo=btfeeds.YahooFinanceCSVData,

@@ -74,7 +74,7 @@ def runstrat(args=None):
             kwargs[d] = datetime.datetime.strptime(a, strpfmt)
 
     # Data feed
-    data0 = trader.feeds.BacktraderCSVData(dataname=args.data0, **kwargs)
+    data0 = trader.feeds.QuanttraderCSVData(dataname=args.data0, **kwargs)
     engine.adddata(data0)
 
     engine.resampledata(data0, timeframe=trader.TimeFrame.Minutes, compression=15)

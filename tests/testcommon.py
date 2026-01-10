@@ -41,7 +41,7 @@ datafiles = [
     '2006-week-001.txt',
 ]
 
-DATAFEED = trader.feeds.BacktraderCSVData
+DATAFEED = trader.feeds.QuanttraderCSVData
 
 FROMDATE = datetime.datetime(2006, 1, 1)
 TODATE = datetime.datetime(2006, 12, 31)

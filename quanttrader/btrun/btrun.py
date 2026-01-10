@@ -33,7 +33,7 @@ import quanttrader as trader
 
 
 DATAFORMATS = dict(
-    btcsv=trader.feeds.BacktraderCSVData,
+    btcsv=trader.feeds.QuanttraderCSVData,
     vchartcsv=trader.feeds.VChartCSVData,
     vcfile=trader.feeds.VChartFile,
     sierracsv=trader.feeds.SierraChartCSVData,
@@ -414,7 +414,7 @@ def getfunctions(iterable, modbase):
 
 def parse_args(pargs=''):
     parser = argparse.ArgumentParser(
-        description='Backtrader Run Script',
+        description='Quanttrader Run Script',
         formatter_class=argparse.RawTextHelpFormatter,
     )
 
