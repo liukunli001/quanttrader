@@ -30,8 +30,8 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import quanttrader as trader
-import trader.utils.flushfile
-from trader.metabase import ParamsBase
+import quanttrader.utils.flushfile
+from quanttrader.metabase import ParamsBase
 
 
 modpath = os.path.dirname(os.path.abspath(__file__))

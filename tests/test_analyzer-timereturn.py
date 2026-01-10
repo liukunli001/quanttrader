@@ -30,8 +30,8 @@ except:
 import testcommon
 
 import quanttrader as trader
-import trader.indicators
-from trader.utils.py3 import PY2
+from quanttrader import indicators as btind
+from quanttrader.utils.py3 import PY2
 
 
 class TestStrategy(trader.Strategy):

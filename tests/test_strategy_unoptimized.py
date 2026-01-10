@@ -30,7 +30,7 @@ except:
 import testcommon
 
 import quanttrader as trader
-import trader.indicators
+from quanttrader import indicators as btind
 
 BUYCREATE = [
     '3641.42', '3798.46', '3874.61', '3860.00', '3843.08', '3648.33',

@@ -30,9 +30,9 @@ except:
 
 import testcommon
 
-from trader.utils.py3 import range
+from quanttrader.utils.py3 import range
 import quanttrader as trader
-import trader.indicators
+from quanttrader import indicators as btind
 
 CHKVALUES = [
     '14525.80', '14525.80', '15408.20', '15408.20', '14763.90',

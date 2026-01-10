@@ -31,7 +31,7 @@ except:
 import testcommon
 
 import quanttrader as trader
-import trader.indicators
+from quanttrader import indicators as btind
 
 
 class TestStrategy(trader.Strategy):
