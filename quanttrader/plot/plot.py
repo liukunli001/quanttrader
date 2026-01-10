@@ -44,7 +44,7 @@ from .formatters import (MyVolFormatter, MyDateFormatter, getlocator)
 from . import locator as loc
 from .multicursor import MultiCursor
 from .scheme import PlotScheme
-from ..utils import tag_box_style
+from .utils import tag_box_style
 
 
 class PInfo(object):

@@ -28,7 +28,7 @@ import matplotlib.colors as mcolors
 import matplotlib.legend as mlegend
 import matplotlib.lines as mlines
 
-from ..utils import shade_color
+from .utils import shade_color
 
 
 class CandlestickPlotHandler(object):

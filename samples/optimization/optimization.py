@@ -42,8 +42,8 @@ class OptimizeStrategy(trader.Strategy):
     def __init__(self):
         # Add indicators to add load
 
-        btind.SMA(period=self.p.smaperiod)
-        btind.MACD(period_me1=self.p.macdperiod1,
+        trader.indicators.SMA(period=self.p.smaperiod)
+        trader.indicators.MACD(period_me1=self.p.macdperiod1,
                    period_me2=self.p.macdperiod2,
                    period_signal=self.p.macdperiod3)
 
@@ -72,7 +72,7 @@ def runstrat():
     todate = datetime.datetime.strptime(args.todate, '%Y-%m-%d')
 
     # Create the 1st data
-    data = btfeeds.BacktraderCSVData(
+    data = trader.feeds.BacktraderCSVData(
         dataname=args.data,
         fromdate=fromdate,
         todate=todate)

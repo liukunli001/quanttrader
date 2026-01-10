@@ -26,8 +26,8 @@ import math
 from ..utils.py3 import itervalues
 
 from .. import Analyzer, TimeFrame
-from .mathsupport import average, standarddev
-from .analyzers import TimeReturn, AnnualReturn
+from ..mathsupport import average, standarddev
+from . import TimeReturn, AnnualReturn
 
 
 class SharpeRatio(Analyzer):

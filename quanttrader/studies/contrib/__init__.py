@@ -21,7 +21,7 @@
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
-import .. as trader
+import quanttrader as trader
 
 from .import fractal as fractal
 for name in fractal.__all__:

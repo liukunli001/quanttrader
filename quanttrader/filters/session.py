@@ -25,7 +25,7 @@ from datetime import datetime, timedelta
 
 from ..dataseries import TimeFrame
 from ..utils.py3 import with_metaclass
-from . import metabase
+from .. import metabase
 
 
 class SessionFiller(with_metaclass(metabase.MetaParams, object)):

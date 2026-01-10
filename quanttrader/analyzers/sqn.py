@@ -24,7 +24,7 @@ from __future__ import (absolute_import, division, print_function,
 import math
 
 from .. import Analyzer
-from .mathsupport import average, standarddev
+from ..mathsupport import average, standarddev
 from ..utils import AutoOrderedDict
 
 

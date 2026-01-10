@@ -24,7 +24,7 @@ from __future__ import (absolute_import, division, print_function,
 
 import quanttrader as trader
 from ..utils.py3 import itervalues
-from .mathsupport import average, standarddev
+from ..mathsupport import average, standarddev
 from . import TimeReturn
 
 

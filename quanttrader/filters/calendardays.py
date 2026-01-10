@@ -25,7 +25,7 @@ from datetime import date, datetime, timedelta
 
 from ..dataseries import TimeFrame
 from ..utils.py3 import with_metaclass
-from . import metabase
+from .. import metabase
 
 
 class CalendarDays(with_metaclass(metabase.MetaParams, object)):
