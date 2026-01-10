@@ -1,23 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8; py-indent-offset:4 -*-
-###############################################################################
-#
-# Copyright (C) 2015-2023 Daniel Rodriguez
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-###############################################################################
+
 from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
@@ -180,13 +162,13 @@ def parse_args(pargs=None):
         )
     )
 
-    parser.add_argument('--data0', default='../../datas/nvda-1999-2014.txt',
+    parser.add_argument('--data0', default='/Users/kunliliu/Documents/GitHub/quanttrader/datas/nvda-1999-2014.txt',
                         required=False, help='Data0 to read in')
 
-    parser.add_argument('--data1', default='../../datas/yhoo-1996-2014.txt',
+    parser.add_argument('--data1', default='/Users/kunliliu/Documents/GitHub/quanttrader/datas/yhoo-1996-2014.txt',
                         required=False, help='Data1 to read in')
 
-    parser.add_argument('--data2', default='../../datas/orcl-1995-2014.txt',
+    parser.add_argument('--data2', default='/Users/kunliliu/Documents/GitHub/quanttrader/datas/orcl-1995-2014.txt',
                         required=False, help='Data1 to read in')
 
     # Defaults for dates

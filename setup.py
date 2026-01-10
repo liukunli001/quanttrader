@@ -1,23 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8; py-indent-offset:4 -*-
-###############################################################################
-#
-# Copyright (C) 2015-2023 Daniel Rodriguez
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-###############################################################################
+
 import os.path
 import codecs  # To use a consistent encoding
 import setuptools
@@ -48,7 +30,7 @@ setuptools.setup(
     # https://packaging.python.org/en/latest/single_source_version.html
     version=__version__,
 
-    description='BackTesting Engine',
+    description='Quant Trading Engine',
     long_description=long_description,
 
     # The project's main homepage.
@@ -56,8 +38,8 @@ setuptools.setup(
     download_url=gdurl,
 
     # Author details
-    author='Daniel Rodriguez',
-    author_email='danjrod@gmail.com',
+    author='Kunli Liu',
+    author_email='liukunli001@gmail.com',
 
     # Choose your license
     license='GPLv3+',
