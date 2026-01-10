@@ -73,7 +73,7 @@ class OperationN(PeriodN):
 class BaseApplyN(OperationN):
     '''
     Base class for ApplyN and others which may take a ``func`` as a parameter
-    but want to define the lines in the indicator.
+    but want to define the lines in the indicators.
 
     Calculates ``func`` for a given period where func is given as a parameter,
     aka named argument or ``kwarg``

@@ -25,8 +25,8 @@ import argparse
 import datetime
 
 import quanttrader as trader
-import trader.feeds
-
+import quanttrader.feeds
+feeds = trader.feeds
 
 class St(trader.Strategy):
     def __init__(self):
@@ -77,10 +77,10 @@ def getdata(args):
 
     dataformat = dict(
         bt=trader.feeds.QuanttraderCSVData,
-        visualchart=btfeeds.VChartCSVData,
-        sierrachart=btfeeds.SierraChartCSVData,
-        yahoo=btfeeds.YahooFinanceCSVData,
-        yahoo_unreversed=btfeeds.YahooFinanceCSVData
+        visualchart=feeds.VChartCSVData,
+        sierrachart=feeds.SierraChartCSVData,
+        yahoo=feeds.YahooFinanceCSVData,
+        yahoo_unreversed=feeds.YahooFinanceCSVData
     )
 
     dfkwargs = dict()

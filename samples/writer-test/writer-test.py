@@ -26,9 +26,9 @@ import datetime
 
 # The above could be sent to an independent module
 import quanttrader as trader
-import trader.feeds
-import trader.indicators
-from trader.analyzers import SQN
+import quanttrader.feeds
+from quanttrader import indicators as indicators
+from quanttrader.analyzers import SQN
 
 
 class LongShortStrategy(trader.Strategy):
@@ -62,9 +62,9 @@ class LongShortStrategy(trader.Strategy):
         self.orderid = None
 
         # Create SMA on 2nd data
-        sma = btind.MovAv.SMA(self.data, period=self.p.period)
+        sma = indicators.MovAv.SMA(self.data, period=self.p.period)
         # Create a CrossOver Signal from close an moving average
-        self.signal = btind.CrossOver(self.data.close, sma)
+        self.signal = indicators.CrossOver(self.data.close, sma)
         self.signal.csv = self.p.csvcross
 
     def next(self):

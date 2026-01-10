@@ -23,7 +23,7 @@ from __future__ import (absolute_import, division, print_function,
 
 
 import quanttrader as trader
-import trader.indicators
+import quanttrader.indicators
 
 
 class RelativeVolume(trader.Indicator):

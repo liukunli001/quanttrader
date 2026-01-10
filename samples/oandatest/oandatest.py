@@ -26,7 +26,7 @@ import datetime
 
 # The above could be sent to an independent module
 import quanttrader as trader
-from trader.utils import flushfile  # win32 quick stdout flushing
+from quanttrader.utils import flushfile  # win32 quick stdout flushing
 
 StoreCls = trader.stores.OandaStore
 DataCls = trader.feeds.OandaData

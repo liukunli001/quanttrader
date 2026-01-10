@@ -27,7 +27,7 @@ from . import SMA, ROC100
 
 class KnowSureThing(trader.Indicator):
     '''
-    It is a "summed" momentum indicator. Developed by Martin Pring and
+    It is a "summed" momentum indicators. Developed by Martin Pring and
     published in 1992 in Stocks & Commodities.
 
     Formula:

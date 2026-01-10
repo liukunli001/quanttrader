@@ -29,7 +29,7 @@ import sys
 
 
 import quanttrader as trader
-from trader.utils.py3 import bytes
+from quanttrader.utils.py3 import bytes
 
 
 DATAFORMATS = dict(

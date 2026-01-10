@@ -25,8 +25,8 @@ import argparse
 import datetime
 
 import quanttrader as trader
-import trader.feeds
-
+import quanttrader.feeds
+feeds = trader.feeds
 
 class St(trader.Strategy):
     def next(self):
@@ -42,7 +42,7 @@ def runstrat():
 
     engine = trader.Engine()
 
-    data = btfeeds.GenericCSVData(
+    data = feeds.GenericCSVData(
         dataname=args.data,
         dtformat='%d/%m/%y',
         # tmformat='%H%M%S',  # already the default value

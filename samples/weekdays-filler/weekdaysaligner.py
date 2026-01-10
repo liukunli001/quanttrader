@@ -25,9 +25,10 @@ import argparse
 import datetime
 
 import quanttrader as trader
-import trader.feeds
-import trader.indicators
-import trader.utils.flushfile
+import quanttrader.feeds
+feeds = trader.feeds
+from quanttrader import indicators as indicators
+import quanttrader.utils.flushfile
 
 # from wkdaysfiller import WeekDaysFiller
 from weekdaysfiller import WeekDaysFiller
@@ -38,8 +39,8 @@ class St(trader.Strategy):
 
     def __init__(self):
         if self.p.sma:
-            btind.SMA(self.data0, period=self.p.sma)
-            btind.SMA(self.data1, period=self.p.sma)
+            indicators.SMA(self.data0, period=self.p.sma)
+            indicators.SMA(self.data1, period=self.p.sma)
 
     def next(self):
         dtequal = (self.data0.datetime.datetime() ==
@@ -60,9 +61,9 @@ def runstrat():
 
     engine = trader.Engine(stdstats=False)
 
-    DataFeed = btfeeds.YahooFinanceCSVData
+    DataFeed = feeds.YahooFinanceCSVData
     if args.online:
-        DataFeed = btfeeds.YahooFinanceData
+        DataFeed = feeds.YahooFinanceData
 
     data0 = DataFeed(dataname=args.data0, fromdate=fromdate, todate=todate)
 

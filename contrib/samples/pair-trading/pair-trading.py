@@ -13,8 +13,8 @@ import datetime
 
 # The above could be sent to an independent module
 import quanttrader as trader
-import trader.feeds
-import trader.indicators
+import quanttrader.feeds
+import quanttrader.indicators
 
 
 class PairTradingStrategy(trader.Strategy):
@@ -70,12 +70,12 @@ class PairTradingStrategy(trader.Strategy):
         self.portfolio_value = self.p.portfolio_value
 
         # Signals performed with PD.OLS :
-        self.transform = btind.OLS_TransformationN(self.data0, self.data1,
+        self.transform = indicators.OLS_TransformationN(self.data0, self.data1,
                                                    period=self.p.period)
         self.zscore = self.transform.zscore
 
         # Checking signals built with StatsModel.API :
-        # self.ols_transfo = btind.OLS_Transformation(self.data0, self.data1,
+        # self.ols_transfo = indicators.OLS_Transformation(self.data0, self.data1,
         #                                             period=self.p.period,
         #                                             plot=True)
 
@@ -171,7 +171,7 @@ def runstrategy():
     todate = datetime.datetime.strptime(args.todate, '%Y-%m-%d')
 
     # Create the 1st data
-    data0 = btfeeds.YahooFinanceCSVData(
+    data0 = feeds.YahooFinanceCSVData(
         dataname=args.data0,
         fromdate=fromdate,
         todate=todate)
@@ -180,7 +180,7 @@ def runstrategy():
     engine.adddata(data0)
 
     # Create the 2nd data
-    data1 = btfeeds.YahooFinanceCSVData(
+    data1 = feeds.YahooFinanceCSVData(
         dataname=args.data1,
         fromdate=fromdate,
         todate=todate)

@@ -29,7 +29,7 @@ from . import Indicator, MovingAverage
 
 class OscillatorMixIn(Indicator):
     '''
-    MixIn class to create a subclass with another indicator. The main line of
+    MixIn class to create a subclass with another indicators. The main line of
     that indicator will be substracted from the other base class main line
     creating an oscillator
 

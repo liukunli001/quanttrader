@@ -24,8 +24,8 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 
 import quanttrader as trader
-import trader.feeds
-import trader.indicators
+import quanttrader.feeds
+from quanttrader import indicators as indicators
 
 
 class SMAStrategy(trader.Strategy):
@@ -35,7 +35,7 @@ class SMAStrategy(trader.Strategy):
     )
 
     def __init__(self):
-        self.sma = btind.SMA(self.data, period=self.p.period)
+        self.sma = indicators.SMA(self.data, period=self.p.period)
 
     def start(self):
         self.counter = 0

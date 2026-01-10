@@ -25,9 +25,10 @@ import argparse
 import sys
 
 import quanttrader as trader
-import trader.feeds
-import trader.indicators
-import trader.utils.flushfile
+import quanttrader.feeds
+feeds = trader.feeds
+from quanttrader import indicators as indicators
+import quanttrader.utils.flushfile
 
 
 class TestInd(trader.Indicator):
@@ -35,7 +36,7 @@ class TestInd(trader.Indicator):
 
     def __init__(self):
         self.lines.a = b = self.data.close - self.data.high
-        self.lines.b = btind.SMA(b, period=20)
+        self.lines.b = indicators.SMA(b, period=20)
 
 
 class St(trader.Strategy):
@@ -45,11 +46,11 @@ class St(trader.Strategy):
     )
 
     def __init__(self):
-        btind.SMA()
-        btind.Stochastic()
-        btind.RSI()
-        btind.MACD()
-        btind.CCI()
+        indicators.SMA()
+        indicators.Stochastic()
+        indicators.RSI()
+        indicators.MACD()
+        indicators.CCI()
         TestInd().plotinfo.plot = False
 
     def next(self):
@@ -124,7 +125,7 @@ def runstrat():
     args = parse_args()
 
     engine = trader.Engine()
-    data = btfeeds.YahooFinanceCSVData(dataname=args.data)
+    data = feeds.YahooFinanceCSVData(dataname=args.data)
     engine.adddata(data)
     engine.addstrategy(
         St, datalines=args.datalines, lendetails=args.lendetails)

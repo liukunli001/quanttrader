@@ -105,7 +105,7 @@ class Indicator(with_metaclass(MetaIndicator, IndicatorBase)):
                 data.advance()
 
             for indicator in self._lineiterators[LineIterator.IndType]:
-                indicator.advance()
+                indicators.advance()
 
             self.advance()
             self.prenext()
@@ -118,7 +118,7 @@ class Indicator(with_metaclass(MetaIndicator, IndicatorBase)):
                 data.advance()
 
             for indicator in self._lineiterators[LineIterator.IndType]:
-                indicator.advance()
+                indicators.advance()
 
             self.advance()
             self.nextstart()
@@ -130,7 +130,7 @@ class Indicator(with_metaclass(MetaIndicator, IndicatorBase)):
                 data.advance()
 
             for indicator in self._lineiterators[LineIterator.IndType]:
-                indicator.advance()
+                indicators.advance()
 
             self.advance()
             self.next()

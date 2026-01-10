@@ -24,16 +24,16 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 
 import quanttrader as trader
-import trader.feeds
-import trader.indicators
-import trader.utils.flushfile
+import quanttrader.feeds
+from quanttrader import indicators as indicators
+import quanttrader.utils.flushfile
 
 
 class St(trader.Strategy):
     params = dict(multi=True)
 
     def __init__(self):
-        self.pp = pp = btind.PivotPoint(self.data1)
+        self.pp = pp = indicators.PivotPoint(self.data1)
         pp.plotinfo.plot = False  # deactivate plotting
 
         if self.p.multi:

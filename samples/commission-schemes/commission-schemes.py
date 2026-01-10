@@ -25,8 +25,8 @@ import argparse
 import datetime
 
 import quanttrader as trader
-import trader.feeds
-import trader.indicators
+import quanttrader.feeds
+from quanttrader import indicators as indicators
 
 
 class SMACrossOver(trader.Strategy):
@@ -66,9 +66,9 @@ class SMACrossOver(trader.Strategy):
                      (trade.pnl, trade.pnlcomm))
 
     def __init__(self):
-        sma = btind.SMA(self.data, period=self.p.period)
+        sma = indicators.SMA(self.data, period=self.p.period)
         # > 0 crossing up / < 0 crossing down
-        self.buysell_sig = btind.CrossOver(self.data, sma)
+        self.buysell_sig = indicators.CrossOver(self.data, sma)
 
     def next(self):
         if self.buysell_sig > 0:

@@ -24,8 +24,8 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 
 import quanttrader as trader
-import trader.feeds
-import trader.utils.flushfile
+import quanttrader.feeds
+import quanttrader.utils.flushfile
 
 
 class St(trader.Strategy):

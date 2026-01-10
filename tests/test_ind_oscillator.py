@@ -24,7 +24,7 @@ from __future__ import (absolute_import, division, print_function,
 import testcommon
 
 import quanttrader as trader
-from quanttrader import indicators as btind
+from quanttrader import indicators as indicators
 
 chkdatas = 1
 chkvals = [
@@ -32,12 +32,12 @@ chkvals = [
 ]
 
 chkmin = 30
-chkind = btind.Oscillator
+chkind = indicators.Oscillator
 
 
 class TS2(testcommon.TestStrategy):
     def __init__(self):
-        ind = btind.MovAv.SMA(self.data)
+        ind = indicators.MovAv.SMA(self.data)
         self.p.inddata = [ind]
         super(TS2, self).__init__()
 

@@ -33,13 +33,13 @@ class PivotPoint(Indicator):
 
     Example of using this indicator:
 
-      data = btfeeds.ADataFeed(dataname=x, timeframe=trader.TimeFrame.Days)
+      data = feeds.ADataFeed(dataname=x, timeframe=trader.TimeFrame.Days)
       engine.adddata(data)
       engine.resampledata(data, timeframe=trader.TimeFrame.Months)
 
     In the ``__init__`` method of the strategy:
 
-      pivotindicator = btind.PivotPoiont(self.data1)  # the resampled data
+      pivotindicator = indicators.PivotPoiont(self.data1)  # the resampled data
 
     The indicator will try to automatically plo to the non-resampled data. To
     disable this behavior use the following during construction:
@@ -114,13 +114,13 @@ class FibonacciPivotPoint(Indicator):
 
     Example of using this indicator:
 
-      data = btfeeds.ADataFeed(dataname=x, timeframe=trader.TimeFrame.Days)
+      data = feeds.ADataFeed(dataname=x, timeframe=trader.TimeFrame.Days)
       engine.adddata(data)
       engine.resampledata(data, timeframe=trader.TimeFrame.Months)
 
     In the ``__init__`` method of the strategy:
 
-      pivotindicator = btind.FibonacciPivotPoiont(self.data1)  # the resampled data
+      pivotindicator = indicators.FibonacciPivotPoiont(self.data1)  # the resampled data
 
     The indicator will try to automatically plo to the non-resampled data. To
     disable this behavior use the following during construction:
@@ -198,13 +198,13 @@ class DemarkPivotPoint(Indicator):
 
     Example of using this indicator:
 
-      data = btfeeds.ADataFeed(dataname=x, timeframe=trader.TimeFrame.Days)
+      data = feeds.ADataFeed(dataname=x, timeframe=trader.TimeFrame.Days)
       engine.adddata(data)
       engine.resampledata(data, timeframe=trader.TimeFrame.Months)
 
     In the ``__init__`` method of the strategy:
 
-      pivotindicator = btind.DemarkPivotPoiont(self.data1)  # the resampled data
+      pivotindicator = indicators.DemarkPivotPoiont(self.data1)  # the resampled data
 
     The indicator will try to automatically plo to the non-resampled data. To
     disable this behavior use the following during construction:

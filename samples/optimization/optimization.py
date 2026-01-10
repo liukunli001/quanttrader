@@ -25,11 +25,11 @@ import argparse
 import datetime
 import time
 
-from trader.utils.py3 import range
+from quanttrader.utils.py3 import range
 
 import quanttrader as trader
-import trader.indicators
-import trader.feeds
+import quanttrader.indicators
+import quanttrader.feeds
 
 
 class OptimizeStrategy(trader.Strategy):

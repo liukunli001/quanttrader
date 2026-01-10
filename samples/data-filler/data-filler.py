@@ -27,9 +27,9 @@ import math
 
 # The above could be sent to an independent module
 import quanttrader as trader
-import trader.feeds
-import trader.utils.flushfile
-import trader.filters
+import quanttrader.feeds
+import quanttrader.utils.flushfile
+import quanttrader.filters
 
 from relativevolume import RelativeVolume
 

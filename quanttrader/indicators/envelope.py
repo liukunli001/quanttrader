@@ -28,7 +28,7 @@ from . import Indicator, MovingAverage
 
 class EnvelopeMixIn(object):
     '''
-    MixIn class to create a subclass with another indicator. The main line of
+    MixIn class to create a subclass with another indicators. The main line of
     that indicator will be surrounded by an upper and lower band separated a
     given "perc"entage from the input main line
 

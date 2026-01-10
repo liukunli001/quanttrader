@@ -24,8 +24,8 @@ from __future__ import (absolute_import, division, print_function,
 import datetime
 
 import quanttrader as trader
-import trader.feeds
-import trader.indicators
+import quanttrader.feeds
+from quanttrader import indicators as indicators
 
 from orderobserver import OrderObserver
 
@@ -73,11 +73,11 @@ class MyStrategy(trader.Strategy):
 
     def __init__(self):
         # SimpleMovingAverage on main data
-        # Equivalent to -> sma = btind.SMA(self.data, period=self.p.smaperiod)
-        sma = btind.SMA(period=self.p.smaperiod)
+        # Equivalent to -> sma = indicators.SMA(self.data, period=self.p.smaperiod)
+        sma = indicators.SMA(period=self.p.smaperiod)
 
         # CrossOver (1: up, -1: down) close / sma
-        self.buysell = btind.CrossOver(self.data.close, sma, plot=True)
+        self.buysell = indicators.CrossOver(self.data.close, sma, plot=True)
 
         # Sentinel to None: new ordersa allowed
         self.order = None

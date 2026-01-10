@@ -26,9 +26,9 @@ import datetime
 import random
 
 import quanttrader as trader
-import trader.feeds
-
-from trader.utils.py3 import with_metaclass
+import quanttrader.feeds
+feeds = trader.feeds
+from quanttrader.utils.py3 import with_metaclass
 
 
 class St(trader.Strategy):
@@ -104,10 +104,10 @@ def getdata(args):
 
     dataformat = dict(
         bt=trader.feeds.QuanttraderCSVData,
-        visualchart=btfeeds.VChartCSVData,
-        sierrachart=btfeeds.SierraChartCSVData,
-        yahoo=btfeeds.YahooFinanceCSVData,
-        yahoo_unreversed=btfeeds.YahooFinanceCSVData
+        visualchart=feeds.VChartCSVData,
+        sierrachart=feeds.SierraChartCSVData,
+        yahoo=feeds.YahooFinanceCSVData,
+        yahoo_unreversed=feeds.YahooFinanceCSVData
     )
 
     dfkwargs = dict()

@@ -27,8 +27,8 @@ import itertools
 
 # The above could be sent to an independent module
 import quanttrader as trader
-import trader.feeds
-import trader.indicators
+import quanttrader.feeds
+from quanttrader import indicators as indicators
 
 import mtradeobserver
 
@@ -58,9 +58,9 @@ class MultiTradeStrategy(trader.Strategy):
         self.order = None
 
         # Create SMA on 2nd data
-        sma = btind.MovAv.SMA(self.data, period=self.p.period)
+        sma = indicators.MovAv.SMA(self.data, period=self.p.period)
         # Create a CrossOver Signal from close an moving average
-        self.signal = btind.CrossOver(self.data.close, sma)
+        self.signal = indicators.CrossOver(self.data.close, sma)
 
         # To alternate amongst different tradeids
         if self.p.mtrade:

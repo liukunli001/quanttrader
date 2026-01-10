@@ -29,8 +29,9 @@ import sys
 
 
 import quanttrader as trader
-import trader.feeds
-import trader.indicators
+import quanttrader.feeds
+feeds = trader.feeds
+from quanttrader import indicators as indicators
 
 
 class OrderExecutionStrategy(trader.Strategy):
@@ -78,11 +79,11 @@ class OrderExecutionStrategy(trader.Strategy):
 
     def __init__(self):
         # SimpleMovingAverage on main data
-        # Equivalent to -> sma = btind.SMA(self.data, period=self.p.smaperiod)
-        sma = btind.SMA(period=self.p.smaperiod)
+        # Equivalent to -> sma = indicators.SMA(self.data, period=self.p.smaperiod)
+        sma = indicators.SMA(period=self.p.smaperiod)
 
         # CrossOver (1: up, -1: down) close / sma
-        self.buysell = btind.CrossOver(self.data.close, sma, plot=True)
+        self.buysell = indicators.CrossOver(self.data.close, sma, plot=True)
 
         # Sentinel to None: new ordersa allowed
         self.order = None
@@ -187,10 +188,10 @@ def getdata(args):
 
     dataformat = dict(
         bt=trader.feeds.QuanttraderCSVData,
-        visualchart=btfeeds.VChartCSVData,
-        sierrachart=btfeeds.SierraChartCSVData,
-        yahoo=btfeeds.YahooFinanceCSVData,
-        yahoo_unreversed=btfeeds.YahooFinanceCSVData
+        visualchart=feeds.VChartCSVData,
+        sierrachart=feeds.SierraChartCSVData,
+        yahoo=feeds.YahooFinanceCSVData,
+        yahoo_unreversed=feeds.YahooFinanceCSVData
     )
 
     dfkwargs = dict()

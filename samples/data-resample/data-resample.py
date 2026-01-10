@@ -24,7 +24,7 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 
 import quanttrader as trader
-import trader.feeds
+import quanttrader.feeds
 
 
 def runstrat():

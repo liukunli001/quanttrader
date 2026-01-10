@@ -24,12 +24,12 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 
 import quanttrader as trader
-import trader.feeds
-
+import quanttrader.feeds
+feeds = trader.feeds
 import pandas
 
 
-class PandasDataOptix(btfeeds.PandasData):
+class PandasDataOptix(feeds.PandasData):
 
     lines = ('optix_close', 'optix_pess', 'optix_opt',)
     params = (('optix_close', -1),
@@ -38,7 +38,7 @@ class PandasDataOptix(btfeeds.PandasData):
 
     if False:
         # No longer needed with version 1.9.62.122
-        datafields = btfeeds.PandasData.datafields + (
+        datafields = feeds.PandasData.datafields + (
             ['optix_close', 'optix_pess', 'optix_opt'])
 
 

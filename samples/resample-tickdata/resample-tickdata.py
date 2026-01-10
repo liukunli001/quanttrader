@@ -24,8 +24,8 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 
 import quanttrader as trader
-import trader.feeds
-
+import quanttrader.feeds
+feeds = trader.feeds
 
 def runstrat():
     args = parse_args()
@@ -39,7 +39,7 @@ def runstrat():
     # Load the Data
     datapath = args.dataname or '../../datas/ticksample.csv'
 
-    data = btfeeds.GenericCSVData(
+    data = feeds.GenericCSVData(
         dataname=datapath,
         dtformat='%Y-%m-%dT%H:%M:%S.%f',
         timeframe=trader.TimeFrame.Ticks,

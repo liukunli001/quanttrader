@@ -24,7 +24,7 @@ from __future__ import (absolute_import, division, print_function,
 import testcommon
 
 import quanttrader as trader
-from quanttrader import indicators as btind
+from quanttrader import indicators as indicators
 
 chkdatas = 1
 chkvals = [
@@ -33,7 +33,7 @@ chkvals = [
 
 
 chkmin = 30
-chkind = btind.DMA
+chkind = indicators.DMA
 
 
 def test_run(main=False):

@@ -24,13 +24,13 @@ from __future__ import (absolute_import, division, print_function,
 import testcommon
 
 import quanttrader as trader
-from quanttrader import indicators as btind
+from quanttrader import indicators as indicators
 
 chkdatas = 1
 chkvals = []
 
 chkmin = 34  # from MACD
-chkind = [btind.SMA, btind.Stochastic, btind.MACD, btind.Highest]
+chkind = [indicators.SMA, indicators.Stochastic, indicators.MACD, indicators.Highest]
 chkargs = dict()
 
 

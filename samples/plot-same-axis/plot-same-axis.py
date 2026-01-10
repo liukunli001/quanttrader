@@ -26,8 +26,8 @@ import datetime
 
 # The above could be sent to an independent module
 import quanttrader as trader
-import trader.feeds
-import trader.indicators
+import quanttrader.feeds
+from quanttrader import indicators as indicators
 
 
 class PlotStrategy(trader.Strategy):
@@ -44,16 +44,16 @@ class PlotStrategy(trader.Strategy):
     )
 
     def __init__(self):
-        sma = btind.SMA(subplot=self.params.smasubplot)
+        sma = indicators.SMA(subplot=self.params.smasubplot)
 
-        macd = btind.MACD()
+        macd = indicators.MACD()
         # In SMA we passed plot directly as kwarg, here the plotinfo.plot
         # attribute is changed - same effect
         macd.plotinfo.plot = not self.params.nomacdplot
 
         # Let's put rsi on stochastic/sma or the other way round
-        stoc = btind.Stochastic()
-        rsi = btind.RSI()
+        stoc = indicators.Stochastic()
+        rsi = indicators.RSI()
         if self.params.stocrsi:
             stoc.plotinfo.plotmaster = rsi
             stoc.plotinfo.plotlinelabels = self.p.stocrsilabels

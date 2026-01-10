@@ -30,7 +30,7 @@ __all__ = ['Vortex']
 class Vortex(trader.Indicator):
     '''
     See:
-      - http://www.vortexindicator.com/VFX_VORTEX.PDF
+      - http://www.vortexindicators.com/VFX_VORTEX.PDF
 
     '''
     lines = ('vi_plus', 'vi_minus',)

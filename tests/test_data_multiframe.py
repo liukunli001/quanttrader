@@ -24,13 +24,13 @@ from __future__ import (absolute_import, division, print_function,
 import testcommon
 
 import quanttrader as trader
-from quanttrader import indicators as btind
+from quanttrader import indicators as indicators
 
 chkdatas = 2
 chkvals = []
 
 chkmin = 151  # because of the weekly data
-chkind = [btind.SMA]
+chkind = [indicators.SMA]
 chkargs = dict()
 
 

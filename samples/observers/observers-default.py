@@ -22,7 +22,7 @@ from __future__ import (absolute_import, division, print_function,
                         unicode_literals)
 
 import quanttrader as trader
-import trader.feeds
+import quanttrader.feeds
 
 if __name__ == '__main__':
     engine = trader.Engine(stdstats=True)

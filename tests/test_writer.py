@@ -26,7 +26,7 @@ import time
 import testcommon
 
 import quanttrader as trader
-from quanttrader import indicators as btind
+from quanttrader import indicators as indicators
 
 
 chkdatas = 1
@@ -36,7 +36,7 @@ class TestStrategy(trader.Strategy):
     params = dict(main=False)
 
     def __init__(self):
-        btind.SMA()
+        indicators.SMA()
 
 
 def test_run(main=False):

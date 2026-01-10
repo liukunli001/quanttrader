@@ -26,7 +26,7 @@ import datetime
 
 # The above could be sent to an independent module
 import quanttrader as trader
-import trader.feeds
+import quanttrader.feeds
 
 from relvolbybar import RelativeVolumeByBar
 

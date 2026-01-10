@@ -25,9 +25,10 @@ import argparse
 import datetime
 
 import quanttrader as trader
-import trader.indicators
-import trader.feeds
-import trader.filters
+from quanttrader import indicators as indicators
+import quanttrader.feeds
+feeds = trader.feeds
+import quanttrader.filters
 
 
 def runstrat():
@@ -43,7 +44,7 @@ def runstrat():
     fromdate = datetime.datetime.strptime(args.fromdate, '%Y-%m-%d')
     todate = datetime.datetime.strptime(args.todate, '%Y-%m-%d')
 
-    data = btfeeds.YahooFinanceData(
+    data = feeds.YahooFinanceData(
         dataname=args.data,
         fromdate=fromdate,
         todate=todate)
@@ -52,7 +53,7 @@ def runstrat():
     engine.adddata(data)
 
     # Add a simple moving average if requirested
-    engine.addindicator(btind.SMA, period=args.period)
+    engine.addindicator(indicators.SMA, period=args.period)
 
     # Add a writer with CSV
     if args.writer:

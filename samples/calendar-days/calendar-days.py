@@ -25,9 +25,9 @@ import argparse
 import datetime
 
 import quanttrader as trader
-import trader.indicators
-import trader.feeds
-import trader.filters
+from quanttrader import indicators as indicators
+import quanttrader.feeds
+import quanttrader.filters
 
 
 def runstrat():
@@ -62,7 +62,7 @@ def runstrat():
 
     # Add a simple moving average if requirested
     if args.sma:
-        engine.addindicator(btind.SMA, period=args.period)
+        engine.addindicator(indicators.SMA, period=args.period)
 
     # Add a writer with CSV
     if args.writer:

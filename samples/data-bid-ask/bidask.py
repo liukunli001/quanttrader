@@ -24,11 +24,12 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 
 import quanttrader as trader
-import trader.feeds
-import trader.indicators
+import quanttrader.feeds
+feeds = trader.feeds
+from quanttrader import indicators as indicators
 
 
-class BidAskCSV(btfeeds.GenericCSVData):
+class BidAskCSV(feeds.GenericCSVData):
     linesoverride = True  # discard usual OHLC structure
     # datetime must be present and last
     lines = ('bid', 'ask', 'datetime')
@@ -45,7 +46,7 @@ class St(trader.Strategy):
 
     def __init__(self):
         if self.p.sma:
-            self.sma = btind.SMA(self.data, period=self.p.period)
+            self.sma = indicators.SMA(self.data, period=self.p.period)
 
     def next(self):
         dtstr = self.data.datetime.datetime().isoformat()

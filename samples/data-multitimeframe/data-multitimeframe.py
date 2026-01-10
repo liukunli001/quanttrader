@@ -24,11 +24,11 @@ from __future__ import (absolute_import, division, print_function,
 import argparse
 
 import quanttrader as trader
-import trader.feeds
-import trader.indicators
+import quanttrader.feeds
+from quanttrader import indicators as indicators
 from trader import ResamplerDaily, ResamplerWeekly, ResamplerMonthly
 from trader import ReplayerDaily, ReplayerWeekly, ReplayerMonthly
-from trader.utils import flushfile
+from quanttrader.utils import flushfile
 
 
 class SMAStrategy(trader.Strategy):
@@ -38,11 +38,11 @@ class SMAStrategy(trader.Strategy):
     )
 
     def __init__(self):
-        self.sma_small_tf = btind.SMA(self.data, period=self.p.period)
+        self.sma_small_tf = indicators.SMA(self.data, period=self.p.period)
         trader.indicators.MACD(self.data0)
 
         if not self.p.onlydaily:
-            self.sma_large_tf = btind.SMA(self.data1, period=self.p.period)
+            self.sma_large_tf = indicators.SMA(self.data1, period=self.p.period)
             trader.indicators.MACD(self.data1)
 
     def prenext(self):

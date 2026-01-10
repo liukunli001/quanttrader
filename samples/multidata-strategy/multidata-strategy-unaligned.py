@@ -26,8 +26,9 @@ import datetime
 
 # The above could be sent to an independent module
 import quanttrader as trader
-import trader.feeds
-import trader.indicators
+import quanttrader.feeds
+feeds = trader.feeds
+from quanttrader import indicators as indicators
 
 
 class MultiDataStrategy(trader.Strategy):
@@ -77,9 +78,9 @@ class MultiDataStrategy(trader.Strategy):
         self.orderid = None
 
         # Create SMA on 2nd data
-        sma = btind.MovAv.SMA(self.data1, period=self.p.period)
+        sma = indicators.MovAv.SMA(self.data1, period=self.p.period)
         # Create a CrossOver Signal from close an moving average
-        self.signal = btind.CrossOver(self.data1.close, sma)
+        self.signal = indicators.CrossOver(self.data1.close, sma)
 
     def next(self):
         if self.orderid:
@@ -123,7 +124,7 @@ def runstrategy():
     todate = datetime.datetime.strptime(args.todate, '%Y-%m-%d')
 
     # Create the 1st data
-    data0 = btfeeds.YahooFinanceCSVData(
+    data0 = feeds.YahooFinanceCSVData(
         dataname=args.data0,
         fromdate=fromdate,
         todate=todate)
@@ -132,7 +133,7 @@ def runstrategy():
     engine.adddata(data0)
 
     # Create the 2nd data
-    data1 = btfeeds.YahooFinanceCSVData(
+    data1 = feeds.YahooFinanceCSVData(
         dataname=args.data1,
         fromdate=fromdate,
         todate=todate)

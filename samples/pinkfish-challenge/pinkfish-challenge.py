@@ -25,7 +25,7 @@ import argparse
 import datetime
 
 import quanttrader as trader
-import trader.indicators
+from quanttrader import indicators as indicators
 
 
 class DayStepsCloseFilter(trader.with_metaclass(trader.MetaParams, object)):
@@ -195,7 +195,7 @@ class St(trader.Strategy):
         self.inmarket = 0
 
         # Get the highest but delayed 1 ... to avoid "today"
-        self.highest = btind.Highest(self.data.high,
+        self.highest = indicators.Highest(self.data.high,
                                      period=self.p.highperiod,
                                      subplot=False)
 

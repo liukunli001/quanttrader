@@ -291,7 +291,7 @@ class Strategy(with_metaclass(MetaStrategy, StrategyBase)):
 
     def _oncepost(self, dt):
         for indicator in self._lineiterators[LineIterator.IndType]:
-            if len(indicator._clock) > len(indicator):
+            if len(self._clock) > len(indicator):
                 indicator.advance()
 
         if self._oldsync:

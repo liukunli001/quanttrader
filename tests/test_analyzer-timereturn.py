@@ -30,7 +30,7 @@ except:
 import testcommon
 
 import quanttrader as trader
-from quanttrader import indicators as btind
+from quanttrader import indicators as indicators
 from quanttrader.utils.py3 import PY2
 
 
@@ -80,8 +80,8 @@ class TestStrategy(trader.Strategy):
         # Flag to allow new orders in the system or not
         self.orderid = None
 
-        self.sma = btind.SMA(self.data, period=self.p.period)
-        self.cross = btind.CrossOver(self.data.close, self.sma, plot=True)
+        self.sma = indicators.SMA(self.data, period=self.p.period)
+        self.cross = indicators.CrossOver(self.data.close, self.sma, plot=True)
 
     def start(self):
         if not self.p.stocklike:
